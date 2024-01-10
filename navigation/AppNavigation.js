@@ -24,7 +24,7 @@ export default function AppNavigation() {
         <Stack.Screen
           name="Home"
           options={{ headerShown: false }}
-          component={HomeScreen}
+          component={BottomTabNavigatorComponent}
         />
         <Stack.Screen
           name="Welcome"

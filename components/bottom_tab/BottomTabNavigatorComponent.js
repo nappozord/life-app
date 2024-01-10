@@ -12,7 +12,7 @@ export default function BottomTabNavigatorComponent() {
       screenOptions={{ headerShown: false, tabBarHideOnKeyboard : true }}
       tabBar={(props) => (
         <View>
-          {/*<CustomBottomTabComponent {...props} />*/}
+          <CustomBottomTabComponent {...props} />
         </View>
       )}
     >

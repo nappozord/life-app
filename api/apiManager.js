@@ -1,4 +1,4 @@
-import { defaultCategories, realCategories } from "../data";
+import { defaultCategories, realCategories, defaultUser } from "../data";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export async function getCategories(date) {
@@ -87,7 +87,7 @@ export function restoreBackup(date) {
 
 export async function getUser() {
   let jsonValue = await AsyncStorage.getItem("user");
-  return JSON.parse(jsonValue);
+  return jsonValue ? JSON.parse(jsonValue) : defaultUser;
 }
 
 export async function updateUser(user) {

@@ -16,7 +16,7 @@ import { themeColors } from "../../theme";
 const CustomBottomTab = ({ state, descriptors, navigation }) => {
   const { width, height } = useWindowDimensions();
   const MARGIN = 20;
-  const TAB_BAR_WIDTH = width - 2 * MARGIN;
+  const TAB_BAR_WIDTH = width;
   const TAB_WIDTH = TAB_BAR_WIDTH / state.routes.length;
 
   const translateAnimation = useAnimatedStyle(() => {
@@ -27,7 +27,7 @@ const CustomBottomTab = ({ state, descriptors, navigation }) => {
 
   return (
     <View
-      style={[styles.tabBarContainer, { width: TAB_BAR_WIDTH, bottom: 20 }]}
+      style={[styles.tabBarContainer, { width: TAB_BAR_WIDTH, bottom: 0 }]}
     >
       <Animated.View
         style={[
@@ -77,7 +77,7 @@ const CustomBottomTab = ({ state, descriptors, navigation }) => {
               <IconButton
                 icon={route.name}
                 size={28}
-                color={isFocused ? "#1F2937" : "rgba(31, 41, 55, 0.8)"}
+                color={isFocused ? themeColors.bgBlack : themeColors.bgBlack}
               />
             </View>
           </Pressable>
@@ -93,11 +93,12 @@ const styles = StyleSheet.create({
   tabBarContainer: {
     flex: 1,
     flexDirection: "row",
-    height: 55,
+    height: 75,
     position: "absolute",
     alignSelf: "center",
-    backgroundColor: themeColors.bgWhite(0.3),
-    borderRadius: 100,
+    backgroundColor: themeColors.bgWhite(0.6),
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
     alignItems: "center",
     justifyContent: "space-around",
     overflow: "hidden",
@@ -109,8 +110,8 @@ const styles = StyleSheet.create({
   },
   slidingTab: {
     width: 100,
-    height: 40,
-    borderRadius: 100,
+    height: 50,
+    borderRadius: 15,
     backgroundColor: themeColors.bgWhite(0.4),
   },
   contentContainer: {

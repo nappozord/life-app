@@ -12,7 +12,7 @@ import Animated, {
   SlideInDown,
   SlideOutDown,
 } from "react-native-reanimated";
-import { UserCircleIcon } from "react-native-heroicons/solid";
+import { IconButton } from "react-native-paper";
 import { themeColors } from "../../theme";
 import { useNavigation } from "@react-navigation/native";
 
@@ -33,8 +33,12 @@ export default function SignUpComponent(props) {
     >
       <View className="absolute w-full mt-2 z-10">
         <View className="flex-row justify-center">
-          <View className="p-4 bg-gray-300 rounded-full">
-            <UserCircleIcon size={80} fill={"black"} />
+          <View className="bg-gray-300 rounded-full">
+            <IconButton
+              icon={"account-supervisor-circle"}
+              color={themeColors.bgBlack}
+              size={80}
+            />
           </View>
         </View>
       </View>
@@ -80,8 +84,10 @@ export default function SignUpComponent(props) {
           />
           <TouchableOpacity
             className="py-3 rounded-2xl"
-            style={{backgroundColor: themeColors.chartBlue}}
-            onPress={() => navigation.push("Home")}
+            style={{ backgroundColor: themeColors.chartBlue }}
+            onPress={() => {
+              navigation.push("Home");
+            }}
           >
             <Text className="text-gray-200 font-bold text-center text-xl">
               Sign Up

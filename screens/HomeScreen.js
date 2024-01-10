@@ -68,6 +68,11 @@ export default function HomeScreen() {
     });
   }, [date]);
 
+  useEffect(() => {
+    if(activeCategory === 0)
+      setCardPressed(false);
+  }, [activeCategory])
+
   return (
     <View className="flex-1 relative">
       <StatusBar style="light" />
