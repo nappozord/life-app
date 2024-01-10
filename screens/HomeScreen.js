@@ -23,8 +23,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { defaultUser, realCategories } from "../data";
 import HeaderComponent from "../components/header/HeaderComponent";
 
-const { width, height } = Dimensions.get("window");
-
 export default function HomeScreen() {
   const [date, setDate] = useState(() => formatDate(new Date()));
   const [user, setUser] = useState({});

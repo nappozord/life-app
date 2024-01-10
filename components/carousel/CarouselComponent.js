@@ -22,6 +22,9 @@ export default function CarouselComponent({
 
   const [finishedAnimation, setFinishedAnimation] = useState(false);
 
+  if(activeCategory === 0 && finishedAnimation)
+    setFinishedAnimation(false);
+
   return (
     <Animated.View>
       <Carousel
@@ -30,7 +33,7 @@ export default function CarouselComponent({
         data={categories}
         renderItem={({ item }) => (
           <CategoryCardComponent
-            key={item.id}
+            key={"carousel_" + item.id}
             date={date}
             item={item}
             user={user}

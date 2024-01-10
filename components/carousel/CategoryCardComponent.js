@@ -30,7 +30,6 @@ export default function CategoryCardComponent({
   setUser,
 }) {
   const dimensions = useWindowDimensions();
-  const isMounted = useRef(false);
   const [loading, setLoading] = useState(false);
 
   const height = useSharedValue(HEIGHT);
@@ -43,7 +42,7 @@ export default function CategoryCardComponent({
     }
   }, [loading]);
 
-  const finishAnimationCallback = (finished, exiting) => {
+  const finishAnimationCallback = (finished) => {
     if (activeCategory == item.id) {
       setFinishedAnimation(finished);
       setLoading(false);
@@ -58,26 +57,24 @@ export default function CategoryCardComponent({
   };
 
   useEffect(() => {
-    //if (isMounted.current) {
-    if (!cardPressed) {
-      if (activeCategory !== item.id) {
-        width.value = WIDTH;
-        height.value = HEIGHT;
+    if (item.id !== 0) {
+      if (!cardPressed) {
+        if (activeCategory !== item.id) {
+          width.value = WIDTH;
+          height.value = HEIGHT;
+        } else {
+          width.value = withTiming(WIDTH, { duration: 500 });
+          height.value = withTiming(HEIGHT, { duration: 500 });
+        }
       } else {
-        width.value = withTiming(WIDTH, { duration: 500 });
-        height.value = withTiming(HEIGHT, { duration: 500 });
-      }
-    } else {
-      if (activeCategory !== item.id) {
-        width.value = dimensions.width;
-        height.value = dimensions.height;
-      } else {
-        startAnimation(500);
+        if (activeCategory !== item.id) {
+          width.value = dimensions.width;
+          height.value = dimensions.height;
+        } else {
+          startAnimation(500);
+        }
       }
     }
-    /*} else {
-      isMounted.current = true;
-    }*/
   }, [cardPressed]);
 
   const animatedStyleOuter = useAnimatedStyle(() => ({

@@ -1,4 +1,4 @@
-import { View, Text, FlatList } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import React from "react";
 import { IconButton } from "react-native-paper";
 import { themeColors } from "../../../theme";
@@ -33,15 +33,16 @@ export default function UserCategoryExpensesComponent({
           setUser={setUser}
         />
       </View>
-      <View>
-        <FlatList
-          data={item.expenses}
-          keyExtractor={(item) => {item.id + "_" + item.title}}
+      <View style={{height: 336}}>
+        <ScrollView
           showsVerticalScrollIndicator={false}
           className="mt-3"
-          renderItem={({ item }) => {
+          fadingEdgeLength={30}
+        >
+          {item.expenses.map((item) => {
             return (
               <ExpenseComponent
+                key={item.id + "_" + item.title}
                 categories={categories}
                 setCategories={setCategories}
                 item={item}
@@ -51,8 +52,8 @@ export default function UserCategoryExpensesComponent({
                 setUser={setUser}
               />
             );
-          }}
-        />
+          })}
+        </ScrollView>
       </View>
     </View>
   );
