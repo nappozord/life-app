@@ -41,8 +41,6 @@ export default function EditCategoryModalComponent({
       const result = JSON.parse(r);
       const index = result[result.length - 1].id + 1;
 
-      console.log(index);
-
       const category = {
         id: index > categories.length ? index : categories.length,
         title: description.current,
@@ -53,8 +51,6 @@ export default function EditCategoryModalComponent({
         income: false,
         index: categories.length,
       };
-
-      console.log(category.id);
 
       categories.push(category);
 

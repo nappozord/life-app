@@ -53,7 +53,7 @@ export default function HomeScreen() {
     //AsyncStorage.clear();
     //AsyncStorage.removeItem("February, 2024")
     //AsyncStorage.removeItem("defaultCategories")
-    AsyncStorage.getAllKeys().then((r) => console.log(r));
+    //AsyncStorage.getAllKeys().then((r) => console.log(r));
   }, [categories]);
 
   const searchBarAnimatedStyle = useAnimatedStyle(() => ({
