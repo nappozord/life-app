@@ -12,8 +12,8 @@ import IngredientModal from "./IngredientModal";
 import IngredientPercentageComponent from "./IngredientPercentageComponent";
 
 export default function IngredientComponent({
-  groceries,
-  setGroceries,
+  meals,
+  setMeals,
   ingredients,
   setIngredients,
   recipes,
@@ -106,7 +106,7 @@ export default function IngredientComponent({
           <View className="mt-1 -mb-1 -mx-1">
             <IngredientPercentageComponent
               item={item}
-              groceries={groceries}
+              meals={meals}
               recipes={recipes}
             />
           </View>

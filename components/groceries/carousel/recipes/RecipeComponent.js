@@ -12,8 +12,8 @@ import { calculateRecipeCosts } from "~/utils/calculateCosts";
 import RecipeModal from "./RecipeModal";
 
 export default function RecipeComponent({
-  groceries,
-  setGroceries,
+  meals,
+  setMeals,
   ingredients,
   setIngredients,
   recipes,

@@ -8,8 +8,8 @@ import { FlashList } from "@shopify/flash-list";
 import Animated, { SlideInRight } from "react-native-reanimated";
 
 export default function RecipesListComponent({
-  groceries,
-  setGroceries,
+  meals,
+  setMeals,
   ingredients,
   setIngredients,
   recipes,
@@ -120,8 +120,8 @@ export default function RecipesListComponent({
             return (
               <RecipeComponent
                 item={item}
-                groceries={groceries}
-                setGroceries={setGroceries}
+                meals={meals}
+                setMeals={setMeals}
                 ingredients={ingredients}
                 setIngredients={setIngredients}
                 recipes={recipes}

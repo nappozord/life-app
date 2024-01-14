@@ -1,4 +1,4 @@
-import { defaultCategories, realCategories, defaultUser, groceriesDefault, ingredientsDefault, recipesDefault } from "~/data";
+import { defaultCategories, realCategories, defaultUser, mealsDefault, ingredientsDefault, recipesDefault } from "~/data";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export async function getCategories(date) {
@@ -94,13 +94,13 @@ export async function updateUser(user) {
   await AsyncStorage.setItem("user", JSON.stringify(user));
 }
 
-export async function getGroceries() {
-  let jsonValue = await AsyncStorage.getItem("groceries");
-  return jsonValue ? JSON.parse(jsonValue) : groceriesDefault;
+export async function getMeals() {
+  let jsonValue = await AsyncStorage.getItem("meals");
+  return jsonValue ? JSON.parse(jsonValue) : mealsDefault;
 }
 
-export async function updateGroceries(groceries) {
-  await AsyncStorage.setItem("groceries", JSON.stringify(groceries));
+export async function updateMeals(meals) {
+  await AsyncStorage.setItem("meals", JSON.stringify(meals));
 }
 
 export async function getIngredients() {

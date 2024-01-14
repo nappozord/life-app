@@ -5,8 +5,8 @@ import { FlashList } from "@shopify/flash-list";
 import Animated, { SlideInRight } from "react-native-reanimated";
 
 export default function ReservationCardComponent({
-  groceries,
-  setGroceries,
+  meals,
+  setMeals,
   ingredients,
   setIngredients,
   recipes,
@@ -36,8 +36,8 @@ export default function ReservationCardComponent({
     <View className="flex-1 ml-4">
       <Animated.View entering={SlideInRight} className="flex-1 mb-1">
         <ReservationTypeComponent
-          groceries={groceries}
-          setGroceries={setGroceries}
+          meals={meals}
+          setMeals={setMeals}
           ingredients={ingredients}
           setIngredients={setIngredients}
           recipes={recipes}
@@ -48,8 +48,8 @@ export default function ReservationCardComponent({
       </Animated.View>
       <Animated.View entering={SlideInRight} className="flex-1 mb-1">
         <ReservationTypeComponent
-          groceries={groceries}
-          setGroceries={setGroceries}
+          meals={meals}
+          setMeals={setMeals}
           ingredients={ingredients}
           setIngredients={setIngredients}
           recipes={recipes}
@@ -60,8 +60,8 @@ export default function ReservationCardComponent({
       </Animated.View>
       <Animated.View entering={SlideInRight} className="flex-1 mb-1">
         <ReservationTypeComponent
-          groceries={groceries}
-          setGroceries={setGroceries}
+          meals={meals}
+          setMeals={setMeals}
           ingredients={ingredients}
           setIngredients={setIngredients}
           recipes={recipes}
@@ -72,8 +72,8 @@ export default function ReservationCardComponent({
       </Animated.View>
       <Animated.View entering={SlideInRight} className="flex-1 mb-1">
         <ReservationTypeComponent
-          groceries={groceries}
-          setGroceries={setGroceries}
+          meals={meals}
+          setMeals={setMeals}
           ingredients={ingredients}
           setIngredients={setIngredients}
           recipes={recipes}

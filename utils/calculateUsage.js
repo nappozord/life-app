@@ -1,24 +1,24 @@
 import { getNextDays } from "./manageDate";
 
-function countIngredients(ingredient, grocery) {
+function countIngredients(ingredient, meal) {
   let count = 0;
 
-  grocery.breakfast.ingredients.forEach((obj) => {
+  meal.breakfast.ingredients.forEach((obj) => {
     if (obj.id === ingredient.id) {
       count += obj.quantity;
     }
   });
-  grocery.dinner.ingredients.forEach((obj) => {
+  meal.dinner.ingredients.forEach((obj) => {
     if (obj.id === ingredient.id) {
       count += obj.quantity;
     }
   });
-  grocery.lunch.ingredients.forEach((obj) => {
+  meal.lunch.ingredients.forEach((obj) => {
     if (obj.id === ingredient.id) {
       count += obj.quantity;
     }
   });
-  grocery.snack.ingredients.forEach((obj) => {
+  meal.snack.ingredients.forEach((obj) => {
     if (obj.id === ingredient.id) {
       count += obj.quantity;
     }
@@ -27,10 +27,10 @@ function countIngredients(ingredient, grocery) {
   return count;
 }
 
-function countIngredientInRecipes(ingredient, grocery, recipes) {
+function countIngredientInRecipes(ingredient, meal, recipes) {
   let count = 0;
 
-  grocery.breakfast.recipes.forEach((obj) => {
+  meal.breakfast.recipes.forEach((obj) => {
     const recipe = recipes.find((r) => r.id === obj);
     if (recipe) {
       const ing = recipe.ingredients.find((i) => i.id === ingredient.id);
@@ -38,7 +38,7 @@ function countIngredientInRecipes(ingredient, grocery, recipes) {
     }
   });
 
-  grocery.dinner.recipes.forEach((obj) => {
+  meal.dinner.recipes.forEach((obj) => {
     const recipe = recipes.find((r) => r.id === obj);
     if (recipe) {
       const ing = recipe.ingredients.find((i) => i.id === ingredient.id);
@@ -46,7 +46,7 @@ function countIngredientInRecipes(ingredient, grocery, recipes) {
     }
   });
 
-  grocery.lunch.recipes.forEach((obj) => {
+  meal.lunch.recipes.forEach((obj) => {
     const recipe = recipes.find((r) => r.id === obj);
     if (recipe) {
       const ing = recipe.ingredients.find((i) => i.id === ingredient.id);
@@ -54,7 +54,7 @@ function countIngredientInRecipes(ingredient, grocery, recipes) {
     }
   });
 
-  grocery.snack.recipes.forEach((obj) => {
+  meal.snack.recipes.forEach((obj) => {
     const recipe = recipes.find((r) => r.id === obj);
     if (recipe) {
       const ing = recipe.ingredients.find((i) => i.id === ingredient.id);
@@ -67,7 +67,7 @@ function countIngredientInRecipes(ingredient, grocery, recipes) {
 
 export function calculateIngredientUsage(
   ingredient,
-  groceries,
+  meals,
   recipes,
   date,
   range
@@ -77,7 +77,7 @@ export function calculateIngredientUsage(
   totalCount = 0;
 
   daysInRange.forEach((day) => {
-    groceries.find((obj) => {
+    meals.find((obj) => {
       if (obj.date === day) {
         totalCount += countIngredients(ingredient, obj);
         totalCount += countIngredientInRecipes(ingredient, obj, recipes);

@@ -7,8 +7,8 @@ import Animated, { SlideInRight } from "react-native-reanimated";
 import SearchComponent from "~/components/groceries/searchbar/SearchComponent";
 
 export default function GroceriesCard({
-  groceries,
-  setGroceries,
+  meals,
+  setMeals,
   ingredients,
   setIngredients,
   recipes,

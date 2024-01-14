@@ -14,8 +14,8 @@ import {
   saveCategories,
   getUser,
   updateUser,
-  getGroceries,
-  updateGroceries,
+  getMeals,
+  updateMeals,
   getIngredients,
   updateIngredients,
   getRecipes,
@@ -33,7 +33,7 @@ import HeaderComponent from "~/components/header/HeaderComponent";
 import GroceriesCarouselComponent from "~/components/groceries/carousel/GroceriesCarouselComponent";
 
 export default function App() {
-  const [groceries, setGroceries] = useState();
+  const [meals, setMeals] = useState();
   const [ingredients, setIngredients] = useState();
   const [recipes, setRecipes] = useState();
   const [user, setUser] = useState({});
@@ -66,10 +66,10 @@ export default function App() {
   }, [user]);
 
   useEffect(() => {
-    !groceries
-      ? getGroceries().then((r) => setGroceries(r))
-      : updateGroceries(groceries);
-  }, [groceries]);
+    !meals
+      ? getMeals().then((r) => setMeals(r))
+      : updateMeals(meals);
+  }, [meals]);
 
   useEffect(() => {
     !ingredients
@@ -109,7 +109,7 @@ export default function App() {
                 chipListRef={chipListRef}
               />
             </View>
-            {groceries && ingredients && recipes ? (
+            {meals && ingredients && recipes ? (
               <Animated.View
                 className="justify-end overflow-hidden flex-1"
                 entering={FadeIn}
@@ -118,8 +118,8 @@ export default function App() {
                 <View className="pb-24">
                   <GroceriesCarouselComponent
                     categories={categories}
-                    groceries={groceries}
-                    setGroceries={setGroceries}
+                    meals={meals}
+                    setMeals={setMeals}
                     ingredients={ingredients}
                     setIngredients={setIngredients}
                     recipes={recipes}

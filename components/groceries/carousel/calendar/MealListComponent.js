@@ -12,8 +12,8 @@ import { Divider, IconButton } from "react-native-paper";
 import { FlashList } from "@shopify/flash-list";
 
 export default function MealListComponent({
-  groceries,
-  setGroceries,
+  meals,
+  setMeals,
   ingredients,
   setIngredients,
   recipes,
@@ -22,20 +22,20 @@ export default function MealListComponent({
   type,
   recipe,
 }) {
-  const grocery = groceries.find((obj) => obj.date === day);
+  const meal = meals.find((obj) => obj.date === day);
 
   function deleteItem(item) {
     if (recipe) {
-      grocery[type]["recipes"] = grocery[type]["recipes"].filter(
+      meal[type]["recipes"] = meal[type]["recipes"].filter(
         (obj) => obj !== item.id
       );
     } else {
-      grocery[type]["ingredients"] = grocery[type]["ingredients"].filter(
+      meal[type]["ingredients"] = meal[type]["ingredients"].filter(
         (obj) => obj.id !== item.id
       );
     }
 
-    setGroceries([...groceries]);
+    setMeals([...meals]);
   }
 
   return (
@@ -44,7 +44,7 @@ export default function MealListComponent({
         //estimatedItemSize={40}
         keyExtractor={(item) => day + "_" + type + "_" + item.id}
         showsVerticalScrollIndicator={false}
-        data={grocery[type][recipe ? "recipes" : "ingredients"]}
+        data={meal[type][recipe ? "recipes" : "ingredients"]}
         renderItem={(id) => {
           const item = recipe
             ? recipes.find((obj) => obj.id === id.item)

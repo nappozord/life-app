@@ -7,8 +7,8 @@ import IngredientModal from "./IngredientModal";
 import { FlashList } from "@shopify/flash-list";
 
 export default function IngredientsListComponent({
-  groceries,
-  setGroceries,
+  meals,
+  setMeals,
   ingredients,
   setIngredients,
   recipes,
@@ -119,8 +119,8 @@ export default function IngredientsListComponent({
             return (
               <IngredientComponent
                 item={item}
-                groceries={groceries}
-                setGroceries={setGroceries}
+                meals={meals}
+                setMeals={setMeals}
                 ingredients={ingredients}
                 setIngredients={setIngredients}
                 recipes={recipes}

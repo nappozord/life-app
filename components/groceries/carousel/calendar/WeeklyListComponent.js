@@ -5,8 +5,8 @@ import { getCurrentWeek } from "~/utils/manageDate";
 import { FlashList } from "@shopify/flash-list";
 
 export default function WeeklyListComponent({
-  groceries,
-  setGroceries,
+  meals,
+  setMeals,
   ingredients,
   setIngredients,
   recipes,
@@ -34,8 +34,8 @@ export default function WeeklyListComponent({
               </View>
               <View className="flex-1">
                 <ReservationCardComponent
-                  groceries={groceries}
-                  setGroceries={setGroceries}
+                  meals={meals}
+                  setMeals={setMeals}
                   ingredients={ingredients}
                   setIngredients={setIngredients}
                   recipes={recipes}

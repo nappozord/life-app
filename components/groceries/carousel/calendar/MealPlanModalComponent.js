@@ -23,8 +23,8 @@ export default function MealPlanModalComponent({
   setRecipes,
   ingredients,
   setIngredients,
-  groceries,
-  setGroceries,
+  meals,
+  setMeals,
 }) {
   const [search, setSearch] = useState([...recipes, ...ingredients]);
   const [selected, setSelected] = useState({
@@ -52,8 +52,8 @@ export default function MealPlanModalComponent({
   }, [onlySelected]);
 
   const saveButton = () => {
-    if (!groceries.find((obj) => obj.date === item.day)) {
-      groceries.push({
+    if (!meals.find((obj) => obj.date === item.day)) {
+      meals.push({
         date: item.day,
         breakfast: {
           ingredients: [],
@@ -74,8 +74,8 @@ export default function MealPlanModalComponent({
       });
     }
 
-    groceries.find((obj) => obj.date === item.day)[item.type] = selected;
-    setGroceries([...groceries]);
+    meals.find((obj) => obj.date === item.day)[item.type] = selected;
+    setMeals([...meals]);
   };
 
   return (

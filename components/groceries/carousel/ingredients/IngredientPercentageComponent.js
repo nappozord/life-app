@@ -7,9 +7,9 @@ import { calculateIngredientUsage } from "~/utils/calculateUsage";
 export default function IngredientPercentageComponent({
   item,
   recipes,
-  groceries,
+  meals,
 }) {
-  const progress = calculateIngredientUsage(item, groceries, recipes, new Date(), 7);
+  const progress = calculateIngredientUsage(item, meals, recipes, new Date(), 7);
 
   return (
     <ProgressBar

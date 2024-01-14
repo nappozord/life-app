@@ -17,8 +17,8 @@ import CalendarModal from "./CalendarModal";
 import Animated, { SlideInUp, SlideOutDown } from "react-native-reanimated";
 
 export default function CalendarComponent({
-  groceries,
-  setGroceries,
+  meals,
+  setMeals,
   ingredients,
   setIngredients,
   recipes,
@@ -91,8 +91,8 @@ export default function CalendarComponent({
         </Animated.View>
       </View>
       <WeeklyListComponent
-        groceries={groceries}
-        setGroceries={setGroceries}
+        meals={meals}
+        setMeals={setMeals}
         ingredients={ingredients}
         setIngredients={setIngredients}
         recipes={recipes}

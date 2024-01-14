@@ -10,8 +10,8 @@ import GroceriesCard from "./list/GroceriesCard";
 
 export default function BudgetCarouselComponent({
   categories,
-  groceries,
-  setGroceries,
+  meals,
+  setMeals,
   ingredients,
   setIngredients,
   recipes,
@@ -47,8 +47,8 @@ export default function BudgetCarouselComponent({
           >
             {item.index === 0 ? (
               <CalendarComponent
-                groceries={groceries}
-                setGroceries={setGroceries}
+                meals={meals}
+                setMeals={setMeals}
                 ingredients={ingredients}
                 setIngredients={setIngredients}
                 recipes={recipes}
@@ -56,8 +56,8 @@ export default function BudgetCarouselComponent({
               />
             ) : item.index === 1 ? (
               <GroceriesCard
-                groceries={groceries}
-                setGroceries={setGroceries}
+                meals={meals}
+                setMeals={setMeals}
                 ingredients={ingredients}
                 setIngredients={setIngredients}
                 recipes={recipes}
@@ -65,8 +65,8 @@ export default function BudgetCarouselComponent({
               />
             ) : item.index === 2 ? (
               <RecipesListComponent
-                groceries={groceries}
-                setGroceries={setGroceries}
+                meals={meals}
+                setMeals={setMeals}
                 ingredients={ingredients}
                 setIngredients={setIngredients}
                 recipes={recipes}
@@ -74,8 +74,8 @@ export default function BudgetCarouselComponent({
               />
             ) : item.index === 3 ? (
               <IngredientsListComponent
-                groceries={groceries}
-                setGroceries={setGroceries}
+                meals={meals}
+                setMeals={setMeals}
                 ingredients={ingredients}
                 setIngredients={setIngredients}
                 recipes={recipes}

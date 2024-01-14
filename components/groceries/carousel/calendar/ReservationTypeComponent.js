@@ -7,8 +7,8 @@ import { calculateMealCosts } from "~/utils/calculateCosts";
 import MealListComponent from "./MealListComponent";
 
 export default function ReservationTypeComponent({
-  groceries,
-  setGroceries,
+  meals,
+  setMeals,
   ingredients,
   setIngredients,
   recipes,
@@ -18,11 +18,11 @@ export default function ReservationTypeComponent({
 }) {
   const [modalVisible, setModalVisible] = useState(false);
 
-  const selected = groceries.find((obj) => obj.date === day)
-    ? groceries.find((obj) => obj.date === day)[type.type]
+  const selected = meals.find((obj) => obj.date === day)
+    ? meals.find((obj) => obj.date === day)[type.type]
     : { ingredients: [], recipes: [] };
 
-  const dailyGrocery = groceries.find((obj) => obj.date === day);
+  const dailyMeal = meals.find((obj) => obj.date === day);
 
   return (
     <View className="flex-1">
@@ -40,8 +40,8 @@ export default function ReservationTypeComponent({
           setIngredients={setIngredients}
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
-          groceries={groceries}
-          setGroceries={setGroceries}
+          meals={meals}
+          setMeals={setMeals}
         />
       ) : null}
       <TouchableOpacity
@@ -62,9 +62,9 @@ export default function ReservationTypeComponent({
               style={{ backgroundColor: themeColors.bgBlack(0.5) }}
             >
               <Text className="text-base text-gray-200">
-                {"€" + dailyGrocery
+                {"€" + dailyMeal
                   ? calculateMealCosts(
-                      dailyGrocery,
+                      dailyMeal,
                       type.type,
                       ingredients,
                       recipes
@@ -75,11 +75,11 @@ export default function ReservationTypeComponent({
           </View>
         </View>
         <Divider />
-        {dailyGrocery ? (
+        {dailyMeal ? (
           <>
             <MealListComponent
-              groceries={groceries}
-              setGroceries={setGroceries}
+              meals={meals}
+              setMeals={setMeals}
               ingredients={ingredients}
               setIngredients={setIngredients}
               recipes={recipes}
@@ -89,8 +89,8 @@ export default function ReservationTypeComponent({
               recipe={true}
             />
             <MealListComponent
-              groceries={groceries}
-              setGroceries={setGroceries}
+              meals={meals}
+              setMeals={setMeals}
               ingredients={ingredients}
               setIngredients={setIngredients}
               recipes={recipes}
