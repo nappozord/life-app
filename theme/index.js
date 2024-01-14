@@ -1,8 +1,8 @@
 export const themeColors = {
   bgWhite: opacity => RGBAToHexA(255, 255, 255, opacity),
-  bgGrey: "#b3bcb9",
-  bgBlack: "#1F2937",
-  chartBlue: "#1a6985",
+  bgGrey: opacity => RGBAToHexA(179, 188, 185, opacity),
+  bgBlack: opacity => RGBAToHexA(31, 41, 55, opacity),
+  chartBlue: opacity => RGBAToHexA(26, 105, 133, opacity),
   chartRed: opacity => RGBAToHexA(133, 54, 26, opacity),
   chartGreen : opacity => RGBAToHexA(51, 133, 26, opacity),
 }   
