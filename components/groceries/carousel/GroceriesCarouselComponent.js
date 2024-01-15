@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import { View, useWindowDimensions } from "react-native";
-import Animated, { useSharedValue } from "react-native-reanimated";
+import Animated, { FadeIn, useSharedValue } from "react-native-reanimated";
 import { themeColors } from "~/theme";
 import CalendarComponent from "~/components/groceries/carousel/calendar/CalendarComponent";
 import IngredientsListComponent from "./ingredients/IngredientsListComponent";
@@ -27,13 +27,14 @@ export default function BudgetCarouselComponent({
   if (carouselRef.current) carouselRef.current.snapToItem(activeChip);
 
   return (
-    <Animated.View>
+    <View>
       <Carousel
         ref={carouselRef}
         containerCustomStyle={{ overflow: "visible" }}
         data={categories}
         renderItem={({ item }) => (
-          <View
+          <Animated.View
+            entering={FadeIn}
             className="justify-end h-full overflow-hidden pb-3"
             style={[{
               width: dimensions.width - 40,
@@ -82,7 +83,7 @@ export default function BudgetCarouselComponent({
                 setRecipes={setRecipes}
               />
             ) : null}
-          </View>
+          </Animated.View>
         )}
         firstItem={activeChip}
         inactiveSlideOpacity={1}
@@ -90,8 +91,8 @@ export default function BudgetCarouselComponent({
         sliderWidth={410}
         itemWidth={dimensions.width}
         slideStyle={{ display: "flex", alignItems: "center" }}
-        initialNumToRender={3}
-        windowSize={3}
+        initialNumToRender={1}
+        windowSize={4}
         onSnapToItem={(index) => {
           setActiveChip(index);
           chipListRef.current.scrollToIndex({
@@ -100,6 +101,6 @@ export default function BudgetCarouselComponent({
           });
         }}
       />
-    </Animated.View>
+    </View>
   );
 }

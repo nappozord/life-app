@@ -34,7 +34,7 @@ export default function CalendarComponent({
     weekListRef.current.scrollToIndex({
       animated: true,
       index: currentWeek.find(
-        (day) => day.date === date.toISOString().split("T")[0]
+        (day) => day.dateString === date.toISOString().split("T")[0]
       ).index,
     });
   }, [date]);
@@ -70,7 +70,7 @@ export default function CalendarComponent({
           exiting={SlideOutDown}
         >
           {currentWeek.map((day) => {
-            const isSelected = day.date === date.toISOString().split("T")[0];
+            const isSelected = day.dateString === date.toISOString().split("T")[0];
 
             return (
               <TouchableOpacity
@@ -101,7 +101,7 @@ export default function CalendarComponent({
         weekListRef={weekListRef}
         initialIndex={
           currentWeek.find(
-            (day) => day.date === date.toISOString().split("T")[0]
+            (day) => day.dateString === date.toISOString().split("T")[0]
           ).index
         }
       />

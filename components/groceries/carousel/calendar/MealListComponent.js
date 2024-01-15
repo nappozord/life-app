@@ -41,7 +41,6 @@ export default function MealListComponent({
   return (
     <View className="flex-1 overflow-hidden">
       <FlatList
-        //estimatedItemSize={40}
         keyExtractor={(item) => day + "_" + type + "_" + item.id}
         showsVerticalScrollIndicator={false}
         data={meal[type][recipe ? "recipes" : "ingredients"]}

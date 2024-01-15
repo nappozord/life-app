@@ -5,6 +5,8 @@ import { themeColors } from "~/theme";
 import { FlashList } from "@shopify/flash-list";
 import Animated, { SlideInRight } from "react-native-reanimated";
 import SearchComponent from "~/components/groceries/searchbar/SearchComponent";
+import { getCurrentWeek } from "~/utils/manageDate";
+import GroceriesList from "./GroceriesList";
 
 export default function GroceriesCard({
   meals,
@@ -14,10 +16,17 @@ export default function GroceriesCard({
   recipes,
   setRecipes,
 }) {
-  const [sort, setSort] = useState("alphabetical");
+  const [week, setWeek] = useState(getCurrentWeek(new Date()));
   const [modalVisible, setModalVisible] = useState(false);
   const [search, setSearch] = useState([...ingredients]);
   const [onlySelected, setOnlySelected] = useState(false);
+
+  function offsetDate(offset) {
+    const currentDate = new Date(week[0].date);
+    currentDate.setDate(currentDate.getDate() + offset);
+
+    setWeek(getCurrentWeek(currentDate));
+  }
 
   return (
     <>
@@ -33,7 +42,7 @@ export default function GroceriesCard({
               onPress={() => setModalVisible(true)}
             >
               <IconButton
-                icon="plus"
+                icon="check"
                 size={24}
                 color={themeColors.bgWhite(0.7)}
               />
@@ -51,7 +60,32 @@ export default function GroceriesCard({
                 />
               </View>
               <Text className="text-gray-400">
-                {sort === "alphabetical" ? "A-Z order" : "Usage order"}
+                {week[0].dateString === getCurrentWeek(new Date())[0].dateString
+                  ? "This week"
+                  : week[0].date.toLocaleString("default", {
+                      month: "long",
+                    }) ===
+                    week[6].date.toLocaleString("default", { month: "long" })
+                  ? "From " +
+                    week[0].dayNumber +
+                    " to " +
+                    week[6].dayNumber +
+                    ", " +
+                    week[0].date.toLocaleString("default", {
+                      month: "long",
+                    })
+                  : "From " +
+                    week[0].dayNumber +
+                    ", " +
+                    week[0].date.toLocaleString("default", {
+                      month: "short",
+                    }) +
+                    " to " +
+                    week[6].dayNumber +
+                    ", " +
+                    week[6].date.toLocaleString("default", {
+                      month: "short",
+                    })}
               </Text>
             </View>
           </View>
@@ -59,55 +93,41 @@ export default function GroceriesCard({
             <TouchableOpacity
               className="rounded-full"
               style={{
-                backgroundColor:
-                  sort === "alphabetical"
-                    ? themeColors.bgWhite(0.7)
-                    : themeColors.bgWhite(0.6),
+                backgroundColor: themeColors.bgWhite(0.7),
                 borderTopRightRadius: 0,
                 borderBottomRightRadius: 0,
               }}
               onPress={() => {
-                setSort("alphabetical");
+                offsetDate(-7);
               }}
             >
-              <IconButton
-                size={sort === "alphabetical" ? 25 : 24}
-                icon={"sort-alphabetical-variant"}
-              />
+              <IconButton size={24} icon="menu-left" />
             </TouchableOpacity>
             <TouchableOpacity
               className="rounded-full"
               style={{
-                backgroundColor:
-                  sort === "use"
-                    ? themeColors.bgWhite(0.7)
-                    : themeColors.bgWhite(0.6),
+                backgroundColor: themeColors.bgWhite(0.7),
                 borderTopLeftRadius: 0,
                 borderBottomLeftRadius: 0,
                 borderLeftWidth: 1,
               }}
               onPress={() => {
-                setSort("use");
+                offsetDate(7);
               }}
             >
-              <IconButton
-                size={sort === "use" ? 25 : 24}
-                icon={"sort-variant"}
-              />
+              <IconButton size={24} icon="menu-right" />
             </TouchableOpacity>
           </View>
         </View>
-      </View>
-      <View className="flex-1 justify-end">
-      <View className="p-1" style={{backgroundColor: themeColors.bgWhite(0.2)}}>
-        <SearchComponent
-          items={[...ingredients]}
-          setSearch={setSearch}
-          onlyIngredient={true}
-          setOnlySelected={setOnlySelected}
-          placeholderText={"Add something to your grocery list!"}
+        <GroceriesList
+          meals={meals}
+          setMeals={setMeals}
+          ingredients={ingredients}
+          setIngredients={setIngredients}
+          recipes={recipes}
+          setRecipes={setRecipes}
+          week={week}
         />
-      </View>
       </View>
     </>
   );

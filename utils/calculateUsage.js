@@ -3,25 +3,23 @@ import { getNextDays } from "./manageDate";
 function countIngredients(ingredient, meal) {
   let count = 0;
 
-  meal.breakfast.ingredients.forEach((obj) => {
+  const calculate = (obj) => {
     if (obj.id === ingredient.id) {
-      count += obj.quantity;
+      count += (obj.quantity > 0 ? obj.quantity : 0.01);
     }
+  }
+
+  meal.breakfast.ingredients.forEach((obj) => {
+    calculate(obj);
   });
   meal.dinner.ingredients.forEach((obj) => {
-    if (obj.id === ingredient.id) {
-      count += obj.quantity;
-    }
+    calculate(obj);
   });
   meal.lunch.ingredients.forEach((obj) => {
-    if (obj.id === ingredient.id) {
-      count += obj.quantity;
-    }
+    calculate(obj);
   });
   meal.snack.ingredients.forEach((obj) => {
-    if (obj.id === ingredient.id) {
-      count += obj.quantity;
-    }
+    calculate(obj);
   });
 
   return count;
@@ -30,36 +28,28 @@ function countIngredients(ingredient, meal) {
 function countIngredientInRecipes(ingredient, meal, recipes) {
   let count = 0;
 
-  meal.breakfast.recipes.forEach((obj) => {
+  const calculate = (obj) => {
     const recipe = recipes.find((r) => r.id === obj);
     if (recipe) {
       const ing = recipe.ingredients.find((i) => i.id === ingredient.id);
-      count += ing ? ing.quantity : 0;
+      count += ing ? (ing.quantity > 0 ? ing.quantity : 0.01) : 0;
     }
+  }
+
+  meal.breakfast.recipes.forEach((obj) => {
+    calculate(obj);
   });
 
   meal.dinner.recipes.forEach((obj) => {
-    const recipe = recipes.find((r) => r.id === obj);
-    if (recipe) {
-      const ing = recipe.ingredients.find((i) => i.id === ingredient.id);
-      count += ing ? ing.quantity : 0;
-    }
+    calculate(obj);
   });
 
   meal.lunch.recipes.forEach((obj) => {
-    const recipe = recipes.find((r) => r.id === obj);
-    if (recipe) {
-      const ing = recipe.ingredients.find((i) => i.id === ingredient.id);
-      count += ing ? ing.quantity : 0;
-    }
+    calculate(obj);
   });
 
   meal.snack.recipes.forEach((obj) => {
-    const recipe = recipes.find((r) => r.id === obj);
-    if (recipe) {
-      const ing = recipe.ingredients.find((i) => i.id === ingredient.id);
-      count += ing ? ing.quantity : 0;
-    }
+    calculate(obj);
   });
 
   return count;

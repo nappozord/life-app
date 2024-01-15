@@ -45,7 +45,8 @@ export function getCurrentWeek(date) {
     result.push({
       dayName: currentDay.toDateString({weekday: 'short'}).slice(0, 3),
       dayNumber: currentDay.getDate().toString().padStart(2, '0'),
-      date: currentDay.toISOString().split('T')[0],
+      dateString: currentDay.toISOString().split('T')[0],
+      date: currentDay,
       index: i,
     });
   }

@@ -25,7 +25,7 @@ export default function BalanceComponent({ user }) {
     <View>
       <Canvas className="flex-1" style={{width: fontSize, height: 30}}>
           <Text
-            color={themeColors.bgGrey(1)}
+            color={themeColors.bgWhite(0.8)}
             text={targetText}
             x={0}
             y={22}

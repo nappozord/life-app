@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, Text, FlatList } from "react-native";
+import { View, TouchableOpacity, Text, RefreshControl, FlatList } from "react-native";
 import React, { useEffect, useState } from "react";
 import { IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
@@ -16,6 +16,15 @@ export default function IngredientsListComponent({
 }) {
   const [sort, setSort] = useState("alphabetical");
   const [modalVisible, setModalVisible] = useState(false);
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 500);
+    setIngredients([...ingredients]);
+  }, []);
 
   return (
     <View className="flex-1">
@@ -103,6 +112,14 @@ export default function IngredientsListComponent({
       </View>
       <View className="mx-5 mt-2 -mb-2 flex-1">
         <FlashList
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              progressBackgroundColor={themeColors.chartBlue(1)}
+              colors={[themeColors.bgWhite(0.3)]}
+            />
+          }
           estimatedItemSize={45}
           keyExtractor={(item) => "ingredients_" + item.id}
           fadingEdgeLength={50}

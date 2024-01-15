@@ -6,15 +6,13 @@ export function calculateRecipeCosts(recipe, ingredients) {
 
     total +=
       (parseFloat(ingredient[0].cost) / parseFloat(ingredient[0].quantity)) *
-      parseFloat(item.quantity);
+      (parseFloat(item.quantity) > 0 ? parseFloat(item.quantity) : 0.01);
   });
   return total.toFixed(2);
 }
 
 export function calculateMealCosts(meal, type, ingredients, recipes) {
   let total = 0;
-
-  //console.log(meal)
 
   if (meal) {
     meal[type].ingredients.forEach((ingredient) => {
@@ -25,7 +23,7 @@ export function calculateMealCosts(meal, type, ingredients, recipes) {
             parseFloat(
               ingredients.find((i) => i.id === ingredient.id).quantity
             )) *
-          parseFloat(ingredient.quantity);
+          (parseFloat(ingredient.quantity) > 0 ? parseFloat(ingredient.quantity) : 0.01);
       }
     });
 

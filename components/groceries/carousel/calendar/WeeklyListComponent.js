@@ -31,6 +31,9 @@ export default function WeeklyListComponent({
               <View className="items-center">
                 <Text className="text-gray-300">{item.dayName}</Text>
                 <Text className="text-gray-300 text-4xl">{item.dayNumber}</Text>
+                <Text className="text-gray-300 -mt-1">
+                  {item.date.toLocaleString("default", { month: "short" })}
+                </Text>
               </View>
               <View className="flex-1">
                 <ReservationCardComponent
@@ -40,7 +43,7 @@ export default function WeeklyListComponent({
                   setIngredients={setIngredients}
                   recipes={recipes}
                   setRecipes={setRecipes}
-                  day={item.date}
+                  day={item.dateString}
                 />
               </View>
             </View>
