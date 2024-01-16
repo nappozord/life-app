@@ -5,7 +5,7 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { getCurrentWeek } from "~/utils/manageDate";
 import { FlashList, MasonryFlashList } from "@shopify/flash-list";
 import { getIngredientFromMeal } from "~/utils/manageIngredients";
@@ -29,8 +29,7 @@ export default function GroceriesList({
 }) {
   const [groceryList, setGroceryList] = useState(calculateList);
   const [refreshing, setRefreshing] = useState(false);
-
-  //console.log(week[0].dateString)
+  const totalCost = useRef(0);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -86,6 +85,12 @@ export default function GroceriesList({
       (obj) => obj.needed > obj.ingredient.stock * obj.ingredient.quantity
     );
 
+    totalCost.current = 0;
+
+    ingredientList.forEach(item => {
+      totalCost.current += item.ingredient.cost;
+    })
+
     return ingredientList.sort((a, b) =>
       a.ingredient.title > b.ingredient.title
         ? 1
@@ -96,30 +101,38 @@ export default function GroceriesList({
   };
 
   return (
-    <View className="flex-1 my-1 px-2">
+    <View className="flex-1">
       {groceryList && groceryList.length > 0 ? (
-        <MasonryFlashList
-          numColumns={3}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-              progressBackgroundColor={themeColors.chartBlue(1)}
-              colors={[themeColors.bgWhite(0.3)]}
-            />
-          }
-          estimatedItemSize={600}
-          fadingEdgeLength={50}
-          showsVerticalScrollIndicator={false}
-          data={[
-            ...groceryList,
-            { ingredient: { id: -1, title: "Add Ingredient" } },
-          ]}
-          keyExtractor={(item) => item.ingredient.id}
-          renderItem={({ item }) => {
-            return <GroceryComponent item={item} />;
-          }}
-        />
+        <>
+         <View className="mb-1" style={{backgroundColor: "rgba(0, 0, 0, 0)", elevation: 10}}>
+          <View className="px-4 py-1" style={{backgroundColor: themeColors.chartGreen(0.5)}} needsOffscreenAlphaCompositing={true} >
+            <Text className="text-gray-200 text-lg font-semibold">
+              {"Total: €" + totalCost.current}
+            </Text>
+          </View></View>
+          <MasonryFlashList
+            numColumns={3}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                progressBackgroundColor={themeColors.chartBlue(1)}
+                colors={[themeColors.bgWhite(0.3)]}
+              />
+            }
+            estimatedItemSize={600}
+            fadingEdgeLength={50}
+            showsVerticalScrollIndicator={false}
+            data={[
+              ...groceryList,
+              { ingredient: { id: -1, title: "Add Ingredient" } },
+            ]}
+            keyExtractor={(item) => item.ingredient.id}
+            renderItem={({ item }) => {
+              return <GroceryComponent item={item} />;
+            }}
+          />
+        </>
       ) : (
         <Animated.View entering={FadeIn}>
           <TouchableOpacity

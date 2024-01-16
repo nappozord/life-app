@@ -199,9 +199,7 @@ export default function IngredientModal({
                           selectionColor={themeColors.bgBlack(1)}
                           defaultValue={cost.current}
                           onChangeText={(text) => {
-                            if (text === "" || text === null)
-                              cost.current = 0.0;
-                            else cost.current = text.split(" ").join("");
+                            cost.current = text;
                           }}
                         />
                         <Pressable
