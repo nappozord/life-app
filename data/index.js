@@ -959,3 +959,10 @@ export const recipesDefault = [
     ],
   },
 ];
+
+export const groceryListDefault = [{
+  date: "",
+  checked: [{ id: 1, quantity: 1 }],
+  added: [],
+  excluded: [],
+}];

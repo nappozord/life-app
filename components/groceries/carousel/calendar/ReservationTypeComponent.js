@@ -62,14 +62,14 @@ export default function ReservationTypeComponent({
               style={{ backgroundColor: themeColors.bgBlack(0.5) }}
             >
               <Text className="text-base text-gray-200">
-                {"€" + dailyMeal
+                {"€" + (dailyMeal
                   ? calculateMealCosts(
                       dailyMeal,
                       type.type,
                       ingredients,
                       recipes
                     )
-                  : "0.00"}
+                  : "0.00")}
               </Text>
             </View>
           </View>

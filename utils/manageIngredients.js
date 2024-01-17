@@ -34,6 +34,7 @@ function searchIngredients(ingredient, ingredients, weeklyIngredients){
       weeklyIngredients.push({
         ingredient: { ...ing },
         needed: ingredient.quantity > 0 ? ingredient.quantity : 0.01,
+        onCart: 0,
       });
     }
   }

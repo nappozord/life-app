@@ -3,10 +3,10 @@ import React, { useEffect, useState } from "react";
 import { IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
 import { FlashList } from "@shopify/flash-list";
-import Animated, { SlideInRight } from "react-native-reanimated";
-import SearchComponent from "~/components/groceries/searchbar/SearchComponent";
+import Animated, { FadeIn } from "react-native-reanimated";
 import { getCurrentWeek } from "~/utils/manageDate";
 import GroceriesList from "./GroceriesList";
+import { getGroceryList, updateGroceryList } from "~/api/apiManager";
 
 export default function GroceriesCard({
   meals,
@@ -17,9 +17,7 @@ export default function GroceriesCard({
   setRecipes,
 }) {
   const [week, setWeek] = useState(getCurrentWeek(new Date()));
-  const [modalVisible, setModalVisible] = useState(false);
-  const [search, setSearch] = useState([...ingredients]);
-  const [onlySelected, setOnlySelected] = useState(false);
+  const [groceryList, setGroceryList] = useState(null);
 
   function offsetDate(offset) {
     const currentDate = new Date(week[0].date);
@@ -27,6 +25,32 @@ export default function GroceriesCard({
 
     setWeek(getCurrentWeek(currentDate));
   }
+
+  useEffect(() => {
+    if (
+      groceryList &&
+      (groceryList.added.length > 0 ||
+        groceryList.checked.length > 0 ||
+        groceryList.excluded.length > 0)
+    )
+      updateGroceryList(groceryList);
+  }, [groceryList]);
+
+  useEffect(() => {
+    setGroceryList(null);
+    getGroceryList().then((r) => {
+      if (r && r.find((obj) => obj.date === week[0].dateString)) {
+        setGroceryList(r.find((obj) => obj.date === week[0].dateString));
+      } else {
+        setGroceryList({
+          date: week[0].dateString,
+          checked: [],
+          added: [],
+          excluded: [],
+        });
+      }
+    });
+  }, [week]);
 
   return (
     <>
@@ -119,15 +143,19 @@ export default function GroceriesCard({
             </TouchableOpacity>
           </View>
         </View>
-        <GroceriesList
-          meals={meals}
-          setMeals={setMeals}
-          ingredients={ingredients}
-          setIngredients={setIngredients}
-          recipes={recipes}
-          setRecipes={setRecipes}
-          week={week}
-        />
+        {groceryList ? (
+          <GroceriesList
+            meals={meals}
+            setMeals={setMeals}
+            ingredients={ingredients}
+            setIngredients={setIngredients}
+            recipes={recipes}
+            setRecipes={setRecipes}
+            groceryList={groceryList}
+            setGroceryList={setGroceryList}
+            week={week}
+          />
+        ) : null}
       </View>
     </>
   );

@@ -34,7 +34,7 @@ export default function WelcomeScreen() {
     //restoreBackup("January, 2024");
     //restoreBackup("December, 2023");
     //AsyncStorage.clear();
-    //AsyncStorage.removeItem("meals")
+    //AsyncStorage.removeItem("groceries")
     //AsyncStorage.removeItem("defaultCategories")
     AsyncStorage.getAllKeys().then((r) => console.log(r));
   }, [])
