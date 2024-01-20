@@ -1,6 +1,21 @@
 {
   "expo": {
     "name": "life-app",
-    "slug": "life-app"
+    "slug": "life-app",
+    "extra": {
+      "eas": {
+        "projectId": "ff34ffd3-4d6e-4799-9cd0-c3d2706d7e89"
+      }
+    },
+    "android": {
+      "package": "com.nappozord.lifeapp"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/ff34ffd3-4d6e-4799-9cd0-c3d2706d7e89"
+    },
+    "ios": {}
   }
 }

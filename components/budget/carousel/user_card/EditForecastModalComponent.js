@@ -5,6 +5,7 @@ import {
   Image,
   Modal,
   Pressable,
+  Platform,
   TouchableOpacity,
 } from "react-native";
 import React, { useRef } from "react";
@@ -78,7 +79,7 @@ export default function EditForecastModalComponent({
         style={{ opacity: 0.95 }}
       />
       <KeyboardAvoidingView
-        keyboardVerticalOffset={-50}
+        //keyboardVerticalOffset={-50}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >

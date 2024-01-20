@@ -130,7 +130,7 @@ export default function EditExpenseModalComponent({
         style={{ opacity: 0.9 }}
       />
       <KeyboardAvoidingView
-        keyboardVerticalOffset={-50}
+        //keyboardVerticalOffset={-50}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
