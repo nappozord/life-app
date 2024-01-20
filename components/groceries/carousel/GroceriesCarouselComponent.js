@@ -36,15 +36,20 @@ export default function BudgetCarouselComponent({
           <Animated.View
             entering={FadeIn}
             className="justify-end h-full overflow-hidden pb-3"
-            style={[{
-              width: dimensions.width - 40,
-              borderRadius: 25,
-              backgroundColor: themeColors.bgWhite(0.3),
-            }, item.index === 1 ? {
-              borderBottomLeftRadius: 16,
-              borderBottomRightRadius: 16,
-              paddingBottom: 0,
-            } : {}]}
+            style={[
+              {
+                width: dimensions.width - 40,
+                borderRadius: 25,
+                backgroundColor: themeColors.bgWhite(0.3),
+              },
+              item.index === 1
+                ? {
+                    borderBottomLeftRadius: 16,
+                    borderBottomRightRadius: 16,
+                    paddingBottom: 0,
+                  }
+                : {},
+            ]}
           >
             {item.index === 0 ? (
               <CalendarComponent

@@ -18,6 +18,7 @@ export default function GroceryComponent({
   groceryList,
   setGroceryList,
   ingredients,
+  setIngredients,
 }) {
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -32,6 +33,10 @@ export default function GroceryComponent({
       id: item.ingredient.id,
       quantity: item.needed,
     });
+
+    groceryList.added = groceryList.added.filter(
+      (i) => i.id !== item.ingredient.id
+    );
 
     groceryList.checked = groceryList.checked.filter(
       (i) => i.id !== item.ingredient.id
@@ -74,46 +79,58 @@ export default function GroceryComponent({
       }
 
       setGroceryList({ ...groceryList });
+
+      ingredients.find((i) => i.id === item.ingredient.id).stock += i;
+
+      setIngredients([...ingredients]);
     }
   }
 
   if (item.ingredient.id < 0) {
     return (
       <>
-        {modalVisible ? <AddIngredientModal
-          item={ingredientList}
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-          ingredients={ingredients}
-        /> : null}
-        <Animated.View entering={FadeIn} className="flex-1 mt-11 mb-2 px-1">
+        {modalVisible ? (
+          <AddIngredientModal
+            item={ingredientList}
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+            ingredients={ingredients}
+            groceryList={groceryList}
+            setGroceryList={setGroceryList}
+          />
+        ) : null}
+        <Animated.View entering={FadeIn} className="flex-1 mt-8 mb-2 px-1">
           <View className="flex-row justify-between align-center rounded-full z-10">
             <View />
             <TouchableOpacity
-              className="rounded-full -mt-10 items-center"
+              className="rounded-full -mt-7 items-center"
               style={{
                 backgroundColor: themeColors.bgBlack(1),
                 elevation: 10,
               }}
-              onPress={() => {setModalVisible(!modalVisible)}}
+              onPress={() => {
+                setModalVisible(!modalVisible);
+              }}
             >
               <IconButton
                 icon={"plus"}
-                size={28}
+                size={20}
                 color={themeColors.bgWhite(0.9)}
               />
             </TouchableOpacity>
             <View />
           </View>
           <TouchableOpacity
-            className="-mt-6 rounded-2xl p-2"
+            className="-mt-7 rounded-2xl p-2"
             style={{
               backgroundColor: themeColors.bgWhite(0.3),
             }}
-            onPress={() => {setModalVisible(!modalVisible)}}
+            onPress={() => {
+              setModalVisible(!modalVisible);
+            }}
           >
-            <View className="justify-between items-center space-y-1 -mt-1">
-              <View className="flex-1 pt-8 pb-8">
+            <View className="justify-between items-center space-y-1">
+              <View className="flex-1 pt-8 pb-7">
                 <Text className={"text-base text-center text-gray-800"}>
                   {item.ingredient.title}
                 </Text>

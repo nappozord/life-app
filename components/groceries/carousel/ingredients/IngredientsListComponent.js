@@ -1,4 +1,10 @@
-import { View, TouchableOpacity, Text, RefreshControl, FlatList } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  RefreshControl,
+  FlatList,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";

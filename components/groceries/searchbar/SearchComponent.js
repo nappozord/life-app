@@ -13,7 +13,9 @@ export default function SearchComponent({
   placeholderText,
 }) {
   function searchItems(text) {
-    const subset = items.filter((obj) => obj.title.includes(text));
+    const subset = items.filter((obj) =>
+      obj.title.toLowerCase().includes(text.toLowerCase())
+    );
     setSearch(subset);
   }
 

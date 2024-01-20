@@ -4,10 +4,12 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import BudgetScreen from "~/screens/BudgetScreen";
 import GroceryScreen from "~/screens/GroceryScreen";
 import CustomBottomTabComponent from "./CustomBottomTabComponent";
+import Animated, { SlideInRight, SlideOutLeft } from "react-native-reanimated";
 
 const Tab = createBottomTabNavigator();
 
 export default function BottomTabNavigatorComponent() {
+
   return (
     <Tab.Navigator
       screenOptions={{ headerShown: false, tabBarHideOnKeyboard : true }}

@@ -18,7 +18,7 @@ import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
 import { calculateRecipeCosts } from "~/utils/calculateCosts";
 import { FlashList } from "@shopify/flash-list";
-import IngredientSelectionComponent from "../recipes/IngredientSelectionComponent";
+import IngredientSelectionComponent from "~/components/groceries/searchbar/IngredientSelectionComponent";
 
 export default function RecipesIngredientsListComponent({
   style,

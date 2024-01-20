@@ -42,12 +42,12 @@ export default function GroceriesList({
       setRefreshing(false);
     }, 500);
     setIngredientList(calculateNewList);
-  }, [meals, ingredients, recipes, week]);
+  }, [meals, ingredients, recipes, week, groceryList]);
 
   useEffect(() => {
     setIngredientList([]);
     setIngredientList(calculateNewList);
-  }, [week]);
+  }, [meals, ingredients, recipes, week, groceryList]);
 
   useEffect(() => {
     let count = 0;
@@ -58,9 +58,8 @@ export default function GroceriesList({
         Math.ceil(item.needed / parseFloat(item.ingredient.quantity));
     });
 
-    //console.log(count);
     setTotalCost(count);
-  }, [ingredientList])
+  }, [ingredientList]);
 
   const calculateNewList = () => {
     let ingredientList = [];
@@ -100,7 +99,7 @@ export default function GroceriesList({
     });
 
     ingredientList = ingredientList.filter(
-      (obj) => obj.needed >= obj.ingredient.stock * obj.ingredient.quantity
+      (obj) => obj.needed > obj.ingredient.stock * obj.ingredient.quantity
     );
 
     ingredientList = mergeLists(ingredientList);
@@ -125,7 +124,7 @@ export default function GroceriesList({
   function setAdded(ingredientList) {
     groceryList.added.forEach((obj) => {
       if (ingredientList.find((i) => i.ingredient.id === obj.id)) {
-        ingredientList.find((i) => i.ingredient.id === obj.id).needed +=
+        ingredientList.find((i) => i.ingredient.id === obj.id).needed =
           obj.quantity;
       } else {
         ingredientList.push({
@@ -147,7 +146,9 @@ export default function GroceriesList({
         if (
           ingredientList.find((i) => i.ingredient.id === obj.id).needed <= 0
         ) {
-          ingredientList = ingredientList.filter((i) => i.ingredient.id !== obj.id);
+          ingredientList = ingredientList.filter(
+            (i) => i.ingredient.id !== obj.id
+          );
         }
       }
     });
@@ -226,6 +227,7 @@ export default function GroceriesList({
                     groceryList={groceryList}
                     setGroceryList={setGroceryList}
                     ingredients={ingredients}
+                    setIngredients={setIngredients}
                   />
                 );
               }}

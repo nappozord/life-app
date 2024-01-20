@@ -12,7 +12,7 @@ import React, { useRef, useState } from "react";
 import { themeColors } from "~/theme";
 import { Divider, IconButton } from "react-native-paper";
 import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
-import IngredientSearchComponent from "./IngredientSearchComponent";
+import IngredientSearchComponent from "~/components/groceries/searchbar/IngredientSearchComponent";
 
 export default function RecipeModal({
   item,
@@ -27,9 +27,7 @@ export default function RecipeModal({
 
   const name = useRef(item ? item.title.toString() : null);
   const [icon, setIcon] = useState(item ? item.icon.toString() : "food");
-  const [selected, setSelected] = useState(
-    item ? [ ...item.ingredients ]  : []
-  );
+  const [selected, setSelected] = useState(item ? [...item.ingredients] : []);
 
   function addRecipe() {
     if (name.current === "" || name.current === null)

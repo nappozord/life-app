@@ -32,6 +32,7 @@ export default function MealPlanModalComponent({
     recipes: [...item.selected.recipes],
   });
   const [onlySelected, setOnlySelected] = useState(false);
+  const [useRecipes, setUseRecipes] = useState(0);
 
   useEffect(() => {
     if (onlySelected) {
@@ -50,6 +51,16 @@ export default function MealPlanModalComponent({
       setSearch([...recipes, ...ingredients]);
     }
   }, [onlySelected]);
+
+  useEffect(() => {
+    if(useRecipes === 0){
+      setSearch([...recipes, ...ingredients]);
+    } else if(useRecipes === 1){
+      setSearch([...ingredients]);
+    } else if(useRecipes === 2){
+      setSearch([...recipes]);
+    }
+  }, [useRecipes])
 
   const saveButton = () => {
     if (!meals.find((obj) => obj.date === item.day)) {
@@ -168,6 +179,46 @@ export default function MealPlanModalComponent({
                         className="p-0 m-0"
                       />
                     </TouchableOpacity>
+                  </View>
+                  <View className="flex-row py-1">
+                    <View className="flex-1">
+                      <TouchableOpacity
+                        className="flex-row items-center"
+                        style={{
+                          backgroundColor:
+                            useRecipes === 1
+                              ? themeColors.bgWhite(0.5)
+                              : themeColors.bgWhite(0.2),
+                          borderTopLeftRadius: 24,
+                          borderBottomLeftRadius: 24,
+                        }}
+                        onPress={() => {
+                          useRecipes === 0 ? setUseRecipes(1) : setUseRecipes(0)
+                        }}
+                      >
+                        <IconButton size={24} icon="apple" color={themeColors.bgBlack(1)} />
+                        <Text className="text-gray-800 text-base">Ingredients</Text>
+                      </TouchableOpacity>
+                    </View>
+                    <View className="flex-1">
+                      <TouchableOpacity
+                        className="flex-row items-center"
+                        style={{
+                          backgroundColor:
+                            useRecipes === 2
+                              ? themeColors.bgWhite(0.5)
+                              : themeColors.bgWhite(0.2),
+                          borderTopRightRadius: 24,
+                          borderBottomRightRadius: 24,
+                        }}
+                        onPress={() => {
+                          useRecipes === 0 ? setUseRecipes(2) : setUseRecipes(0)
+                        }}
+                      >
+                        <IconButton size={24} icon="food" color={themeColors.bgBlack(1)} />
+                        <Text className="text-gray-800 text-base">Recipes</Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
                   <View>
                     <RecipesIngredientsListComponent
