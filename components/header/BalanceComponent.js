@@ -1,7 +1,7 @@
 import { View, TouchableOpacity } from "react-native";
 import React from "react";
 import { IconButton } from "react-native-paper";
-import { themeColors } from "../../theme";
+import { themeColors } from "~/theme";
 import Animated, {
   FadeIn,
   FadeOut,
@@ -18,14 +18,14 @@ export default function BalanceComponent({ user }) {
 
   const targetText = useDerivedValue(() => `€${totalValue.value.toFixed(2)}`, []);
 
-  const font = useFont(require("../../assets/fonts/Roboto-Bold.ttf"), 20);
+  const font = useFont(require("~/assets/fonts/Roboto-Bold.ttf"), 20);
   const fontSize = font ? font.getTextWidth(`€${user.balance.toFixed(2)}`) : 0;
 
   return (
     <View>
       <Canvas className="flex-1" style={{width: fontSize, height: 30}}>
           <Text
-            color={themeColors.bgGrey}
+            color={themeColors.bgWhite(0.8)}
             text={targetText}
             x={0}
             y={22}

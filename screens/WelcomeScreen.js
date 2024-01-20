@@ -7,7 +7,7 @@ import {
   Dimensions,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import LottieView from "lottie-react-native";
 import Animated, {
   Easing,
@@ -16,10 +16,12 @@ import Animated, {
   FadeIn,
   FadeOut,
 } from "react-native-reanimated";
-import { themeColors } from "../theme";
+import { themeColors } from "~/theme";
 
-import LoginComponent from "../components/login/LoginComponent";
-import SignUpComponent from "../components/login/SignUpComponent";
+import LoginComponent from "~/components/login/LoginComponent";
+import SignUpComponent from "~/components/login/SignUpComponent";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { restoreBackup } from "~/api/apiManager";
 
 const height = Dimensions.get("window").height;
 
@@ -27,12 +29,22 @@ export default function WelcomeScreen() {
   [login, setLogin] = useState(false);
   [signup, setSignup] = useState(false);
 
+  useEffect(() => {
+    //updateUser(defaultUser)
+    //restoreBackup("January, 2024");
+    //restoreBackup("December, 2023");
+    //AsyncStorage.clear();
+    //AsyncStorage.removeItem("groceries")
+    //AsyncStorage.removeItem("defaultCategories")
+    AsyncStorage.getAllKeys().then((r) => console.log(r));
+  }, [])
+
   return (
     <View className="flex-1">
       <StatusBar style="light" />
       <Image
         className="absolute h-full w-full"
-        source={require("../assets/bg.png")}
+        source={require("~/assets/bg.png")}
         blurRadius={80}
       />
       <Pressable
@@ -59,7 +71,7 @@ export default function WelcomeScreen() {
             className="flex-row justify-center"
           >
             <LottieView
-              source={require("../assets/welcome.json")}
+              source={require("~/assets/welcome.json")}
               autoPlay
               loop
               style={{ width: 350, height: 350 }}
@@ -72,7 +84,7 @@ export default function WelcomeScreen() {
           >
             <TouchableOpacity
               className="py-3 mx-7 rounded-xl"
-              style={{backgroundColor: themeColors.chartBlue}}
+              style={{backgroundColor: themeColors.chartBlue(1)}}
               onPress={() => setSignup(true)}
             >
               <Text className="text-xl font-bold text-center text-gray-200">

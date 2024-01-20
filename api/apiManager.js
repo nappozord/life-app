@@ -1,4 +1,4 @@
-import { defaultCategories, realCategories, defaultUser } from "../data";
+import { defaultCategories, realCategories, defaultUser, mealsDefault, ingredientsDefault, recipesDefault } from "~/data";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export async function getCategories(date) {
@@ -92,4 +92,55 @@ export async function getUser() {
 
 export async function updateUser(user) {
   await AsyncStorage.setItem("user", JSON.stringify(user));
+}
+
+export async function getMeals() {
+  let jsonValue = await AsyncStorage.getItem("meals");
+  return jsonValue ? JSON.parse(jsonValue) : mealsDefault;
+}
+
+export async function updateMeals(meals) {
+  await AsyncStorage.setItem("meals", JSON.stringify(meals));
+}
+
+export async function getIngredients() {
+  let jsonValue = await AsyncStorage.getItem("ingredients");
+  return jsonValue ? JSON.parse(jsonValue) : ingredientsDefault;
+}
+
+export async function updateIngredients(ingredients) {
+  await AsyncStorage.setItem("ingredients", JSON.stringify(ingredients));
+}
+
+export async function getRecipes() {
+  let jsonValue = await AsyncStorage.getItem("recipes");
+  return jsonValue ? JSON.parse(jsonValue) : recipesDefault;
+}
+
+export async function updateRecipes(recipes) {
+  await AsyncStorage.setItem("recipes", JSON.stringify(recipes));
+}
+
+export async function getGroceryList() {
+  let jsonValue = await AsyncStorage.getItem("groceries");
+  return jsonValue ? JSON.parse(jsonValue) : null;
+}
+
+export async function updateGroceryList(grocery) {
+  let groceries = await getGroceryList();
+
+  if(groceries){
+    let g = groceries.find(obj => obj.date === grocery.date);
+    if(g){
+      g.checked = grocery.checked;
+      g.added = grocery.added;
+      g.excluded = grocery.excluded;
+    } else {
+      groceries.push({...grocery});
+    }
+  } else {
+    groceries = [{...grocery}];
+  }
+
+  await AsyncStorage.setItem("groceries", JSON.stringify(groceries));
 }

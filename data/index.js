@@ -494,3 +494,475 @@ export const defaultUser = {
   balance: 2941.59,
   preferences: [],
 };
+
+export const mealsDefault = [
+  {
+    date: "2024-01-08",
+    breakfast: {
+      ingredients: [{ id: 1, quantity: 1 }],
+      recipes: [],
+    },
+    lunch: {
+      ingredients: [],
+      recipes: [],
+    },
+    dinner: {
+      ingredients: [],
+      recipes: [],
+    },
+    snack: {
+      ingredients: [{ id: 1, quantity: 5 }],
+      recipes: [],
+    },
+  },
+  {
+    date: "2024-01-09",
+    breakfast: {
+      ingredients: [{ id: 1, quantity: 1 }],
+      recipes: [],
+    },
+    lunch: {
+      ingredients: [],
+      recipes: [],
+    },
+    dinner: {
+      ingredients: [],
+      recipes: [10],
+    },
+    snack: {
+      ingredients: [{ id: 1, quantity: 5 }],
+      recipes: [],
+    },
+  },
+  {
+    date: "2024-01-10",
+    breakfast: {
+      ingredients: [{ id: 1, quantity: 1 }],
+      recipes: [],
+    },
+    lunch: {
+      ingredients: [],
+      recipes: [],
+    },
+    dinner: {
+      ingredients: [],
+      recipes: [2],
+    },
+    snack: {
+      ingredients: [{ id: 1, quantity: 5 }],
+      recipes: [],
+    },
+  },
+  {
+    date: "2024-01-11",
+    breakfast: {
+      ingredients: [],
+      recipes: [0],
+    },
+    lunch: {
+      ingredients: [],
+      recipes: [4],
+    },
+    dinner: {
+      ingredients: [],
+      recipes: [3],
+    },
+    snack: {
+      ingredients: [],
+      recipes: [],
+    },
+  },
+  {
+    date: "2024-01-12",
+    breakfast: {
+      ingredients: [],
+      recipes: [0],
+    },
+    lunch: {
+      ingredients: [],
+      recipes: [5],
+    },
+    dinner: {
+      ingredients: [],
+      recipes: [],
+    },
+    snack: {
+      ingredients: [],
+      recipes: [],
+    },
+  },
+  {
+    date: "2024-01-13",
+    breakfast: {
+      ingredients: [{ id: 1, quantity: 1 }],
+      recipes: [0],
+    },
+    lunch: {
+      ingredients: [],
+      recipes: [6],
+    },
+    dinner: {
+      ingredients: [],
+      recipes: [7],
+    },
+    snack: {
+      ingredients: [],
+      recipes: [],
+    },
+  },
+  {
+    date: "2024-01-14",
+    breakfast: {
+      ingredients: [{ id: 1, quantity: 1 }],
+      recipes: [0],
+    },
+    lunch: {
+      ingredients: [],
+      recipes: [8],
+    },
+    dinner: {
+      ingredients: [],
+      recipes: [9],
+    },
+    snack: {
+      ingredients: [{ id: 1, quantity: 1 }],
+      recipes: [],
+    },
+  },
+];
+
+export const ingredientsDefault = [
+  {
+    id: 0,
+    title: "/",
+    cost: 0,
+    quantity: 0,
+    stock: 0,
+    duration: 0,
+  },
+  {
+    id: 1,
+    title: "Banana",
+    cost: 1.7,
+    quantity: 1,
+    stock: 0,
+    duration: 7,
+  },
+  {
+    id: 2,
+    title: "Nutella Biscuits",
+    cost: 1.99,
+    quantity: 0,
+    stock: 0,
+    duration: 7,
+  },
+  {
+    id: 3,
+    title: "Pane",
+    cost: 1.79,
+    quantity: 0,
+    stock: 0,
+    duration: 7,
+  },
+  {
+    id: 4,
+    title: "Pollo",
+    cost: 3.5,
+    quantity: 0,
+    stock: 0,
+    duration: 7,
+  },
+  {
+    id: 5,
+    title: "Parmigiano",
+    cost: 2.99,
+    quantity: 0,
+    stock: 0,
+    duration: 7,
+  },
+  {
+    id: 6,
+    title: "Passata Pomodoro",
+    cost: 1.3,
+    quantity: 0,
+    stock: 0,
+    duration: 7,
+  },
+  {
+    id: 7,
+    title: "Pasta (corta)",
+    cost: 0.65,
+    quantity: 0,
+    stock: 0,
+    duration: 7,
+  },
+  {
+    id: 8,
+    title: "Tonno",
+    cost: 2.99,
+    quantity: 0,
+    stock: 0,
+    duration: 7,
+  },
+  {
+    id: 9,
+    title: "Sugo Amatriciana",
+    cost: 1.29,
+    quantity: 0,
+    stock: 0,
+    duration: 7,
+  },
+  {
+    id: 10,
+    title: "Tacchino",
+    cost: 1.35,
+    quantity: 0,
+    stock: 0,
+    duration: 7,
+  },
+  {
+    id: 11,
+    title: "Wurstel",
+    cost: 1.39,
+    quantity: 0,
+    stock: 0,
+    duration: 7,
+  },
+  {
+    id: 12,
+    title: "Biscotti colazione",
+    cost: 1.49,
+    quantity: 0,
+    stock: 0,
+    duration: 7,
+  },
+  {
+    id: 13,
+    title: "Riso",
+    cost: 2.99,
+    quantity: 0,
+    stock: 0,
+    duration: 7,
+  },
+  {
+    id: 14,
+    title: "Olive Nere",
+    cost: 1.19,
+    quantity: 0,
+    stock: 0,
+    duration: 7,
+  },
+  {
+    id: 15,
+    title: "Pesto",
+    cost: 1.19,
+    quantity: 0,
+    stock: 0,
+    duration: 7,
+  },
+  {
+    id: 16,
+    title: "Pizza",
+    cost: 2.79,
+    quantity: 0,
+    stock: 0,
+    duration: 7,
+  },
+  {
+    id: 17,
+    title: "Ragù",
+    cost: 1.5,
+    quantity: 0,
+    stock: 0,
+    duration: 7,
+  },
+  {
+    id: 18,
+    title: "Olio Semi",
+    cost: 1.79,
+    quantity: 0,
+    stock: 0,
+    duration: 7,
+  },
+  {
+    id: 19,
+    title: "Pan Grattato",
+    cost: 0.99,
+    quantity: 0,
+    stock: 0,
+    duration: 7,
+  },
+  {
+    id: 20,
+    title: "Uova",
+    cost: 1.99,
+    quantity: 0,
+    stock: 0,
+    duration: 0,
+  },
+  {
+    id: 21,
+    title: "The",
+    cost: 1.19,
+    quantity: 0,
+    stock: 0,
+    duration: 7,
+  },
+  {
+    id: 22,
+    title: "Zucchero",
+    cost: 0.99,
+    quantity: 0,
+    stock: 0,
+    duration: 7,
+  },
+  {
+    id: 23,
+    title: "Sale",
+    cost: 0.99,
+    quantity: 0,
+    stock: 0,
+    duration: 7,
+  },
+  {
+    id: 24,
+    title: "Maionese",
+    cost: 0.99,
+    quantity: 0,
+    stock: 0,
+    duration: 7,
+  },
+  {
+    id: 25,
+    title: "Ketchup",
+    cost: 0.99,
+    quantity: 0,
+    stock: 0,
+    duration: 7,
+  },
+];
+
+export const recipesDefault = [
+  {
+    id: 0,
+    title: "The e biscotti",
+    icon: "food",
+    used: 0,
+    ingredients: [
+      { id: 21, quantity: 1 / 25 },
+      { id: 12, quantity: 1 / 8 },
+      { id: 22, quantity: 1 / 100 },
+    ],
+  },
+  {
+    id: 1,
+    title: "Hot-Dog",
+    icon: "food",
+    used: 0,
+    ingredients: [
+      { id: 3, quantity: 1 / 8 },
+      { id: 11, quantity: 1 / 3 },
+      { id: 24, quantity: 1 / 50 },
+    ],
+  },
+  {
+    id: 2,
+    title: "Panino Tacchino",
+    icon: "food",
+    used: 0,
+    ingredients: [
+      { id: 3, quantity: 1 / 8 },
+      { id: 10, quantity: 1 },
+      { id: 24, quantity: 1 / 50 },
+    ],
+  },
+  {
+    id: 3,
+    title: "Glovo Day",
+    icon: "food",
+    used: 0,
+    ingredients: [],
+  },
+  {
+    id: 4,
+    title: "Pasta Amatriciana",
+    icon: "food",
+    used: 0,
+    ingredients: [
+      { id: 9, quantity: 1 / 2 },
+      { id: 7, quantity: 1 / 3 },
+    ],
+  },
+  {
+    id: 5,
+    title: "Riso Tonno Olive",
+    icon: "food",
+    used: 0,
+    ingredients: [
+      { id: 13, quantity: 1 / 20 },
+      { id: 14, quantity: 1 / 8 },
+      { id: 8, quantity: 1 / 8 },
+    ],
+  },
+  {
+    id: 6,
+    title: "Pasta Pesto",
+    icon: "food",
+    used: 0,
+    ingredients: [
+      { id: 15, quantity: 1 / 20 },
+      { id: 7, quantity: 1 / 8 },
+    ],
+  },
+  {
+    id: 7,
+    title: "Pizza",
+    icon: "food",
+    used: 0,
+    ingredients: [
+      { id: 16, quantity: 1 / 20 },
+      { id: 11, quantity: 1 / 8 },
+    ],
+  },
+  {
+    id: 8,
+    title: "Pasta Ragù",
+    icon: "food",
+    used: 0,
+    ingredients: [
+      { id: 17, quantity: 1 / 20 },
+      { id: 7, quantity: 1 / 8 },
+    ],
+  },
+  {
+    id: 9,
+    title: "Pollo",
+    icon: "food",
+    used: 0,
+    ingredients: [
+      { id: 18, quantity: 1 / 20 },
+      { id: 19, quantity: 1 / 8 },
+      { id: 20, quantity: 1 / 20 },
+      { id: 4, quantity: 1 / 8 },
+      { id: 25, quantity: 1 / 50 },
+    ],
+  },
+  {
+    id: 10,
+    title: "Panino Tonno",
+    icon: "food",
+    used: 0,
+    ingredients: [
+      { id: 8, quantity: 1 / 20 },
+      { id: 3, quantity: 1 / 8 },
+      { id: 24, quantity: 1 / 50 },
+    ],
+  },
+];
+
+export const groceryListDefault = [{
+  date: "",
+  checked: [{ id: 1, quantity: 1 }],
+  added: [],
+  excluded: [],
+}];

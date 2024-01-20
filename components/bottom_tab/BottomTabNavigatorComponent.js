@@ -1,12 +1,15 @@
 import { View, Text, KeyboardAvoidingView } from "react-native";
 import React, {useState} from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import HomeScreen from "../../screens/HomeScreen";
+import BudgetScreen from "~/screens/BudgetScreen";
+import GroceryScreen from "~/screens/GroceryScreen";
 import CustomBottomTabComponent from "./CustomBottomTabComponent";
+import Animated, { SlideInRight, SlideOutLeft } from "react-native-reanimated";
 
 const Tab = createBottomTabNavigator();
 
 export default function BottomTabNavigatorComponent() {
+
   return (
     <Tab.Navigator
       screenOptions={{ headerShown: false, tabBarHideOnKeyboard : true }}
@@ -16,10 +19,10 @@ export default function BottomTabNavigatorComponent() {
         </View>
       )}
     >
-      <Tab.Screen name="chart-donut" component={HomeScreen} />
-      <Tab.Screen name="chart-line" component={HomeScreen} />
-      <Tab.Screen name="cart" component={HomeScreen} />
-      <Tab.Screen name="cog-outline" component={HomeScreen} />
+      <Tab.Screen name="chart-donut" component={BudgetScreen} />
+      <Tab.Screen name="chart-line" component={BudgetScreen} />
+      <Tab.Screen name="cart" component={GroceryScreen} />
+      <Tab.Screen name="cog-outline" component={BudgetScreen} />
     </Tab.Navigator>
   );
 }

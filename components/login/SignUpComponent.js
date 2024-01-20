@@ -13,7 +13,7 @@ import Animated, {
   SlideOutDown,
 } from "react-native-reanimated";
 import { IconButton } from "react-native-paper";
-import { themeColors } from "../../theme";
+import { themeColors } from "~/theme";
 import { useNavigation } from "@react-navigation/native";
 
 const height = Dimensions.get("window").height;
@@ -36,7 +36,7 @@ export default function SignUpComponent(props) {
           <View className="bg-gray-300 rounded-full">
             <IconButton
               icon={"account-supervisor-circle"}
-              color={themeColors.bgBlack}
+              color={themeColors.bgBlack(1)}
               size={80}
             />
           </View>
@@ -44,7 +44,7 @@ export default function SignUpComponent(props) {
       </View>
       <Image
         className="absolute w-full mt-16"
-        source={require("../../assets/bg.png")}
+        source={require("~/assets/bg.png")}
         blurRadius={80}
         style={{
           borderTopLeftRadius: 50,
@@ -65,14 +65,14 @@ export default function SignUpComponent(props) {
             className="p-3 text-gray-950 rounded-2xl"
             style={{ backgroundColor: themeColors.bgWhite(0.6) }}
             placeholder="Enter Username"
-            selectionColor={themeColors.bgBlack}
+            selectionColor={themeColors.bgBlack(1)}
           />
           <Text className="text-gray-300 ml-1">Email Addres</Text>
           <TextInput
             className="p-3 text-gray-950 rounded-2xl"
             style={{ backgroundColor: themeColors.bgWhite(0.6) }}
             placeholder="Enter Email"
-            selectionColor={themeColors.bgBlack}
+            selectionColor={themeColors.bgBlack(1)}
           />
           <Text className="text-gray-300 ml-1">Password</Text>
           <TextInput
@@ -80,11 +80,11 @@ export default function SignUpComponent(props) {
             style={{ backgroundColor: themeColors.bgWhite(0.6) }}
             placeholder="Enter Password"
             secureTextEntry
-            selectionColor={themeColors.bgBlack}
+            selectionColor={themeColors.bgBlack(1)}
           />
           <TouchableOpacity
             className="py-3 rounded-2xl"
-            style={{ backgroundColor: themeColors.chartBlue }}
+            style={{ backgroundColor: themeColors.chartBlue(1) }}
             onPress={() => {
               navigation.push("Home");
             }}
@@ -103,7 +103,7 @@ export default function SignUpComponent(props) {
             style={{ backgroundColor: themeColors.bgWhite(0.7) }}
           >
             <Image
-              source={require("../../assets/google.png")}
+              source={require("~/assets/google.png")}
               className="w-10 h-10"
             />
           </TouchableOpacity>

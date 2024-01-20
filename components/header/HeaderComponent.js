@@ -1,7 +1,7 @@
 import { View, TouchableOpacity, Text } from "react-native";
 import React from "react";
 import { IconButton } from "react-native-paper";
-import { themeColors } from "../../theme";
+import { themeColors } from "~/theme";
 import Animated, {
   FadeIn,
   FadeOut,

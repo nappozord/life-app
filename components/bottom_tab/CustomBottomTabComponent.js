@@ -11,7 +11,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { IconButton } from "react-native-paper";
-import { themeColors } from "../../theme";
+import { themeColors } from "~/theme";
 
 const CustomBottomTab = ({ state, descriptors, navigation }) => {
   const { width, height } = useWindowDimensions();
@@ -77,7 +77,7 @@ const CustomBottomTab = ({ state, descriptors, navigation }) => {
               <IconButton
                 icon={route.name}
                 size={28}
-                color={isFocused ? themeColors.bgBlack : themeColors.bgBlack}
+                color={isFocused ? themeColors.bgBlack(1) : themeColors.bgBlack(0.5)}
               />
             </View>
           </Pressable>
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     height: 75,
     position: "absolute",
     alignSelf: "center",
-    backgroundColor: themeColors.bgWhite(0.6),
+    backgroundColor: themeColors.bgWhite(0.5),
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
     alignItems: "center",
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 50,
     borderRadius: 15,
-    backgroundColor: themeColors.bgWhite(0.4),
+    backgroundColor: themeColors.bgWhite(0.3),
   },
   contentContainer: {
     flex: 1,
