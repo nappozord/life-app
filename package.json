@@ -1,15 +1,21 @@
 {
   "dependencies": {
+    "@aws-amplify/react-native": "^1.0.12",
+    "@aws-amplify/rtn-web-browser": "^1.0.12",
     "@react-native-async-storage/async-storage": "^1.21.0",
+    "@react-native-community/netinfo": "11.1.0",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.17",
     "@shopify/flash-list": "^1.6.3",
     "@shopify/react-native-skia": "0.1.221",
+    "aws-amplify": "^6.0.12",
     "expo": "~50.0.1",
     "expo-constants": "~15.4.5",
     "expo-linking": "~6.2.2",
     "expo-router": "~3.4.4",
     "expo-status-bar": "~1.11.1",
+    "expo-updates": "~0.24.8",
+    "firebase": "^10.7.2",
     "lottie-react-native": "6.5.1",
     "nativewind": "^2.0.11",
     "react": "18.2.0",
@@ -17,6 +23,7 @@
     "react-native": "0.73.2",
     "react-native-calendars": "^1.1303.0",
     "react-native-gesture-handler": "~2.14.0",
+    "react-native-get-random-values": "~1.8.0",
     "react-native-heroicons": "^3.2.1",
     "react-native-paper": "^4.12.6",
     "react-native-reanimated": "~3.6.0",
@@ -25,8 +32,7 @@
     "react-native-snap-carousel": "^4.0.0-beta.6",
     "react-native-vector-icons": "^10.0.3",
     "react-native-web": "~0.19.6",
-    "tailwindcss": "^3.3.2",
-    "expo-updates": "~0.24.8"
+    "tailwindcss": "^3.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",
@@ -37,8 +43,8 @@
   "private": true,
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web"
   }
 }

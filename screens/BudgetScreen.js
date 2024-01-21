@@ -1,4 +1,11 @@
-import { View, Image, Dimensions, SafeAreaView } from "react-native";
+import {
+  View,
+  Image,
+  Dimensions,
+  SafeAreaView,
+  BackHandler,
+  Alert,
+} from "react-native";
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useRef, useEffect } from "react";
 import ChipCategoryListComponent from "~/components/budget/chip/ChipCategoryListComponent";
@@ -22,8 +29,11 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { defaultUser, realCategories } from "~/data";
 import HeaderComponent from "~/components/header/HeaderComponent";
+import { useNavigation } from "@react-navigation/native";
+import { signOut } from "aws-amplify/auth";
 
 export default function BudgetScreen() {
+  const navigation = useNavigation();
   const [date, setDate] = useState(() => formatDate(new Date()));
   const [user, setUser] = useState({});
   const [categories, setCategories] = useState([]);
@@ -34,7 +44,35 @@ export default function BudgetScreen() {
   const searchBarHeight = useSharedValue(76);
 
   useEffect(() => {
-    !user.email ? getUser().then((r) => setUser(r)) : updateUser(user);
+    const backAction = () => {
+      Alert.alert("Hold on!", "Are you sure you want to log out?", [
+        {
+          text: "Cancel",
+          onPress: () => null,
+          style: "cancel",
+        },
+        {
+          text: "YES",
+          onPress: () => {
+            signOut()
+              .then(() => navigation.push("Welcome"))
+              .catch((e) => navigation.push("Welcome"));
+          },
+        },
+      ]);
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
+
+  useEffect(() => {
+    !user.userId ? getUser().then((r) => setUser(r)) : updateUser(user);
   }, [user]);
 
   useEffect(() => {
@@ -60,9 +98,8 @@ export default function BudgetScreen() {
   }, [date]);
 
   useEffect(() => {
-    if(activeCategory === 0)
-      setCardPressed(false);
-  }, [activeCategory])
+    if (activeCategory === 0) setCardPressed(false);
+  }, [activeCategory]);
 
   return (
     <View className="flex-1 relative">
@@ -72,7 +109,7 @@ export default function BudgetScreen() {
         source={require("~/assets/bg.png")}
         blurRadius={80}
       />
-      {user.email ? (
+      {user.userId ? (
         <View className="mt-16">
           <Animated.View style={searchBarAnimatedStyle} className="mx-5">
             {cardPressed ? (

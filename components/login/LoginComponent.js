@@ -6,20 +6,50 @@ import {
   TextInput,
   Dimensions,
 } from "react-native";
-import React from "react";
+import React, { useState, useRef } from "react";
 import Animated, {
   Easing,
   SlideInDown,
   SlideOutDown,
 } from "react-native-reanimated";
-import { IconButton } from "react-native-paper";
+import { ActivityIndicator, IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
 import { useNavigation } from "@react-navigation/native";
+import { getUser } from "~/api/apiManager";
+
+import { signIn, signInWithRedirect } from "aws-amplify/auth";
 
 const height = Dimensions.get("window").height;
 
-export default function LoginComponent(props) {
+export default function LoginComponent({
+  setSignup,
+  setLogin,
+  setFinalSetup,
+  setPassRecovery,
+}) {
   const navigation = useNavigation();
+  const email = useRef("");
+  const password = useRef("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  function handleSignIn() {
+    setError(null);
+    setLoading(true);
+    signIn({
+      username: email.current,
+      password: password.current,
+    })
+      .then((r) => {
+        setFinalSetup(true);
+        setLogin(false);
+        setLoading(false);
+      })
+      .catch((e) => {
+        setError(e.message);
+        setLoading(false);
+      });
+  }
 
   return (
     <Animated.View
@@ -66,6 +96,9 @@ export default function LoginComponent(props) {
             style={{ backgroundColor: themeColors.bgWhite(0.6) }}
             placeholder="Enter Email"
             selectionColor={themeColors.bgBlack(1)}
+            onChangeText={(text) => {
+              email.current = text;
+            }}
           />
           <Text className="text-gray-300 ml-2">Password</Text>
           <TextInput
@@ -74,19 +107,39 @@ export default function LoginComponent(props) {
             placeholder="Enter Password"
             secureTextEntry
             selectionColor={themeColors.bgBlack(1)}
+            onChangeText={(text) => {
+              password.current = text;
+            }}
           />
-          <TouchableOpacity className="flex items-end mb-7 mr-4">
+          <TouchableOpacity
+            className="flex items-end mb-7 mr-4"
+            onPress={() => {
+              setPassRecovery(true);
+              setLogin(false);
+            }}
+          >
             <Text className="text-gray-200 underline">Forgot Password?</Text>
           </TouchableOpacity>
           <TouchableOpacity
             className="py-3 rounded-2xl"
             style={{ backgroundColor: themeColors.chartBlue(1) }}
-            onPress={() => navigation.push("Home")}
+            onPress={() => handleSignIn()}
           >
-            <Text className="text-gray-200 font-bold text-center text-xl">
-              Login
-            </Text>
+            {!loading ? (
+              <Text className="text-gray-200 font-bold text-center text-xl">
+                Login
+              </Text>
+            ) : (
+              <ActivityIndicator
+                className="py-0.5"
+                animating={true}
+                color={themeColors.bgWhite(0.8)}
+              />
+            )}
           </TouchableOpacity>
+          {error ? (
+            <Text className="text-red-800 ml-1 text-base">{error}</Text>
+          ) : null}
         </View>
         <Text className="text-xl text-gray-300 font-bold text-center py-5">
           Or
@@ -95,6 +148,15 @@ export default function LoginComponent(props) {
           <TouchableOpacity
             className="p-2 rounded-3xl w-full items-center"
             style={{ backgroundColor: themeColors.bgWhite(0.7) }}
+            onPress={() => {
+              signInWithRedirect({ provider: "Google" })
+                .then((r) => {
+                  navigation.push("Welcome");
+                })
+                .catch((e) => {
+                  setError(e.message);
+                });
+            }}
           >
             <Image
               source={require("~/assets/google.png")}
@@ -109,8 +171,8 @@ export default function LoginComponent(props) {
           <Text> </Text>
           <TouchableOpacity
             onPress={() => {
-              props.setLogin(false);
-              props.setSignup(true);
+              setLogin(false);
+              setSignup(true);
             }}
           >
             <Text className="font-bold underline text-gray-300">Sign Up</Text>
