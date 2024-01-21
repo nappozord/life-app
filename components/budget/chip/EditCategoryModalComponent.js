@@ -99,7 +99,7 @@ export default function EditCategoryModalComponent({
     >
       <Image
         className="absolute h-full w-full"
-        source={require("~/assets/bg.png")}
+        source={require("~/assets/splash.png")}
         blurRadius={80}
         style={{ opacity: 0.9 }}
       />
@@ -116,7 +116,7 @@ export default function EditCategoryModalComponent({
             <Animated.View
               entering={SlideInDown.duration(500)}
               style={{
-                backgroundColor: themeColors.bgWhite(0.6),
+                backgroundColor: themeColors.secondaryContainer,
                 borderTopLeftRadius: 24,
                 borderTopRightRadius: 24,
               }}
@@ -126,26 +126,29 @@ export default function EditCategoryModalComponent({
                 <View
                   className="p-5 rounded-full -mt-20 items-center"
                   style={{
-                    backgroundColor: themeColors.bgBlack(1),
-                    borderColor: themeColors.bgGrey(1),
+                    backgroundColor: themeColors.background,
+                    borderColor: themeColors.secondaryContainer,
                     borderWidth: 5,
                   }}
                 >
                   <View className="flex-row">
                     <IconButton
                       icon={item ? "pencil" : "plus"}
-                      color={themeColors.bgGrey(1)}
+                      color={themeColors.onBackground}
                       size={30}
                       className="-mr-2"
                     />
                     <IconButton
                       icon="animation-outline"
-                      color={themeColors.bgGrey(1)}
+                      color={themeColors.onBackground}
                       size={30}
                       className="-ml-2"
                     />
                   </View>
-                  <Text className="text-xl font-semibold -mt-4 mb-4 text-gray-400">
+                  <Text
+                    className="text-xl font-semibold -mt-4 mb-4"
+                    style={{ color: themeColors.onBackground }}
+                  >
                     Category
                   </Text>
                 </View>
@@ -153,34 +156,40 @@ export default function EditCategoryModalComponent({
               </View>
               <View className="-mt-7">
                 <View className="space-y-1 p-5">
-                  <Text className="text-gray-700 font-semibold text-lg ml-2">
+                  <Text
+                    className="font-semibold text-lg ml-2"
+                    style={{ color: themeColors.onSecondaryContainer }}
+                  >
                     Name
                   </Text>
                   <TextInput
                     ref={inputRef}
-                    className="p-3 text-gray-700 rounded-2xl mb-2 text-base"
-                    style={{ backgroundColor: themeColors.bgWhite(0.6) }}
+                    className="p-3 rounded-2xl mb-2 text-base"
+                    style={{ backgroundColor: themeColors.onBackground }}
                     placeholder="E.g. New Awesome Category!"
-                    selectionColor={themeColors.bgBlack(1)}
+                    selectionColor={themeColors.background}
                     defaultValue={description.current}
                     onChangeText={(text) => {
                       description.current = text;
                     }}
                   />
-                  <Text className="text-gray-700 font-semibold text-lg ml-2">
+                  <Text
+                    className="font-semibold text-lg ml-2"
+                    style={{ color: themeColors.onSecondaryContainer }}
+                  >
                     Icon
                   </Text>
                   <View
                     className="flex-row items-center rounded-2xl p-1 mb-4"
                     style={{
-                      backgroundColor: themeColors.bgWhite(0.6),
+                      backgroundColor: themeColors.onBackground,
                       height: 50,
                     }}
                   >
                     <TextInput
                       placeholder="E.g. basket"
                       className="px-2 flex-1 text-gray-700 text-base"
-                      selectionColor={themeColors.bgBlack(1)}
+                      selectionColor={themeColors.background}
                       defaultValue={icon}
                       onChangeText={(text) => {
                         setIcon(text.split(" ").join("-").toLowerCase());
@@ -188,24 +197,32 @@ export default function EditCategoryModalComponent({
                     />
                     <Pressable
                       className="rounded-2xl"
-                      style={{ backgroundColor: themeColors.bgBlack(1) }}
+                      style={{ backgroundColor: themeColors.background }}
                     >
                       <IconButton
                         size={20}
                         icon={icon}
-                        color={themeColors.bgGrey(1)}
+                        color={themeColors.onBackground}
                       />
                     </Pressable>
                   </View>
                   <View className="flex-row justify-between items-center">
                     <View className="flex-1">
-                      <Text className="text-lg font-semibold ml-2 text-gray-700">
+                      <Text
+                        className="text-lg font-semibold ml-2 "
+                        style={{ color: themeColors.onSecondaryContainer }}
+                      >
                         Set as monthly default
                       </Text>
                     </View>
-                    <View className="mr-2">
+                    <View
+                      className="mr-2 rounded-3xl"
+                      style={{
+                        backgroundColor: themeColors.onSecondaryContainer,
+                      }}
+                    >
                       <Checkbox
-                        color={themeColors.bgBlack(1)}
+                        color={themeColors.secondaryContainer}
                         status={checked ? "checked" : "unchecked"}
                         onPress={() => {
                           setChecked(!checked);
@@ -220,8 +237,8 @@ export default function EditCategoryModalComponent({
                       <TouchableOpacity
                         className="py-5 px-5 mt-1"
                         style={{
-                          backgroundColor: themeColors.chartBlue(1),
-                          borderRightColor: themeColors.bgGrey(1),
+                          backgroundColor: themeColors.primary,
+                          borderRightColor: themeColors.secondaryContainer,
                           borderRightWidth: 1,
                           borderTopLeftRadius: 24,
                         }}
@@ -230,7 +247,10 @@ export default function EditCategoryModalComponent({
                           setModalVisible(false);
                         }}
                       >
-                        <Text className="text-gray-200 font-bold text-center text-xl">
+                        <Text
+                          className="font-bold text-center text-xl"
+                          style={{ color: themeColors.onPrimary }}
+                        >
                           Edit
                         </Text>
                       </TouchableOpacity>
@@ -239,8 +259,8 @@ export default function EditCategoryModalComponent({
                       <TouchableOpacity
                         className="py-5 px-5 mt-1"
                         style={{
-                          backgroundColor: themeColors.bgBlack(1),
-                          borderLeftColor: themeColors.bgGrey(1),
+                          backgroundColor: themeColors.errorContainer,
+                          borderLeftColor: themeColors.secondaryContainer,
                           borderLeftWidth: 1,
                           borderTopRightRadius: 24,
                         }}
@@ -249,7 +269,10 @@ export default function EditCategoryModalComponent({
                           setModalVisible(false);
                         }}
                       >
-                        <Text className="text-gray-200 font-bold text-center text-xl">
+                        <Text
+                          className="font-bold text-center text-xl"
+                          style={{ color: themeColors.onErrorContainer }}
+                        >
                           Delete
                         </Text>
                       </TouchableOpacity>
@@ -259,7 +282,7 @@ export default function EditCategoryModalComponent({
                   <TouchableOpacity
                     className="py-5 mt-2"
                     style={{
-                      backgroundColor: themeColors.chartBlue(1),
+                      backgroundColor: themeColors.primary,
                       borderTopRightRadius: 24,
                       borderTopLeftRadius: 24,
                     }}
@@ -268,7 +291,10 @@ export default function EditCategoryModalComponent({
                       setModalVisible(false);
                     }}
                   >
-                    <Text className="text-gray-200 font-bold text-center text-xl">
+                    <Text
+                      className="font-bold text-center text-xl"
+                      style={{ color: themeColors.onPrimary }}
+                    >
                       Add Category
                     </Text>
                   </TouchableOpacity>

@@ -5,6 +5,7 @@ import {
   Image,
   Modal,
   Pressable,
+  Platform,
   TouchableOpacity,
   KeyboardAvoidingView,
 } from "react-native";
@@ -96,7 +97,7 @@ export default function IngredientModal({
     >
       <Image
         className="absolute h-full w-full"
-        source={require("~/assets/bg.png")}
+        source={require("~/assets/splash.png")}
         blurRadius={80}
         style={{ opacity: 0.9 }}
       />

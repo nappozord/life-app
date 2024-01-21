@@ -13,7 +13,7 @@ import { themeColors } from "~/theme";
 import { Checkbox, IconButton } from "react-native-paper";
 import { setDefaultCategoryForecast } from "~/api/apiManager";
 import { KeyboardAvoidingView } from "react-native";
-import Animated, {SlideInDown} from "react-native-reanimated";
+import Animated, { SlideInDown } from "react-native-reanimated";
 
 export default function EditForecastModalComponent({
   item,
@@ -74,7 +74,7 @@ export default function EditForecastModalComponent({
     >
       <Image
         className="absolute h-full w-full"
-        source={require("~/assets/bg.png")}
+        source={require("~/assets/splash.png")}
         blurRadius={80}
         style={{ opacity: 0.95 }}
       />
@@ -91,7 +91,7 @@ export default function EditForecastModalComponent({
             <Animated.View
               entering={SlideInDown.duration(500)}
               style={{
-                backgroundColor: themeColors.bgWhite(0.6),
+                backgroundColor: themeColors.secondaryContainer,
                 borderTopLeftRadius: 24,
                 borderTopRightRadius: 24,
               }}
@@ -101,26 +101,29 @@ export default function EditForecastModalComponent({
                 <View
                   className="p-5 rounded-full -mt-20 items-center"
                   style={{
-                    backgroundColor: themeColors.bgBlack(1),
-                    borderColor: themeColors.bgGrey(1),
+                    backgroundColor: themeColors.background,
+                    borderColor: themeColors.secondaryContainer,
                     borderWidth: 5,
                   }}
                 >
                   <View className="flex-row">
                     <IconButton
                       icon={"eye-outline"}
-                      color={themeColors.bgGrey(1)}
+                      color={themeColors.onBackground}
                       size={30}
                       className="-mr-2"
                     />
                     <IconButton
                       icon={item.icon}
-                      color={themeColors.bgGrey(1)}
+                      color={themeColors.onBackground}
                       size={30}
                       className="-ml-2"
                     />
                   </View>
-                  <Text className="text-xl font-semibold -mt-4 mb-4 text-gray-400">
+                  <Text
+                    className="text-xl font-semibold -mt-4 mb-4"
+                    style={{ color: themeColors.onBackground }}
+                  >
                     {item.title}
                   </Text>
                 </View>
@@ -128,13 +131,16 @@ export default function EditForecastModalComponent({
               </View>
               <View className="-mt-7">
                 <View className="space-y-1 p-5">
-                  <Text className="text-gray-700 font-semibold text-lg ml-2">
-                    Forecast
+                  <Text
+                    className="font-semibold text-lg ml-2"
+                    style={{ color: themeColors.onSecondaryContainer }}
+                  >
+                    Budget
                   </Text>
                   <View
                     className="flex-row items-center rounded-2xl p-1"
                     style={{
-                      backgroundColor: themeColors.bgWhite(0.6),
+                      backgroundColor: themeColors.onSecondaryContainer,
                       height: 50,
                     }}
                   >
@@ -142,8 +148,9 @@ export default function EditForecastModalComponent({
                       ref={inputRef}
                       keyboardType="numeric"
                       placeholder="E.g. €120"
-                      className="px-2 flex-1 text-gray-700 text-base"
-                      selectionColor={themeColors.bgBlack(1)}
+                      className="px-2 flex-1 text-base"
+                      style={{ color: themeColors.background }}
+                      selectionColor={themeColors.background}
                       defaultValue={amount.current}
                       onChangeText={(text) => {
                         amount.current = text.split(" ").join("");
@@ -151,25 +158,33 @@ export default function EditForecastModalComponent({
                     />
                     <Pressable
                       className="rounded-2xl pr-0.5"
-                      style={{ backgroundColor: themeColors.bgBlack(1) }}
+                      style={{ backgroundColor: themeColors.background }}
                     >
                       <IconButton
                         size={20}
                         icon="currency-eur"
-                        color={themeColors.bgGrey(1)}
+                        color={themeColors.onBackground}
                       />
                     </Pressable>
                   </View>
                 </View>
                 <View className="flex-row justify-between items-center mb-5">
                   <View className="flex-1">
-                    <Text className="text-lg font-semibold ml-7 text-gray-700">
+                    <Text
+                      className="text-lg font-semibold ml-7"
+                      style={{ color: themeColors.onSecondaryContainer }}
+                    >
                       Set as monthly default
                     </Text>
                   </View>
-                  <View className="mr-7">
+                  <View
+                    className="mr-7 rounded-3xl"
+                    style={{
+                      backgroundColor: themeColors.onSecondaryContainer,
+                    }}
+                  >
                     <Checkbox
-                      color={themeColors.bgBlack(1)}
+                      color={themeColors.secondaryContainer}
                       status={checked ? "checked" : "unchecked"}
                       onPress={() => {
                         setChecked(!checked);
@@ -180,7 +195,7 @@ export default function EditForecastModalComponent({
                 <TouchableOpacity
                   className="py-5 mt-2"
                   style={{
-                    backgroundColor: themeColors.chartBlue(1),
+                    backgroundColor: themeColors.primary,
                     borderTopLeftRadius: 24,
                     borderTopRightRadius: 24,
                   }}
@@ -189,7 +204,10 @@ export default function EditForecastModalComponent({
                     setModalVisible(false);
                   }}
                 >
-                  <Text className="text-gray-200 font-bold text-center text-xl">
+                  <Text
+                    className="font-bold text-center text-xl"
+                    style={{ color: themeColors.onPrimary }}
+                  >
                     Update Forecast
                   </Text>
                 </TouchableOpacity>

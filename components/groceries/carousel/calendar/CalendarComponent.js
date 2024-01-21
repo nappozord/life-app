@@ -51,13 +51,16 @@ export default function CalendarComponent({
       ) : null}
       <View
         className="flex-row items-center py-3 px-0"
-        style={{ backgroundColor: themeColors.chartBlue(1), elevation: 10 }}
+        style={{ backgroundColor: themeColors.primaryContainer, elevation: 10 }}
       >
-        <TouchableOpacity className="ml-3 mr-1 rounded-full" style={{backgroundColor: themeColors.bgBlack(0.3)}}>
+        <TouchableOpacity
+          className="ml-3 mr-1 rounded-full"
+          style={{ backgroundColor: themeColors.onSecondary }}
+        >
           <IconButton
             icon="calendar"
             size={34}
-            color={themeColors.bgWhite(0.7)}
+            color={themeColors.onPrimaryContainer}
             className="p-0 m-0"
             onPress={() => {
               setModalVisible(!modalVisible);
@@ -70,21 +73,29 @@ export default function CalendarComponent({
           exiting={SlideOutDown}
         >
           {currentWeek.map((day) => {
-            const isSelected = day.dateString === date.toISOString().split("T")[0];
+            const isSelected =
+              day.dateString === date.toISOString().split("T")[0];
 
             return (
               <TouchableOpacity
                 key={"calendar_" + day.date}
                 className="rounded-2xl px-2 py-2 items-center"
                 style={{
-                  backgroundColor: isSelected ? themeColors.bgBlack(0.5) : null,
+                  backgroundColor: isSelected ? themeColors.onSecondary : null,
                 }}
                 onPress={() => {
                   setDate(new Date(day.date));
                 }}
               >
-                <Text className="text-gray-300">{day.dayName}</Text>
-                <Text className="text-gray-300 text-xl">{day.dayNumber}</Text>
+                <Text style={{ color: themeColors.onPrimaryContainer }}>
+                  {day.dayName}
+                </Text>
+                <Text
+                  className="text-xl"
+                  style={{ color: themeColors.onPrimaryContainer }}
+                >
+                  {day.dayNumber}
+                </Text>
               </TouchableOpacity>
             );
           })}

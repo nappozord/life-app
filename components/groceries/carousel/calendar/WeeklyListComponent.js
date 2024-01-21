@@ -3,6 +3,7 @@ import React from "react";
 import ReservationCardComponent from "./ReservationCardComponent";
 import { getCurrentWeek } from "~/utils/manageDate";
 import { FlashList } from "@shopify/flash-list";
+import { themeColors } from "~/theme";
 
 export default function WeeklyListComponent({
   meals,
@@ -29,9 +30,19 @@ export default function WeeklyListComponent({
           return (
             <View className="m-5 my-2 flex-row">
               <View className="items-center">
-                <Text className="text-gray-300">{item.dayName}</Text>
-                <Text className="text-gray-300 text-4xl">{item.dayNumber}</Text>
-                <Text className="text-gray-300 -mt-1">
+                <Text style={{ color: themeColors.onSecondaryContainer }}>
+                  {item.dayName}
+                </Text>
+                <Text
+                  className="text-4xl"
+                  style={{ color: themeColors.onSecondaryContainer }}
+                >
+                  {item.dayNumber}
+                </Text>
+                <Text
+                  className="-mt-1"
+                  style={{ color: themeColors.onSecondaryContainer }}
+                >
                   {item.date.toLocaleString("default", { month: "short" })}
                 </Text>
               </View>

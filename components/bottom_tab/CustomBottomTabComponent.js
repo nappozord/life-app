@@ -77,7 +77,7 @@ const CustomBottomTab = ({ state, descriptors, navigation }) => {
               <IconButton
                 icon={route.name}
                 size={28}
-                color={isFocused ? themeColors.bgBlack(1) : themeColors.bgBlack(0.5)}
+                color={isFocused ? themeColors.primary : themeColors.onBackground}
               />
             </View>
           </Pressable>
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     height: 75,
     position: "absolute",
     alignSelf: "center",
-    backgroundColor: themeColors.bgWhite(0.5),
+    backgroundColor: themeColors.background,
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
     alignItems: "center",
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 50,
     borderRadius: 15,
-    backgroundColor: themeColors.bgWhite(0.3),
+    backgroundColor: themeColors.surfaceVariant,
   },
   contentContainer: {
     flex: 1,

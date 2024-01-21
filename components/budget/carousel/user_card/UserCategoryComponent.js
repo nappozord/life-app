@@ -43,7 +43,7 @@ export default function UserCategoryComponent({
               className="p-5 rounded-full"
               onPress={() => setModalCategoryVisible(true)}
             >
-              <IconButton icon="pencil" color={themeColors.bgBlack(1)} size={30} />
+              <IconButton icon="pencil" color={themeColors.onSecondaryContainer} size={30} />
             </TouchableOpacity>
           </Animated.View>
         ) : (
@@ -76,7 +76,7 @@ export default function UserCategoryComponent({
                 setCardPressed(false);
               }}
             >
-              <IconButton icon="close" color={themeColors.bgBlack(1)} size={30} />
+              <IconButton icon="close" color={themeColors.onSecondaryContainer} size={30} />
             </TouchableOpacity>
           </Animated.View>
         ) : (
@@ -91,7 +91,7 @@ export default function UserCategoryComponent({
           <ActivityIndicator
             animating={true}
             size={48}
-            color={themeColors.bgWhite(0.4)}
+            color={themeColors.onSecondaryContainer}
           />
         </Animated.View>
       ) : !cardPressed ? (

@@ -22,15 +22,18 @@ export default function HeaderComponent({ user, setUser }) {
       <View className="flex-row items-center space-x-3">
         <TouchableOpacity
           className="rounded-full"
-          style={{ backgroundColor: themeColors.bgWhite(0.3) }}
+          style={{ backgroundColor: themeColors.primary }}
         >
           <IconButton
             icon="account"
             size={24}
-            color={themeColors.bgWhite(0.6)}
+            color={themeColors.onPrimary}
           />
         </TouchableOpacity>
-        <Text className="font-semibold text-xl text-gray-200">
+        <Text
+          className="font-semibold text-xl"
+          style={{ color: themeColors.onBackground }}
+        >
           {user.username}
         </Text>
       </View>
@@ -40,8 +43,8 @@ export default function HeaderComponent({ user, setUser }) {
           style={{
             backgroundColor:
               user.balance > 0
-                ? themeColors.chartGreen(0.6)
-                : themeColors.chartRed(0.6),
+                ? themeColors.success
+                : themeColors.errorContainer,
           }}
         >
           <BalanceComponent user={user} setUser={setUser} />

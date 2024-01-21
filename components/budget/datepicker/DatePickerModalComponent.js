@@ -24,7 +24,10 @@ export default function DatePickerModalComponent({
     <Pressable onPress={() => setModalVisible(false)} className="flex-1 top-40">
       <Pressable
         className="m-5 rounded-3xl"
-        style={{ backgroundColor: themeColors.bgWhite(0.9) }}
+        style={{
+          backgroundColor: themeColors.secondaryContainer,
+          elevation: 10,
+        }}
       >
         <View className="space-y-2">
           <TouchableOpacity
@@ -32,14 +35,17 @@ export default function DatePickerModalComponent({
             style={{
               borderTopLeftRadius: 20,
               borderTopRightRadius: 20,
-              backgroundColor: themeColors.chartBlue(1),
+              backgroundColor: themeColors.primaryContainer,
             }}
             onPress={() => {
               setModalVisible(false);
               setDate(formatDate(new Date()));
             }}
           >
-            <Text className="text-gray-200 font-bold text-center text-xl">
+            <Text
+              className="font-bold text-center text-xl"
+              style={{ color: themeColors.onPrimaryContainer }}
+            >
               This Month
             </Text>
           </TouchableOpacity>
@@ -53,7 +59,7 @@ export default function DatePickerModalComponent({
               <IconButton
                 icon="chevron-left"
                 size={26}
-                color={themeColors.bgBlack(1)}
+                color={themeColors.onSecondaryContainer}
               />
             </TouchableOpacity>
             <View className="flex-row justify-between items-center -ml-6">
@@ -61,9 +67,12 @@ export default function DatePickerModalComponent({
                 className="ml-0"
                 icon="calendar"
                 size={24}
-                color={themeColors.bgBlack(1)}
+                color={themeColors.onSecondaryContainer}
               />
-              <Animated.Text className="font-semibold text-xl text-gray-800">
+              <Animated.Text
+                className="font-semibold text-xl "
+                style={{ color: themeColors.onSecondaryContainer }}
+              >
                 {year}
               </Animated.Text>
             </View>
@@ -76,7 +85,7 @@ export default function DatePickerModalComponent({
               <IconButton
                 icon="chevron-right"
                 size={26}
-                color={themeColors.bgBlack(1)}
+                color={themeColors.onSecondaryContainer}
               />
             </TouchableOpacity>
           </View>
@@ -98,17 +107,20 @@ export default function DatePickerModalComponent({
                     className="px-3 py-1 rounded-full"
                     style={
                       date.month === index + 1
-                        ? { backgroundColor: themeColors.bgBlack(1), opacity: 0.7 }
+                        ? {
+                            backgroundColor: themeColors.onSecondaryContainer,
+                          }
                         : {}
                     }
                   >
                     <Text
-                      className={
-                        "text-base font-semibold " +
-                        (date.month === index + 1
-                          ? "text-white"
-                          : "text-gray-700")
-                      }
+                      className="text-base font-semibold"
+                      style={{
+                        color:
+                          date.month === index + 1
+                            ? themeColors.secondaryContainer
+                            : themeColors.onSecondaryContainer,
+                      }}
                     >
                       {monthText.toUpperCase()}
                     </Text>
@@ -134,17 +146,20 @@ export default function DatePickerModalComponent({
                     className="px-3 py-1 rounded-full"
                     style={
                       date.month === index + 1
-                        ? { backgroundColor: themeColors.bgBlack(1), opacity: 0.7 }
+                        ? {
+                            backgroundColor: themeColors.onSecondaryContainer,
+                          }
                         : {}
                     }
                   >
                     <Text
-                      className={
-                        "text-base font-semibold " +
-                        (date.month === index + 1
-                          ? "text-white"
-                          : "text-gray-700")
-                      }
+                      className="text-base font-semibold"
+                      style={{
+                        color:
+                          date.month === index + 1
+                            ? themeColors.secondaryContainer
+                            : themeColors.onSecondaryContainer,
+                      }}
                     >
                       {monthText.toUpperCase()}
                     </Text>

@@ -85,7 +85,7 @@ export default function SignUpComponent({
       </View>
       <Image
         className="absolute w-full mt-16"
-        source={require("~/assets/bg.png")}
+        source={require("~/assets/splash.png")}
         blurRadius={80}
         style={{
           borderTopLeftRadius: 50,

@@ -109,9 +109,10 @@ export default function CategoryCardComponent({
             animatedStyleInner,
             {
               borderRadius: 40,
-              backgroundColor: themeColors.bgWhite(0.4),
+              backgroundColor: themeColors.secondaryContainer,
               height: height,
               width: width,
+              elevation: 10
             },
           ]}
         >

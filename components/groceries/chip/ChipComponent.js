@@ -8,8 +8,6 @@ export default function ChipComponent({
   setActiveChip,
   chipListRef,
 }) {
-  let activeTextClass = isActive ? "text-gray-300" : "text-gray-800";
-
   return (
     <TouchableOpacity
       onPress={() => {
@@ -22,12 +20,17 @@ export default function ChipComponent({
       className="p-3 px-5 rounded-full mr-2 shadow"
       style={{
         marginLeft: item.index === 0 ? 18 : 0,
-        backgroundColor: isActive
-          ? themeColors.bgWhite(0.1)
-          : themeColors.bgWhite(0.4),
+        backgroundColor: isActive ? themeColors.primary : themeColors.secondary,
       }}
     >
-      <Text className={"font-bold " + activeTextClass}>{item.title}</Text>
+      <Text
+        className="font-bold "
+        style={{
+          color: isActive ? themeColors.onPrimary : themeColors.onSecondary,
+        }}
+      >
+        {item.title}
+      </Text>
     </TouchableOpacity>
   );
 }

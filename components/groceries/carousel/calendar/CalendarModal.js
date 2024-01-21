@@ -31,21 +31,25 @@ export default function CalendarModal({
           >
             <Calendar
               onDayPress={(day) => {
-                setDate(new Date(day.timestamp))
+                setDate(new Date(day.timestamp));
                 setModalVisible(false);
               }}
               firstDay={1}
               current={currentDate.toISOString().split("T")[0]}
               markedDates={{
-                [currentDate.toISOString().split("T")[0]]: {selected: true, selectedColor: themeColors.bgBlack(0.5)}
+                [currentDate.toISOString().split("T")[0]]: {
+                  selected: true,
+                  selectedColor: themeColors.onSecondary,
+                },
               }}
               theme={{
-                calendarBackground: themeColors.chartBlue(1),
-                dayTextColor: themeColors.bgWhite(0.7),
-                monthTextColor: themeColors.bgWhite(0.7),
-                textDisabledColor: themeColors.bgWhite(0.3),
-                todayTextColor: themeColors.bgBlack(1),
-                arrowColor: themeColors.bgWhite(0.7),
+                calendarBackground: themeColors.primaryContainer,
+                dayTextColor: themeColors.onPrimaryContainer,
+                monthTextColor: themeColors.onPrimaryContainer,
+                textDisabledColor: themeColors.outline,
+                todayTextColor: themeColors.primary,
+                monthTextColor: themeColors.onPrimaryContainer,
+                arrowColor: themeColors.onPrimaryContainer,
               }}
             />
           </View>

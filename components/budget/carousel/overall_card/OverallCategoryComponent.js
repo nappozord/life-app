@@ -21,14 +21,20 @@ export default function OverallCategoryComponent({ item, date }) {
       </View>
       <View className="px-5 mt-2 space-y-2">
         <View className="flex-row items-center space-x-1 -mb-2">
-          <Text className="text-3xl text-gray-800 font-semibold z-10">
+          <Text
+            className="text-3xl font-semibold z-10"
+            style={{ color: themeColors.onSecondaryContainer }}
+          >
             {item.title}
           </Text>
-          <IconButton icon={item.icon} color={themeColors.bgBlack(1)} />
+          <IconButton icon={item.icon} color={themeColors.primary} />
         </View>
         <View className="flex-row">
           <View className="space-y-1">
-            <Text className="text-base text-gray-700 font-semibold">
+            <Text
+              className="text-base"
+              style={{ color: themeColors.onSecondaryContainer }}
+            >
               Total income:
             </Text>
             <View className="flex-row justify-between items-center">
@@ -38,9 +44,12 @@ export default function OverallCategoryComponent({ item, date }) {
               />
               <View
                 className="p-1 px-3 rounded-full ml-3"
-                style={{ backgroundColor: themeColors.bgWhite(0.3) }}
+                style={{ backgroundColor: themeColors.primary }}
               >
-                <Text className="text-base font-semibold text-gray-800">
+                <Text
+                  className="text-base font-semibold"
+                  style={{ color: themeColors.onPrimary }}
+                >
                   {"€" + Math.ceil(item.real.in)}
                 </Text>
               </View>
@@ -49,7 +58,10 @@ export default function OverallCategoryComponent({ item, date }) {
         </View>
         <View className="flex-row mb-2">
           <View className="space-y-1">
-            <Text className="text-base text-gray-700 font-semibold">
+            <Text
+              className="text-base"
+              style={{ color: themeColors.onSecondaryContainer }}
+            >
               Total expenses:
             </Text>
             <View className="flex-row justify-between items-center">
@@ -59,9 +71,12 @@ export default function OverallCategoryComponent({ item, date }) {
               />
               <View
                 className="p-1 px-3 rounded-full ml-3"
-                style={{ backgroundColor: themeColors.bgWhite(0.3) }}
+                style={{ backgroundColor: themeColors.primary }}
               >
-                <Text className="text-base font-semibold text-gray-800">
+                <Text
+                  className="text-base font-semibold"
+                  style={{ color: themeColors.onPrimary }}
+                >
                   {"€" + Math.ceil(item.real.out)}
                 </Text>
               </View>
@@ -69,13 +84,21 @@ export default function OverallCategoryComponent({ item, date }) {
           </View>
         </View>
         <View className="flex-row space-y-1 justify-between">
-          
           <View className="flex-row space-x-1">
-            <Text className="text-base text-gray-700 font-semibold">
+            <Text
+              className="text-base"
+              style={{ color: themeColors.onSecondaryContainer }}
+            >
               Daily budget
             </Text>
-            <Text className="text-base text-gray-800 font-semibold">
-              €{(-(item.real.out - item.real.in)/getRemainingDaysInMonth(date)).toFixed(2)}
+            <Text
+              className="text-base font-semibold"
+              style={{ color: themeColors.primary }}
+            >
+              €
+              {(
+                -(item.real.out - item.real.in) / getRemainingDaysInMonth(date)
+              ).toFixed(2)}
             </Text>
           </View>
         </View>

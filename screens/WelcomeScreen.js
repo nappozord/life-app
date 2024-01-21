@@ -29,6 +29,7 @@ import ConfirmCodeComponent from "../components/login/ConfirmCodeComponent";
 import { getUser } from "~/api/apiManager";
 import FinalSetupComponent from "../components/login/FinalSetupComponent";
 import PassRecoveryComponent from "../components/login/PassRecoveryComponent";
+import { updateUser } from "../api/apiManager";
 
 const height = Dimensions.get("window").height;
 
@@ -43,6 +44,12 @@ export default function WelcomeScreen() {
   const email = useRef("");
 
   useEffect(() => {
+    updateUser({
+      userId: "abc",
+      username: "Nappozord",
+      balance: 2000,
+    }).then(() => navigation.push("Home"))
+    
     //updateUser(defaultUser)
     //restoreBackup("January, 2024");
     //restoreBackup("December, 2023");
@@ -66,7 +73,7 @@ export default function WelcomeScreen() {
           });
         }
       })
-      .catch((e) => navigation.push("Welcome"));
+      .catch((e) => {});
   }, []);
 
   return (
@@ -74,7 +81,7 @@ export default function WelcomeScreen() {
       <StatusBar style="light" />
       <Image
         className="absolute h-full w-full"
-        source={require("~/assets/bg.png")}
+        source={require("~/assets/splash.png")}
         blurRadius={80}
       />
       <Pressable

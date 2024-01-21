@@ -20,7 +20,7 @@ export default function ExpenseCardComponent({
         setModalVisible(true);
       }}
       className="flex-row justify-between items-center p-2 mb-3 rounded-2xl"
-      style={{ backgroundColor: themeColors.bgWhite(0.3) }}
+      style={{ backgroundColor: themeColors.secondary }}
     >
       {modalVisible ? (
         <EditExpenseModalComponent
@@ -36,13 +36,13 @@ export default function ExpenseCardComponent({
         />
       ) : null}
       <View>
-        <Text className="text-lg text-gray-800 font-semibold z-10">
+        <Text className="text-lg font-semibold z-10" style={{color: themeColors.onSecondary}}>
           {item.title +
             (item.occurrence > 1 ? " (" + item.occurrence + ")" : "")}
         </Text>
       </View>
       <View>
-        <Text className="text-lg text-gray-800 font-semibold z-10">
+        <Text className="text-lg font-semibold z-10" style={{color: themeColors.onSecondary}}>
           €{parseFloat(item.total).toFixed(2)}
         </Text>
       </View>

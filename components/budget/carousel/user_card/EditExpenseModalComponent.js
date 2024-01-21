@@ -5,6 +5,7 @@ import {
   Image,
   Modal,
   Pressable,
+  Platform,
   TouchableOpacity,
   KeyboardAvoidingView,
 } from "react-native";
@@ -125,7 +126,7 @@ export default function EditExpenseModalComponent({
     >
       <Image
         className="absolute h-full w-full"
-        source={require("~/assets/bg.png")}
+        source={require("~/assets/splash.png")}
         blurRadius={80}
         style={{ opacity: 0.9 }}
       />
@@ -142,7 +143,7 @@ export default function EditExpenseModalComponent({
             <Animated.View
               entering={SlideInDown.duration(500)}
               style={{
-                backgroundColor: themeColors.bgWhite(0.6),
+                backgroundColor: themeColors.secondaryContainer,
                 borderTopLeftRadius: 24,
                 borderTopRightRadius: 24,
               }}
@@ -152,26 +153,29 @@ export default function EditExpenseModalComponent({
                 <View
                   className="p-5 rounded-full -mt-20 items-center"
                   style={{
-                    backgroundColor: themeColors.bgBlack(1),
-                    borderColor: themeColors.bgGrey(1),
+                    backgroundColor: themeColors.background,
+                    borderColor: themeColors.secondaryContainer,
                     borderWidth: 5,
                   }}
                 >
                   <View className="flex-row">
                     <IconButton
                       icon={item ? "pencil" : "plus"}
-                      color={themeColors.bgGrey(1)}
+                      color={themeColors.onBackground}
                       size={30}
                       className="-mr-2"
                     />
                     <IconButton
                       icon={itemIcon}
-                      color={themeColors.bgGrey(1)}
+                      color={themeColors.onBackground}
                       size={30}
                       className="-ml-2"
                     />
                   </View>
-                  <Text className="text-xl font-semibold -mt-4 mb-4 text-gray-400">
+                  <Text
+                    className="text-xl font-semibold -mt-4 mb-4"
+                    style={{ color: themeColors.onBackground }}
+                  >
                     {itemCategory}
                   </Text>
                 </View>
@@ -179,35 +183,45 @@ export default function EditExpenseModalComponent({
               </View>
               <View className="-mt-7">
                 <View className="space-y-1 p-5">
-                  <Text className="text-gray-700 font-semibold text-lg ml-2">
+                  <Text
+                    className="font-semibold text-lg ml-2"
+                    style={{ color: themeColors.onSecondaryContainer }}
+                  >
                     Description
                   </Text>
                   <TextInput
                     ref={inputRef}
-                    className="p-3 text-gray-700 rounded-2xl mb-2 text-base"
-                    style={{ backgroundColor: themeColors.bgWhite(0.6) }}
+                    className="p-3 rounded-2xl mb-2 text-base"
+                    style={{
+                      backgroundColor: themeColors.onSecondaryContainer,
+                      color: themeColors.background,
+                    }}
                     placeholder="E.g. Pizza!"
-                    selectionColor={themeColors.bgBlack(1)}
+                    selectionColor={themeColors.background}
                     defaultValue={description.current}
                     onChangeText={(text) => {
                       description.current = text;
                     }}
                   />
-                  <Text className="text-gray-700 font-semibold text-lg ml-2">
+                  <Text
+                    className="font-semibold text-lg ml-2"
+                    style={{ color: themeColors.onSecondaryContainer }}
+                  >
                     Amount
                   </Text>
                   <View
                     className="flex-row items-center rounded-2xl p-1 overflow-visible"
                     style={{
-                      backgroundColor: themeColors.bgWhite(0.6),
+                      backgroundColor: themeColors.onSecondaryContainer,
                       height: 50,
                     }}
                   >
                     <TextInput
                       keyboardType="numeric"
                       placeholder="E.g. €12.34"
-                      className="px-2 flex-1 text-gray-700 text-base"
-                      selectionColor={themeColors.bgBlack(1)}
+                      className="px-2 flex-1 text-base"
+                      style={{ color: themeColors.background }}
+                      selectionColor={themeColors.background}
                       defaultValue={amount.current}
                       onChangeText={(text) => {
                         amount.current = text.split(" ").join("");
@@ -215,12 +229,12 @@ export default function EditExpenseModalComponent({
                     />
                     <Pressable
                       className="rounded-2xl pr-0.5"
-                      style={{ backgroundColor: themeColors.bgBlack(1) }}
+                      style={{ backgroundColor: themeColors.background }}
                     >
                       <IconButton
                         size={20}
                         icon="currency-eur"
-                        color={themeColors.bgGrey(1)}
+                        color={themeColors.onBackground}
                       />
                     </Pressable>
                   </View>
@@ -231,8 +245,8 @@ export default function EditExpenseModalComponent({
                       <TouchableOpacity
                         className="py-5 px-5 mt-1"
                         style={{
-                          backgroundColor: themeColors.chartBlue(1),
-                          borderRightColor: themeColors.bgGrey(1),
+                          backgroundColor: themeColors.primary,
+                          borderRightColor: themeColors.secondaryContainer,
                           borderRightWidth: 1,
                           borderTopLeftRadius: 24,
                         }}
@@ -241,7 +255,10 @@ export default function EditExpenseModalComponent({
                           setModalVisible(false);
                         }}
                       >
-                        <Text className="text-gray-200 font-bold text-center text-xl">
+                        <Text
+                          className="font-bold text-center text-xl"
+                          style={{ color: themeColors.onPrimary }}
+                        >
                           Edit
                         </Text>
                       </TouchableOpacity>
@@ -250,8 +267,8 @@ export default function EditExpenseModalComponent({
                       <TouchableOpacity
                         className="py-5 px-5 mt-1"
                         style={{
-                          backgroundColor: themeColors.bgBlack(1),
-                          borderLeftColor: themeColors.bgGrey(1),
+                          backgroundColor: themeColors.errorContainer,
+                          borderLeftColor: themeColors.secondaryContainer,
                           borderLeftWidth: 1,
                           borderTopRightRadius: 24,
                         }}
@@ -260,7 +277,10 @@ export default function EditExpenseModalComponent({
                           setModalVisible(false);
                         }}
                       >
-                        <Text className="text-gray-200 font-bold text-center text-xl">
+                        <Text
+                          className="font-bold text-center text-xl"
+                          style={{ color: themeColors.onErrorContainer }}
+                        >
                           Delete
                         </Text>
                       </TouchableOpacity>
@@ -270,7 +290,7 @@ export default function EditExpenseModalComponent({
                   <TouchableOpacity
                     className="py-5 mt-2"
                     style={{
-                      backgroundColor: themeColors.chartBlue(1),
+                      backgroundColor: themeColors.primary,
                       borderTopRightRadius: 24,
                       borderTopLeftRadius: 24,
                     }}
@@ -279,7 +299,10 @@ export default function EditExpenseModalComponent({
                       setModalVisible(false);
                     }}
                   >
-                    <Text className="text-gray-200 font-bold text-center text-xl">
+                    <Text
+                      className="font-bold text-center text-xl"
+                      style={{ color: themeColors.onPrimary }}
+                    >
                       Add Expense
                     </Text>
                   </TouchableOpacity>
