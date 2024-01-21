@@ -5,6 +5,7 @@ import {
   Image,
   TextInput,
   Dimensions,
+  Touchable,
 } from "react-native";
 import React, { useRef, useState } from "react";
 import Animated, {
@@ -18,43 +19,39 @@ import Animated, {
 } from "react-native-reanimated";
 import { ActivityIndicator, IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
-import { useNavigation } from "@react-navigation/native";
 
-import {
-  signUp,
-  signInWithRedirect,
-  confirmSignUp,
-  autoSignIn,
-  getCurrentUser,
-} from "aws-amplify/auth";
+import { confirmSignUp, autoSignIn, resendSignUpCode } from "aws-amplify/auth";
 
 const height = Dimensions.get("window").height;
 
-export default function SignUpComponent({
+export default function ConfirmCodeComponent({
   setConfirmCode,
   setSignup,
   setLogin,
   email,
+  setFinalSetup,
 }) {
-  const navigation = useNavigation();
-  const password = useRef("");
+  const code = useRef("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [errorResend, setErrorResend] = useState(null);
+  const [loadingResend, setLoadingResend] = useState(null);
 
-  function handleSignUp() {
+  function handleConfirmation() {
     setError(null);
     setLoading(true);
-    signUp({
-      username: email.current,
-      password: password.current,
-      options: {
-        autoSignIn: true,
-      },
-    })
+    confirmSignUp({ username: email.current, confirmationCode: code.current })
       .then((r) => {
-        setConfirmCode(true);
-        setSignup(false);
-        setLoading(false);
+        autoSignIn()
+          .then((r) => {
+            setConfirmCode(false);
+            setFinalSetup(true);
+            setLoading(false);
+          })
+          .catch((e) => {
+            setLoading(false);
+            setError(e.message);
+          });
       })
       .catch((e) => {
         setLoading(false);
@@ -74,11 +71,11 @@ export default function SignUpComponent({
     >
       <View className="absolute w-full mt-2 z-10">
         <View className="flex-row justify-center">
-          <View className="bg-gray-300 rounded-full">
+          <View className="bg-gray-300 rounded-full p-2">
             <IconButton
-              icon={"account-supervisor-circle"}
+              icon={"email-newsletter"}
               color={themeColors.bgBlack(1)}
-              size={80}
+              size={72}
             />
           </View>
         </View>
@@ -106,43 +103,78 @@ export default function SignUpComponent({
             className="p-3 text-gray-950 rounded-2xl mb-3"
             style={{ backgroundColor: themeColors.bgWhite(0.6) }}
             placeholder="Enter Email"
+            defaultValue={email ? email.current : null}
             selectionColor={themeColors.bgBlack(1)}
+            readOnly={email.current ? true : false}
             onChangeText={(text) => {
               email.current = text;
             }}
           />
-          <Text className="text-gray-300 ml-2">Password</Text>
+          <Text className="text-gray-300 ml-1">OTP Code</Text>
           <TextInput
-            className="p-3 text-gray-950 rounded-2xl mb-3"
+            keyboardType="numeric"
+            className="p-3 text-gray-950 rounded-2xl mb-0"
             style={{ backgroundColor: themeColors.bgWhite(0.6) }}
-            placeholder="Enter Password"
-            secureTextEntry
+            placeholder="Enter Code"
             selectionColor={themeColors.bgBlack(1)}
             onChangeText={(text) => {
-              password.current = text;
+              code.current = text;
             }}
           />
-          <TouchableOpacity
-            className="flex items-end mb-7 mr-4"
-            onPress={() => {
-              setConfirmCode(true);
-              setSignup(false);
-            }}
-          >
-            <Text className="text-gray-200 underline">
-              Already have an OTP?
-            </Text>
-          </TouchableOpacity>
+          <Text className="mb-3 text-gray-800 ml-1 text-base font-semibold">
+            {"Check your email for the OTP code we sent you!"}
+          </Text>
+          {!loadingResend ? (
+            <TouchableOpacity
+              className="flex items-end mr-4"
+              onPress={() => {
+                setErrorResend(null);
+                resendSignUpCode({ username: email.current })
+                  .then((r) => {
+                    setLoadingResend(true);
+                  })
+                  .catch((e) => {
+                    setErrorResend(e.message);
+                  });
+              }}
+            >
+              <Text className="text-gray-200 underline">Resend Code</Text>
+            </TouchableOpacity>
+          ) : (
+            <View className="mr-4 mb-3 items-end">
+              <Text className="text-green-200">
+                A new OTP code has been sent to your email
+              </Text>
+            </View>
+          )}
+          {errorResend ? (
+            <View className="mr-4 mb-3 items-end">
+              <Text className="text-red-800">{errorResend}</Text>
+            </View>
+          ) : null}
+          <View className="flex items-end mb-7 mr-4">
+            <View className="flex-row">
+              <Text className="text-gray-200">Don't have a code? </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  setSignup(true);
+                  setConfirmCode(false);
+                }}
+              >
+                <Text className="text-gray-200 underline">Sign Up</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
           <TouchableOpacity
             className="py-3 rounded-2xl"
             style={{ backgroundColor: themeColors.chartBlue(1) }}
             onPress={() => {
-              handleSignUp();
+              handleConfirmation();
             }}
           >
             {!loading ? (
               <Text className="text-gray-200 font-bold text-center text-xl">
-                Sign Up
+                Confirm Code
               </Text>
             ) : (
               <ActivityIndicator
@@ -156,29 +188,6 @@ export default function SignUpComponent({
             <Text className="text-red-800 ml-1 text-base">{error}</Text>
           ) : null}
         </View>
-        <Text className="text-xl text-gray-300 font-bold text-center py-5">
-          Or
-        </Text>
-        <View className="flex-row justify-center">
-          <TouchableOpacity
-            className="p-2 rounded-3xl w-full items-center"
-            style={{ backgroundColor: themeColors.bgWhite(0.7) }}
-            onPress={() => {
-              signInWithRedirect({ provider: "Google" })
-                .then((r) => {
-                  navigation.push("Welcome");
-                })
-                .catch((e) => {
-                  setError(e.message);
-                });
-            }}
-          >
-            <Image
-              source={require("~/assets/google.png")}
-              className="w-10 h-10"
-            />
-          </TouchableOpacity>
-        </View>
         <View className="flex-row justify-center mt-7">
           <Text className="text-gray-300 font-semibold">
             Already have an account?
@@ -187,7 +196,7 @@ export default function SignUpComponent({
           <TouchableOpacity
             onPress={() => {
               setLogin(true);
-              setSignup(false);
+              setConfirmCode(false);
             }}
           >
             <Text className="font-bold underline text-gray-300">Login</Text>

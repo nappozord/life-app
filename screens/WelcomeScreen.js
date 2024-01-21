@@ -7,7 +7,7 @@ import {
   Dimensions,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import LottieView from "lottie-react-native";
 import Animated, {
   Easing,
@@ -16,6 +16,7 @@ import Animated, {
   FadeIn,
   FadeOut,
 } from "react-native-reanimated";
+import { useNavigation } from "@react-navigation/native";
 import { themeColors } from "~/theme";
 
 import LoginComponent from "~/components/login/LoginComponent";
@@ -23,11 +24,23 @@ import SignUpComponent from "~/components/login/SignUpComponent";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { restoreBackup } from "~/api/apiManager";
 
+import { getCurrentUser, autoSignIn } from "@aws-amplify/auth";
+import ConfirmCodeComponent from "../components/login/ConfirmCodeComponent";
+import { getUser } from "~/api/apiManager";
+import FinalSetupComponent from "../components/login/FinalSetupComponent";
+import PassRecoveryComponent from "../components/login/PassRecoveryComponent";
+
 const height = Dimensions.get("window").height;
 
 export default function WelcomeScreen() {
+  const navigation = useNavigation();
   [login, setLogin] = useState(false);
   [signup, setSignup] = useState(false);
+  [confirmCode, setConfirmCode] = useState(false);
+  [finalSetup, setFinalSetup] = useState(false);
+  [passRecovery, setPassRecovery] = useState(false);
+  const user = useRef({});
+  const email = useRef("");
 
   useEffect(() => {
     //updateUser(defaultUser)
@@ -37,7 +50,24 @@ export default function WelcomeScreen() {
     //AsyncStorage.removeItem("groceries")
     //AsyncStorage.removeItem("defaultCategories")
     AsyncStorage.getAllKeys().then((r) => console.log(r));
-  }, [])
+
+    getCurrentUser()
+      .then((r) => {
+        if (r && r.userId) {
+          getUser().then((u) => {
+            if (u && u.userId === r.userId) {
+              navigation.push("Home");
+            } else {
+              user.current = {
+                userId: r.userId,
+              };
+              setFinalSetup(true);
+            }
+          });
+        }
+      })
+      .catch((e) => navigation.push("Welcome"));
+  }, []);
 
   return (
     <View className="flex-1">
@@ -62,7 +92,17 @@ export default function WelcomeScreen() {
             exiting={SlideOutRight.duration(400).easing(Easing.ease)}
             className="text-gray-200 font-bold text-4xl text-center"
           >
-            {login ? "Login" : signup ? "Sign Up" : "Welcome!"}
+            {login
+              ? "Login"
+              : signup
+              ? "Sign Up"
+              : confirmCode
+              ? "Confirm Email"
+              : finalSetup 
+              ? "One Last Step"
+              : passRecovery
+              ? "Password Recovery"
+              : "Welcome to Life!"}
           </Animated.Text>
 
           <Animated.View
@@ -84,7 +124,7 @@ export default function WelcomeScreen() {
           >
             <TouchableOpacity
               className="py-3 mx-7 rounded-xl"
-              style={{backgroundColor: themeColors.chartBlue(1)}}
+              style={{ backgroundColor: themeColors.chartBlue(1) }}
               onPress={() => setSignup(true)}
             >
               <Text className="text-xl font-bold text-center text-gray-200">
@@ -104,15 +144,43 @@ export default function WelcomeScreen() {
         </View>
       </Pressable>
       {login ? (
-        <LoginComponent setSignup={setSignup} setLogin={setLogin} />
-      ) : (
-        <></>
-      )}
+        <LoginComponent
+          setFinalSetup={setFinalSetup}
+          setSignup={setSignup}
+          setLogin={setLogin}
+          setPassRecovery={setPassRecovery}
+        />
+      ) : null}
       {signup ? (
-        <SignUpComponent setLogin={setLogin} setSignup={setSignup} />
-      ) : (
-        <></>
-      )}
+        <SignUpComponent
+          email={email}
+          setLogin={setLogin}
+          setSignup={setSignup}
+          setConfirmCode={setConfirmCode}
+        />
+      ) : null}
+      {confirmCode ? (
+        <ConfirmCodeComponent
+          setFinalSetup={setFinalSetup}
+          email={email}
+          setLogin={setLogin}
+          setSignup={setSignup}
+          setConfirmCode={setConfirmCode}
+        />
+      ) : null}
+      {finalSetup ? (
+        <FinalSetupComponent
+          user={user}
+          setFinalSetup={setFinalSetup}
+          setLogin={setLogin}
+        />
+      ) : null}
+      {passRecovery ? (
+        <PassRecoveryComponent
+          setPassRecovery={setPassRecovery}
+          setLogin={setLogin}
+        />
+      ) : null}
     </View>
   );
 }

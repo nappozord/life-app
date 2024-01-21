@@ -62,7 +62,7 @@ export default function App() {
   const searchBarHeight = useSharedValue(76);
 
   useEffect(() => {
-    !user.email ? getUser().then((r) => setUser(r)) : updateUser(user);
+    !user.userId ? getUser().then((r) => setUser(r)) : updateUser(user);
   }, [user]);
 
   useEffect(() => {
@@ -95,7 +95,7 @@ export default function App() {
         source={require("~/assets/bg.png")}
         blurRadius={80}
       />
-      {user.email ? (
+      {user.userId ? (
         <>
           <View className="mt-16 flex-1">
             <Animated.View style={searchBarAnimatedStyle} className="mx-5">

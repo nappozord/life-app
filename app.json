@@ -8,7 +8,19 @@
       }
     },
     "android": {
-      "package": "com.nappozord.lifeapp"
+      "package": "com.nappozord.lifeapp",
+      "permissions": ["CAMERA", "ACCESS_FINE_LOCATION"],
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "category": ["DEFAULT", "BROWSABLE"],
+          "data": [
+            {
+              "scheme": "myapp"
+            }
+          ]
+        }
+      ]
     },
     "runtimeVersion": {
       "policy": "appVersion"

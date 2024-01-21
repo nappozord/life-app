@@ -87,7 +87,7 @@ export function restoreBackup(date) {
 
 export async function getUser() {
   let jsonValue = await AsyncStorage.getItem("user");
-  return jsonValue ? JSON.parse(jsonValue) : defaultUser;
+  return jsonValue ? JSON.parse(jsonValue) : null;
 }
 
 export async function updateUser(user) {
