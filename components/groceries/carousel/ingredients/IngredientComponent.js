@@ -57,7 +57,10 @@ export default function IngredientComponent({
             <View className="flex-row items-center">
               <View
                 className="rounded-full px-4 py-1 mx-1 overflow-hidden"
-                style={{ backgroundColor: themeColors.primary }}
+                style={{
+                  backgroundColor: themeColors.secondary,
+                  elevation: 10,
+                }}
               >
                 <Animated.View
                   entering={SlideInUp}
@@ -66,7 +69,7 @@ export default function IngredientComponent({
                 >
                   <Text
                     className="text-lg"
-                    style={{ color: themeColors.onPrimary }}
+                    style={{ color: themeColors.onSecondary }}
                   >
                     {Math.ceil(item.stock)}
                   </Text>

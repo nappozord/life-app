@@ -62,8 +62,8 @@ export default function IngredientSelectionComponent({
         animatedBorderStyle,
         {
           backgroundColor: isSelected
-            ? themeColors.chartGreen(0.7)
-            : themeColors.chartBlue(0.7),
+            ? themeColors.success
+            : themeColors.primaryContainer,
         },
       ]}
       entering={SlideInRight}
@@ -78,10 +78,13 @@ export default function IngredientSelectionComponent({
             <IconButton
               size={24}
               icon={icon}
-              color={themeColors.bgWhite(0.7)}
+              color={themeColors.onPrimaryContainer}
               className="p-0 m-0"
             />
-            <Text className="font-semibold text-lg text-gray-200">
+            <Text
+              className="font-semibold text-lg"
+              style={{ color: themeColors.onPrimaryContainer }}
+            >
               {item.title}
             </Text>
             {isSelected > 0 ? (
@@ -93,7 +96,10 @@ export default function IngredientSelectionComponent({
               />
             ) : null}
           </View>
-          <Text className="font-semibold text-lg text-gray-200 px-2">
+          <Text
+            className="font-semibold text-lg  px-2"
+            style={{ color: themeColors.onPrimaryContainer }}
+          >
             {"€" + cost}
           </Text>
         </View>
@@ -115,9 +121,12 @@ export default function IngredientSelectionComponent({
   ) : (
     <TouchableOpacity
       className="justify-center items-center rounded-3xl my-1"
-      style={{ height: 200, backgroundColor: themeColors.bgBlack(0.2) }}
+      style={{ height: 200, backgroundColor: themeColors.onSecondary }}
     >
-      <Text className="text-gray-300 font-semibold text-xl">
+      <Text
+        className="font-semibold text-xl"
+        style={{ color: themeColors.secondary }}
+      >
         Add more ingredients!
       </Text>
     </TouchableOpacity>

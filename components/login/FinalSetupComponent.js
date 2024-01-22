@@ -205,7 +205,7 @@ export default function FinalSetupComponent({ user, setFinalSetup, setLogin }) {
             className="font-semibold"
             style={{ color: themeColors.onSecondaryContainer }}
           >
-            Want to change account?
+            Want to change account? 
           </Text>
           <TouchableOpacity
             onPress={() => {

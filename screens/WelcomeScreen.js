@@ -31,16 +31,18 @@ import PassRecoveryComponent from "../components/login/PassRecoveryComponent";
 
 import { restoreBackup } from "~/api/apiManager";
 import { updateUser } from "../api/apiManager";
+import { ActivityIndicator } from "react-native-paper";
 
 const height = Dimensions.get("window").height;
 
 export default function WelcomeScreen() {
   const navigation = useNavigation();
-  [login, setLogin] = useState(false);
-  [signup, setSignup] = useState(false);
-  [confirmCode, setConfirmCode] = useState(false);
-  [finalSetup, setFinalSetup] = useState(false);
-  [passRecovery, setPassRecovery] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [login, setLogin] = useState(false);
+  const [signup, setSignup] = useState(false);
+  const [confirmCode, setConfirmCode] = useState(false);
+  const [finalSetup, setFinalSetup] = useState(false);
+  const [passRecovery, setPassRecovery] = useState(false);
   const user = useRef({});
   const email = useRef("");
   const pageTitle = login
@@ -65,6 +67,7 @@ export default function WelcomeScreen() {
         username: "Nappozord",
         balance: 2000,
       }).then(() => navigation.push("Home"));
+      AsyncStorage.getAllKeys().then((r) => console.log(r));
     }
 
     if (reset) {
@@ -75,24 +78,29 @@ export default function WelcomeScreen() {
       AsyncStorage.removeItem("groceries");
       AsyncStorage.removeItem("defaultCategories");
     }
-    AsyncStorage.getAllKeys().then((r) => console.log(r));
 
     getCurrentUser()
       .then((r) => {
         if (r && r.userId) {
           getUser().then((u) => {
             if (u && u.userId === r.userId) {
+              setLoading(false);
               navigation.push("Home");
             } else {
+              setLoading(false);
               user.current = {
                 userId: r.userId,
               };
               setFinalSetup(true);
             }
           });
+        } else {
+          setLoading(false);
         }
       })
-      .catch(() => {});
+      .catch(() => {
+        setLoading(false);
+      });
   }, []);
 
   return (
@@ -103,111 +111,126 @@ export default function WelcomeScreen() {
         source={require("~/assets/splash.png")}
         //blurRadius={80}
       />
-      <Pressable
-        className="flex-1 absolute w-full"
-        onPress={() => {
-          setLogin(false);
-          setSignup(false);
-        }}
-        style={{ top: 0, height: height }}
-      >
-        <View className="flex-1 justify-around my-4 mt-16">
-          <Animated.Text
-            key={pageTitle}
-            entering={SlideInLeft.duration(400).easing(Easing.ease)}
-            exiting={SlideOutRight.duration(400).easing(Easing.ease)}
-            className="font-bold text-4xl text-center"
-            style={{ color: themeColors.onBackground }}
+      {loading ? (
+        <View className="flex-1 justify-center items-center">
+        <View className="absolute">
+          <ActivityIndicator animating={true} color={themeColors.primary} size={250} />
+        </View>
+        <Image
+          className="absolute h-52 w-52"
+          source={require("~/assets/adaptive-icon.png")}
+          //blurRadius={80}
+      />
+        </View>
+      ) : (
+        <View>
+          <Pressable
+            className="flex-1 absolute w-full"
+            onPress={() => {
+              setLogin(false);
+              setSignup(false);
+            }}
+            style={{ top: 0, height: height }}
           >
-            {pageTitle}
-          </Animated.Text>
-          <Animated.View
-            entering={FadeIn}
-            exiting={FadeOut}
-            className="flex-row justify-center"
-          >
-            <LottieView
-              source={require("~/assets/welcome.json")}
-              autoPlay
-              loop
-              style={{ width: 350, height: 350 }}
-            />
-          </Animated.View>
-          <Animated.View
-            entering={FadeIn}
-            exiting={FadeOut}
-            className="space-y-4"
-          >
-            <TouchableOpacity
-              className="py-3 mx-7 rounded-xl"
-              style={{ backgroundColor: themeColors.primary }}
-              onPress={() => setSignup(true)}
-            >
-              <Text
-                className="text-xl font-bold text-center"
-                style={{ color: themeColors.onPrimary }}
-              >
-                Sign Up
-              </Text>
-            </TouchableOpacity>
-            <View className="flex-row justify-center">
-              <Text
-                className="font-semibold"
+            <View className="flex-1 justify-around my-4 mt-16">
+              <Animated.Text
+                key={pageTitle}
+                entering={SlideInLeft.duration(400).easing(Easing.ease)}
+                exiting={SlideOutRight.duration(400).easing(Easing.ease)}
+                className="font-bold text-4xl text-center"
                 style={{ color: themeColors.onBackground }}
               >
-                Already have an account?
-              </Text>
-              <Text> </Text>
-              <TouchableOpacity onPress={() => setLogin(true)}>
-                <Text
-                  className="font-bold underline"
-                  style={{ color: themeColors.primary }}
+                {pageTitle}
+              </Animated.Text>
+              <Animated.View
+                entering={FadeIn}
+                exiting={FadeOut}
+                className="flex-row justify-center"
+              >
+                <LottieView
+                  source={require("~/assets/welcome.json")}
+                  autoPlay
+                  loop
+                  style={{ width: 350, height: 350 }}
+                />
+              </Animated.View>
+              <Animated.View
+                entering={FadeIn}
+                exiting={FadeOut}
+                className="space-y-4"
+              >
+                <TouchableOpacity
+                  className="py-3 mx-7 rounded-xl"
+                  style={{ backgroundColor: themeColors.primary }}
+                  onPress={() => setSignup(true)}
                 >
-                  Login
-                </Text>
-              </TouchableOpacity>
+                  <Text
+                    className="text-xl font-bold text-center"
+                    style={{ color: themeColors.onPrimary }}
+                  >
+                    Sign Up
+                  </Text>
+                </TouchableOpacity>
+                <View className="flex-row justify-center">
+                  <Text
+                    className="font-semibold"
+                    style={{ color: themeColors.onBackground }}
+                  >
+                    Already have an account?
+                  </Text>
+                  <Text> </Text>
+                  <TouchableOpacity onPress={() => setLogin(true)}>
+                    <Text
+                      className="font-bold underline"
+                      style={{ color: themeColors.primary }}
+                    >
+                      Login
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </Animated.View>
             </View>
-          </Animated.View>
+          </Pressable>
+          {login ? (
+            <LoginComponent
+              setFinalSetup={setFinalSetup}
+              setSignup={setSignup}
+              setLogin={setLogin}
+              setPassRecovery={setPassRecovery}
+            />
+          ) : null}
+          {signup ? (
+            <SignUpComponent
+              email={email}
+              setLogin={setLogin}
+              setSignup={setSignup}
+              setConfirmCode={setConfirmCode}
+            />
+          ) : null}
+          {confirmCode ? (
+            <ConfirmCodeComponent
+              setFinalSetup={setFinalSetup}
+              email={email}
+              setLogin={setLogin}
+              setSignup={setSignup}
+              setConfirmCode={setConfirmCode}
+            />
+          ) : null}
+          {finalSetup ? (
+            <FinalSetupComponent
+              user={user}
+              setFinalSetup={setFinalSetup}
+              setLogin={setLogin}
+            />
+          ) : null}
+          {passRecovery ? (
+            <PassRecoveryComponent
+              setPassRecovery={setPassRecovery}
+              setLogin={setLogin}
+            />
+          ) : null}
         </View>
-      </Pressable>
-      {login ? (
-        <LoginComponent
-          setFinalSetup={setFinalSetup}
-          setSignup={setSignup}
-          setLogin={setLogin}
-          setPassRecovery={setPassRecovery}
-        />
-      ) : null}
-      {signup ? (
-        <SignUpComponent
-          email={email}
-          setLogin={setLogin}
-          setSignup={setSignup}
-          setConfirmCode={setConfirmCode}
-        />
-      ) : null}
-      {confirmCode ? (
-        <ConfirmCodeComponent
-          setFinalSetup={setFinalSetup}
-          email={email}
-          setLogin={setLogin}
-          setSignup={setSignup}
-          setConfirmCode={setConfirmCode}
-        />
-      ) : null}
-      {finalSetup ? (
-        <FinalSetupComponent
-          user={user}
-          setFinalSetup={setFinalSetup}
-          setLogin={setLogin}
-        />
-      ) : null}
-      {passRecovery ? (
-        <PassRecoveryComponent
-          setPassRecovery={setPassRecovery}
-          setLogin={setLogin}
-        />
-      ) : null}
+      )}
     </View>
   );
 }

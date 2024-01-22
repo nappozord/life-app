@@ -1,15 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  Alert,
-  StyleSheet,
   Text,
   View,
   TouchableOpacity,
-  Pressable,
 } from "react-native";
-import { Agenda } from "react-native-calendars";
 import { themeColors } from "~/theme";
-import { Divider, IconButton } from "react-native-paper";
+import { IconButton } from "react-native-paper";
 
 import { getCurrentWeek } from "~/utils/manageDate";
 import WeeklyListComponent from "./WeeklyListComponent";

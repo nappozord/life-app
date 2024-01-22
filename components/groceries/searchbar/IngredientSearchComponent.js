@@ -30,7 +30,10 @@ export default function IngredientSearchComponent({
 
   return (
     <View className="mx-5 -mt-5">
-      <Text className="text-gray-700 font-semibold text-lg ml-2 mb-1">
+      <Text
+        className=" font-semibold text-lg ml-2 mb-1"
+        style={{ color: themeColors.onSecondaryContainer }}
+      >
         Search
       </Text>
       <View className="flex-row justify-between items-center">
@@ -44,7 +47,7 @@ export default function IngredientSearchComponent({
         </View>
         <TouchableOpacity
           className="rounded-2xl p-0 m0"
-          style={{ backgroundColor: themeColors.bgWhite(0.6) }}
+          style={{ backgroundColor: themeColors.secondary }}
           onPress={() => {
             setOnlySelected(!onlySelected);
           }}
@@ -52,7 +55,7 @@ export default function IngredientSearchComponent({
           <IconButton
             size={35}
             icon={onlySelected ? "select-inverse" : "select-group"}
-            color={themeColors.bgBlack(0.9)}
+            color={themeColors.onSecondary}
             className="p-0 m-0"
           />
         </TouchableOpacity>

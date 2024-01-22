@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { useState } from "react";
+import { Text, View, TouchableOpacity } from "react-native";
 import { themeColors } from "~/theme";
 import { Divider, IconButton } from "react-native-paper";
 import MealPlanModalComponent from "./MealPlanModalComponent";
@@ -67,11 +67,11 @@ export default function ReservationTypeComponent({
           <View className="flex-row justify-end">
             <View
               className="px-2 rounded-xl flex-row items-center my-1"
-              style={{ backgroundColor: themeColors.secondaryContainer }}
+              style={{ backgroundColor: themeColors.primary }}
             >
               <Text
-                className="text-base"
-                style={{ color: themeColors.onSecondaryContainer }}
+                className="text-base font-semibold"
+                style={{ color: themeColors.onPrimary }}
               >
                 {"€" +
                   (dailyMeal

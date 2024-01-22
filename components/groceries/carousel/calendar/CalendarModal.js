@@ -1,4 +1,4 @@
-import { View, Text, Modal, Pressable } from "react-native";
+import { View, Modal, Pressable } from "react-native";
 import React from "react";
 import { Calendar } from "react-native-calendars";
 import { themeColors } from "~/theme";

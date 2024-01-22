@@ -1,15 +1,8 @@
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  Pressable,
-} from "react-native";
+import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import Animated, { SlideInRight, SlideOutRight } from "react-native-reanimated";
 import React from "react";
 import { themeColors } from "~/theme";
-import { Divider, IconButton } from "react-native-paper";
-import { FlashList } from "@shopify/flash-list";
+import { IconButton } from "react-native-paper";
 
 export default function MealListComponent({
   meals,
@@ -57,7 +50,7 @@ export default function MealListComponent({
             >
               <TouchableOpacity
                 style={{
-                  backgroundColor: themeColors.primary,
+                  backgroundColor: themeColors.secondaryContainer,
                 }}
                 className="mt-2 px-2 py-1 rounded-lg"
               >
@@ -65,13 +58,13 @@ export default function MealListComponent({
                   <View className="flex-row items-center">
                     <IconButton
                       icon={recipe ? "food" : "apple"}
-                      color={themeColors.onPrimary}
+                      color={themeColors.onSecondaryContainer}
                       size={18}
                       className="m-0 p-0"
                     />
                     <Text
-                      className="text-base ml-2 font-semibold"
-                      style={{ color: themeColors.onPrimary }}
+                      className="text-base ml-2"
+                      style={{ color: themeColors.onSecondaryContainer }}
                     >
                       {item.title}
                     </Text>

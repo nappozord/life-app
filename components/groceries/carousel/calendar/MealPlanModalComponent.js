@@ -1,17 +1,15 @@
 import {
   View,
   Text,
-  TextInput,
   Image,
   Modal,
   Pressable,
   TouchableOpacity,
-  ScrollView,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { themeColors } from "~/theme";
-import { Divider, IconButton } from "react-native-paper";
-import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
+import { IconButton } from "react-native-paper";
+import Animated, { SlideInDown } from "react-native-reanimated";
 import SearchComponent from "~/components/groceries/searchbar/SearchComponent";
 import RecipesIngredientsListComponent from "./RecipesIngredientsListComponent";
 
@@ -53,14 +51,14 @@ export default function MealPlanModalComponent({
   }, [onlySelected]);
 
   useEffect(() => {
-    if(useRecipes === 0){
+    if (useRecipes === 0) {
       setSearch([...recipes, ...ingredients]);
-    } else if(useRecipes === 1){
+    } else if (useRecipes === 1) {
       setSearch([...ingredients]);
-    } else if(useRecipes === 2){
+    } else if (useRecipes === 2) {
       setSearch([...recipes]);
     }
-  }, [useRecipes])
+  }, [useRecipes]);
 
   const saveButton = () => {
     if (!meals.find((obj) => obj.date === item.day)) {
@@ -114,7 +112,7 @@ export default function MealPlanModalComponent({
             <Animated.View
               entering={SlideInDown.duration(500)}
               style={{
-                backgroundColor: themeColors.bgWhite(0.6),
+                backgroundColor: themeColors.secondaryContainer,
                 borderTopLeftRadius: 24,
                 borderTopRightRadius: 24,
               }}
@@ -124,26 +122,29 @@ export default function MealPlanModalComponent({
                 <View
                   className="p-5 rounded-full -mt-20 items-center"
                   style={{
-                    backgroundColor: themeColors.bgBlack(1),
-                    borderColor: themeColors.bgGrey(1),
+                    backgroundColor: themeColors.background,
+                    borderColor: themeColors.secondaryContainer,
                     borderWidth: 5,
                   }}
                 >
                   <View className="flex-row">
                     <IconButton
                       icon={"plus"}
-                      color={themeColors.bgGrey(1)}
+                      color={themeColors.onBackground}
                       size={30}
                       className="-mr-2"
                     />
                     <IconButton
                       icon={item ? item.icon : ""}
-                      color={themeColors.bgGrey(1)}
+                      color={themeColors.onBackground}
                       size={30}
                       className="-ml-2"
                     />
                   </View>
-                  <Text className="text-xl font-semibold -mt-4 mb-4 text-gray-400">
+                  <Text
+                    className="text-xl font-semibold -mt-4 mb-4 "
+                    style={{ color: themeColors.onBackground }}
+                  >
                     {item
                       ? item.type[0].toUpperCase() + item.type.slice(1)
                       : ""}
@@ -153,7 +154,10 @@ export default function MealPlanModalComponent({
               </View>
               <View className="-mt-7">
                 <View className="space-y-1 p-5">
-                  <Text className="text-gray-700 font-semibold text-lg ml-2">
+                  <Text
+                    className="font-semibold text-lg ml-2"
+                    style={{ color: themeColors.onSecondaryContainer }}
+                  >
                     Search
                   </Text>
                   <View className="flex-row justify-between items-center">
@@ -167,7 +171,9 @@ export default function MealPlanModalComponent({
                     </View>
                     <TouchableOpacity
                       className="rounded-2xl p-0 m0"
-                      style={{ backgroundColor: themeColors.bgWhite(0.6) }}
+                      style={{
+                        backgroundColor: themeColors.secondary,
+                      }}
                       onPress={() => {
                         setOnlySelected(!onlySelected);
                       }}
@@ -175,7 +181,7 @@ export default function MealPlanModalComponent({
                       <IconButton
                         size={35}
                         icon={onlySelected ? "select-inverse" : "select-group"}
-                        color={themeColors.bgBlack(0.9)}
+                        color={themeColors.onSecondary}
                         className="p-0 m-0"
                       />
                     </TouchableOpacity>
@@ -187,17 +193,37 @@ export default function MealPlanModalComponent({
                         style={{
                           backgroundColor:
                             useRecipes === 1
-                              ? themeColors.bgWhite(0.5)
-                              : themeColors.bgWhite(0.2),
+                              ? themeColors.primary
+                              : themeColors.secondary,
                           borderTopLeftRadius: 24,
                           borderBottomLeftRadius: 24,
                         }}
                         onPress={() => {
-                          useRecipes === 0 ? setUseRecipes(1) : setUseRecipes(0)
+                          useRecipes === 0
+                            ? setUseRecipes(1)
+                            : setUseRecipes(0);
                         }}
                       >
-                        <IconButton size={24} icon="apple" color={themeColors.bgBlack(1)} />
-                        <Text className="text-gray-800 text-base">Ingredients</Text>
+                        <IconButton
+                          size={24}
+                          icon="apple"
+                          color={
+                            useRecipes === 1
+                              ? themeColors.onPrimary
+                              : themeColors.onSecondary
+                          }
+                        />
+                        <Text
+                          className="text-base"
+                          style={{
+                            color:
+                              useRecipes === 1
+                                ? themeColors.onPrimary
+                                : themeColors.onSecondary,
+                          }}
+                        >
+                          Ingredients
+                        </Text>
                       </TouchableOpacity>
                     </View>
                     <View className="flex-1">
@@ -206,17 +232,37 @@ export default function MealPlanModalComponent({
                         style={{
                           backgroundColor:
                             useRecipes === 2
-                              ? themeColors.bgWhite(0.5)
-                              : themeColors.bgWhite(0.2),
+                              ? themeColors.primary
+                              : themeColors.secondary,
                           borderTopRightRadius: 24,
                           borderBottomRightRadius: 24,
                         }}
                         onPress={() => {
-                          useRecipes === 0 ? setUseRecipes(2) : setUseRecipes(0)
+                          useRecipes === 0
+                            ? setUseRecipes(2)
+                            : setUseRecipes(0);
                         }}
                       >
-                        <IconButton size={24} icon="food" color={themeColors.bgBlack(1)} />
-                        <Text className="text-gray-800 text-base">Recipes</Text>
+                        <IconButton
+                          size={24}
+                          icon="food"
+                          color={
+                            useRecipes === 2
+                              ? themeColors.onPrimary
+                              : themeColors.onSecondary
+                          }
+                        />
+                        <Text
+                          className="text-base"
+                          style={{
+                            color:
+                              useRecipes === 2
+                                ? themeColors.onPrimary
+                                : themeColors.onSecondary,
+                          }}
+                        >
+                          Recipes
+                        </Text>
                       </TouchableOpacity>
                     </View>
                   </View>
@@ -232,7 +278,7 @@ export default function MealPlanModalComponent({
                 <TouchableOpacity
                   className="py-5 -mt-4"
                   style={{
-                    backgroundColor: themeColors.chartBlue(1),
+                    backgroundColor: themeColors.primary,
                     borderTopRightRadius: 24,
                     borderTopLeftRadius: 24,
                   }}
@@ -241,7 +287,10 @@ export default function MealPlanModalComponent({
                     setModalVisible(false);
                   }}
                 >
-                  <Text className="text-gray-200 font-bold text-center text-xl">
+                  <Text
+                    className="font-bold text-center text-xl"
+                    style={{ color: themeColors.onPrimary }}
+                  >
                     {"Save " +
                       (item
                         ? item.type[0].toUpperCase() + item.type.slice(1)
