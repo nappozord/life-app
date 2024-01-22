@@ -1,11 +1,4 @@
-import {
-  View,
-  Image,
-  Dimensions,
-  SafeAreaView,
-  BackHandler,
-  Alert,
-} from "react-native";
+import { View, Image, BackHandler, Alert } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useRef, useEffect } from "react";
 import ChipCategoryListComponent from "~/components/budget/chip/ChipCategoryListComponent";
@@ -21,13 +14,10 @@ import Animated, {
 import { formatDate } from "~/utils/manageDate";
 import {
   getCategories,
-  restoreBackup,
   saveCategories,
   getUser,
   updateUser,
 } from "~/api/apiManager";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { defaultUser, realCategories } from "~/data";
 import HeaderComponent from "~/components/header/HeaderComponent";
 import { useNavigation } from "@react-navigation/native";
 import { signOut } from "aws-amplify/auth";

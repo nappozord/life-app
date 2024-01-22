@@ -1,12 +1,7 @@
-import { View, Text, Image, Pressable, TouchableOpacity } from "react-native";
+import { View, Text, Pressable, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { themeColors } from "~/theme";
-import Animated, {
-  SlideInLeft,
-  SlideInRight,
-  SlideOutLeft,
-  SlideOutRight,
-} from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 import { IconButton } from "react-native-paper";
 import { formatDate } from "~/utils/manageDate";
 

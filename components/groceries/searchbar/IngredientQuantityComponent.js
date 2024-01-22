@@ -1,23 +1,6 @@
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  FlatList,
-  TextInput,
-  Pressable,
-} from "react-native";
+import { View, Text, TextInput, Pressable } from "react-native";
 import React from "react";
-import Animated, {
-  withTiming,
-  FadeIn,
-  FadeOut,
-  useSharedValue,
-  useAnimatedStyle,
-  FadeInLeft,
-  FadeInDown,
-  FadeInUp,
-} from "react-native-reanimated";
+import Animated, { FadeInUp } from "react-native-reanimated";
 import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
 

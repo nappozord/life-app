@@ -1,5 +1,5 @@
-import { View, Text, FlatList, TouchableOpacity } from "react-native";
-import React, { useState, useRef, useEffect } from "react";
+import { View, Text, TouchableOpacity } from "react-native";
+import React, { useState, useEffect } from "react";
 import SearchComponent from "~/components/groceries/searchbar/SearchComponent";
 import { IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";

@@ -1,30 +1,19 @@
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  FlatList,
-} from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import Animated, {
   withTiming,
-  FadeIn,
-  FadeOut,
   useSharedValue,
   useAnimatedStyle,
-  FadeInLeft,
   SlideInRight,
 } from "react-native-reanimated";
 import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
-import { calculateRecipeCosts } from "~/utils/calculateCosts";
 import IngredientQuantityComponent from "./IngredientQuantityComponent";
 
 export default function IngredientSelectionComponent({
   item,
   selected,
   setSelected,
-  ingredients,
 }) {
   const icon = "apple";
 

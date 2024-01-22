@@ -1,9 +1,8 @@
-import { View, TextInput, TouchableOpacity, Pressable } from "react-native";
+import { TextInput, Pressable } from "react-native";
 import React from "react";
 import { themeColors } from "~/theme";
-import { MagnifyingGlassIcon } from "react-native-heroicons/solid";
-import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
-import { Divider, IconButton } from "react-native-paper";
+import Animated from "react-native-reanimated";
+import { IconButton } from "react-native-paper";
 
 export default function SearchComponent({
   items,

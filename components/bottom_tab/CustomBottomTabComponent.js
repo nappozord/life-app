@@ -1,10 +1,4 @@
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-  useWindowDimensions,
-} from "react-native";
+import { Pressable, StyleSheet, View, useWindowDimensions } from "react-native";
 import React from "react";
 import Animated, {
   useAnimatedStyle,
@@ -14,7 +8,7 @@ import { IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
 
 const CustomBottomTab = ({ state, descriptors, navigation }) => {
-  const { width, height } = useWindowDimensions();
+  const { width } = useWindowDimensions();
   const MARGIN = 20;
   const TAB_BAR_WIDTH = width;
   const TAB_WIDTH = TAB_BAR_WIDTH / state.routes.length;
@@ -26,9 +20,7 @@ const CustomBottomTab = ({ state, descriptors, navigation }) => {
   });
 
   return (
-    <View
-      style={[styles.tabBarContainer, { width: TAB_BAR_WIDTH, bottom: 0 }]}
-    >
+    <View style={[styles.tabBarContainer, { width: TAB_BAR_WIDTH, bottom: 0 }]}>
       <Animated.View
         style={[
           styles.slidingTabContainer,
@@ -77,7 +69,9 @@ const CustomBottomTab = ({ state, descriptors, navigation }) => {
               <IconButton
                 icon={route.name}
                 size={28}
-                color={isFocused ? themeColors.primary : themeColors.onBackground}
+                color={
+                  isFocused ? themeColors.primary : themeColors.onBackground
+                }
               />
             </View>
           </Pressable>

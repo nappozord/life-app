@@ -2,14 +2,7 @@ import { View, TouchableOpacity, Text } from "react-native";
 import React from "react";
 import { IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
-import Animated, {
-  FadeIn,
-  FadeOut,
-  useSharedValue,
-  withTiming,
-  useDerivedValue,
-} from "react-native-reanimated";
-import { Canvas, RoundedRect, useFont } from "@shopify/react-native-skia";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import BalanceComponent from "./BalanceComponent";
 
 export default function HeaderComponent({ user, setUser }) {
@@ -24,11 +17,7 @@ export default function HeaderComponent({ user, setUser }) {
           className="rounded-full"
           style={{ backgroundColor: themeColors.primary }}
         >
-          <IconButton
-            icon="account"
-            size={24}
-            color={themeColors.onPrimary}
-          />
+          <IconButton icon="account" size={24} color={themeColors.onPrimary} />
         </TouchableOpacity>
         <Text
           className="font-semibold text-xl"

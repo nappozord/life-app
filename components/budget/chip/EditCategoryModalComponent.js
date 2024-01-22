@@ -8,7 +8,6 @@ import {
   Pressable,
   TouchableOpacity,
   KeyboardAvoidingView,
-  ScrollView,
 } from "react-native";
 import React, { useRef, useState } from "react";
 import { themeColors } from "~/theme";

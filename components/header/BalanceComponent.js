@@ -1,10 +1,7 @@
-import { View, TouchableOpacity } from "react-native";
+import { View } from "react-native";
 import React from "react";
-import { IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
-import Animated, {
-  FadeIn,
-  FadeOut,
+import {
   useSharedValue,
   withTiming,
   useDerivedValue,
@@ -16,22 +13,25 @@ export default function BalanceComponent({ user }) {
 
   totalValue.value = withTiming(user.balance, { duration: 1000 });
 
-  const targetText = useDerivedValue(() => `€${totalValue.value.toFixed(2)}`, []);
+  const targetText = useDerivedValue(
+    () => `€${totalValue.value.toFixed(2)}`,
+    []
+  );
 
   const font = useFont(require("~/assets/fonts/Roboto-Bold.ttf"), 20);
   const fontSize = font ? font.getTextWidth(`€${user.balance.toFixed(2)}`) : 0;
 
   return (
     <View>
-      <Canvas className="flex-1" style={{width: fontSize, height: 30}}>
-          <Text
-            color={themeColors.onBackground}
-            text={targetText}
-            x={0}
-            y={22}
-            font={font}
-          />
-          </Canvas>
+      <Canvas className="flex-1" style={{ width: fontSize, height: 30 }}>
+        <Text
+          color={themeColors.onBackground}
+          text={targetText}
+          x={0}
+          y={22}
+          font={font}
+        />
+      </Canvas>
     </View>
-  )
+  );
 }

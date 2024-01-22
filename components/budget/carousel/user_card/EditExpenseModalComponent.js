@@ -12,7 +12,7 @@ import {
 import React, { useRef } from "react";
 import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
-import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
+import Animated, { SlideInDown } from "react-native-reanimated";
 
 export default function EditExpenseModalComponent({
   item,

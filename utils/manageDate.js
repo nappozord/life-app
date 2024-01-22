@@ -37,15 +37,17 @@ export function getCurrentWeek(date) {
   const dayOfWeek = currentDate.getDay();
 
   const startDate = new Date(currentDate);
-  startDate.setDate(currentDate.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1));
+  startDate.setDate(
+    currentDate.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1)
+  );
 
   for (let i = 0; i < 7; i++) {
     const currentDay = new Date(startDate);
     currentDay.setDate(startDate.getDate() + i);
     result.push({
-      dayName: currentDay.toDateString({weekday: 'short'}).slice(0, 3),
-      dayNumber: currentDay.getDate().toString().padStart(2, '0'),
-      dateString: currentDay.toISOString().split('T')[0],
+      dayName: currentDay.toDateString({ weekday: "short" }).slice(0, 3),
+      dayNumber: currentDay.getDate().toString().padStart(2, "0"),
+      dateString: currentDay.toISOString().split("T")[0],
       date: currentDay,
       index: i,
     });
@@ -54,10 +56,10 @@ export function getCurrentWeek(date) {
   return result;
 }
 
-export function getNextDays(date, range){
+export function getNextDays(date, range) {
   const result = [];
 
-  for(let i = 0; i < range; i++){
+  for (let i = 0; i < range; i++) {
     const nextDate = new Date(date);
     nextDate.setDate(date.getDate() + i);
     result.push(nextDate.toISOString().split("T")[0]);

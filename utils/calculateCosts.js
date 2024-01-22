@@ -23,7 +23,9 @@ export function calculateMealCosts(meal, type, ingredients, recipes) {
             parseFloat(
               ingredients.find((i) => i.id === ingredient.id).quantity
             )) *
-          (parseFloat(ingredient.quantity) > 0 ? parseFloat(ingredient.quantity) : 0.01);
+          (parseFloat(ingredient.quantity) > 0
+            ? parseFloat(ingredient.quantity)
+            : 0.01);
       }
     });
 

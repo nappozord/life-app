@@ -1,4 +1,4 @@
-import { TouchableOpacity, Modal } from "react-native";
+import { TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";

@@ -34,7 +34,9 @@ export default function BarChartComponent({ forecast, real }) {
   );
 
   const font = useFont(require("~/assets/fonts/Roboto-Bold.ttf"), 16);
-  const fontSize = font ? font.getTextWidth(`${Math.round(percentage * 100)}%`) : 0;
+  const fontSize = font
+    ? font.getTextWidth(`${Math.round(percentage * 100)}%`)
+    : 0;
 
   return (
     <View>

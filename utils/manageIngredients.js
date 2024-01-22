@@ -7,7 +7,7 @@ export function getIngredientFromMeal(
 ) {
   if (meal) {
     meal[type].ingredients.forEach((ingredient) => {
-      searchIngredients(ingredient, ingredients, weeklyIngredients)
+      searchIngredients(ingredient, ingredients, weeklyIngredients);
     });
 
     meal[type].recipes.forEach((r) => {
@@ -22,11 +22,10 @@ export function getIngredientFromMeal(
   }
 }
 
-function searchIngredients(ingredient, ingredients, weeklyIngredients){
+function searchIngredients(ingredient, ingredients, weeklyIngredients) {
   if (weeklyIngredients.find((i) => i.ingredient.id === ingredient.id)) {
-    weeklyIngredients.find(
-      (i) => i.ingredient.id === ingredient.id
-    ).needed += ingredient.quantity;
+    weeklyIngredients.find((i) => i.ingredient.id === ingredient.id).needed +=
+      ingredient.quantity;
   } else {
     const ing = ingredients.find((i) => i.id === ingredient.id);
 

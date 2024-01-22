@@ -5,9 +5,9 @@ function countIngredients(ingredient, meal) {
 
   const calculate = (obj) => {
     if (obj.id === ingredient.id) {
-      count += (obj.quantity > 0 ? obj.quantity : 0.01);
+      count += obj.quantity > 0 ? obj.quantity : 0.01;
     }
-  }
+  };
 
   meal.breakfast.ingredients.forEach((obj) => {
     calculate(obj);
@@ -34,7 +34,7 @@ function countIngredientInRecipes(ingredient, meal, recipes) {
       const ing = recipe.ingredients.find((i) => i.id === ingredient.id);
       count += ing ? (ing.quantity > 0 ? ing.quantity : 0.01) : 0;
     }
-  }
+  };
 
   meal.breakfast.recipes.forEach((obj) => {
     calculate(obj);
@@ -80,7 +80,7 @@ export function calculateIngredientUsage(
   if (totalCount > 0)
     percentage = (ingredient.quantity * ingredient.stock) / totalCount;
 
-  if(totalCount > 0 && ingredient.stock === 0) percentage = 0;
+  if (totalCount > 0 && ingredient.stock === 0) percentage = 0;
 
   return percentage;
 }

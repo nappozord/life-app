@@ -1,17 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  Alert,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Image,
-} from "react-native";
+import { View, Image } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import {
-  getCategories,
-  restoreBackup,
-  saveCategories,
   getUser,
   updateUser,
   getMeals,
@@ -22,7 +12,6 @@ import {
   updateRecipes,
 } from "~/api/apiManager";
 import Animated, {
-  withTiming,
   FadeIn,
   FadeOut,
   useSharedValue,
@@ -66,9 +55,7 @@ export default function App() {
   }, [user]);
 
   useEffect(() => {
-    !meals
-      ? getMeals().then((r) => setMeals(r))
-      : updateMeals(meals);
+    !meals ? getMeals().then((r) => setMeals(r)) : updateMeals(meals);
   }, [meals]);
 
   useEffect(() => {
@@ -78,9 +65,7 @@ export default function App() {
   }, [ingredients]);
 
   useEffect(() => {
-    !recipes
-      ? getRecipes().then((r) => setRecipes(r))
-      : updateRecipes(recipes);
+    !recipes ? getRecipes().then((r) => setRecipes(r)) : updateRecipes(recipes);
   }, [recipes]);
 
   const searchBarAnimatedStyle = useAnimatedStyle(() => ({

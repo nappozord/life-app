@@ -1,4 +1,4 @@
-import { View, Text, Modal, Image, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { themeColors } from "~/theme";
 import EditExpenseModalComponent from "./EditExpenseModalComponent";
@@ -36,13 +36,19 @@ export default function ExpenseCardComponent({
         />
       ) : null}
       <View>
-        <Text className="text-lg font-semibold z-10" style={{color: themeColors.onSecondary}}>
+        <Text
+          className="text-lg font-semibold z-10"
+          style={{ color: themeColors.onSecondary }}
+        >
           {item.title +
             (item.occurrence > 1 ? " (" + item.occurrence + ")" : "")}
         </Text>
       </View>
       <View>
-        <Text className="text-lg font-semibold z-10" style={{color: themeColors.onSecondary}}>
+        <Text
+          className="text-lg font-semibold z-10"
+          style={{ color: themeColors.onSecondary }}
+        >
           €{parseFloat(item.total).toFixed(2)}
         </Text>
       </View>

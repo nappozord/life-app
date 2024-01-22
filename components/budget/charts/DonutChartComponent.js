@@ -56,13 +56,17 @@ export default function DonutChartComponent({ item, showTotal }) {
   let color;
   let backgroundColor;
 
-  if (item.income){
+  if (item.income) {
     color = -difference >= 0 ? themeColors.success : themeColors.errorContainer;
-    backgroundColor = -difference >= 0 ? themeColors.onSuccess : themeColors.onErrorContainer;
-  }
-  else {
-    color = difference >= 0 ? themeColors.primaryContainer : themeColors.errorContainer;
-    backgroundColor = difference >= 0 ? themeColors.primary : themeColors.onErrorContainer;
+    backgroundColor =
+      -difference >= 0 ? themeColors.onSuccess : themeColors.onErrorContainer;
+  } else {
+    color =
+      difference >= 0
+        ? themeColors.primaryContainer
+        : themeColors.errorContainer;
+    backgroundColor =
+      difference >= 0 ? themeColors.primary : themeColors.onErrorContainer;
   }
 
   return (

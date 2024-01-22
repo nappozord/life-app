@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text } from "react-native";
 import React from "react";
 import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
@@ -43,16 +43,25 @@ export default function UserCategorySummaryComponent({
         >
           Budget
         </Text>
-        <Text className="text-base font-semibold" style={{ color: themeColors.primary }}>
+        <Text
+          className="text-base font-semibold"
+          style={{ color: themeColors.primary }}
+        >
           €{Math.abs(item.forecast).toFixed(2)}
         </Text>
       </View>
       <View className="flex-row justify-between items-center">
         <View className="space-y-1">
-          <Text className="text-base " style={{color: themeColors.onSecondaryContainer}}>
+          <Text
+            className="text-base "
+            style={{ color: themeColors.onSecondaryContainer }}
+          >
             {"Total " + (item.id === 1 ? "income" : "expenses") + ":"}
           </Text>
-          <Text className="text-3xl font-semibold" style={{ color: themeColors.primary }}>
+          <Text
+            className="text-3xl font-semibold"
+            style={{ color: themeColors.primary }}
+          >
             €{Math.abs(item.real).toFixed(2)}
           </Text>
         </View>

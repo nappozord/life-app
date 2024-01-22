@@ -1,4 +1,4 @@
-import { View, Text, Pressable, TouchableOpacity, Modal } from "react-native";
+import { View, Pressable, TouchableOpacity, Modal } from "react-native";
 import React, { useState } from "react";
 import Animated, {
   SlideInLeft,

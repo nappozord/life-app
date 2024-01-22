@@ -1,5 +1,5 @@
-import { View, FlatList, KeyboardAvoidingView, Keyboard } from "react-native";
-import React, { useEffect, useState } from "react";
+import { View } from "react-native";
+import React from "react";
 import IngredientSelectionComponent from "./IngredientSelectionComponent";
 import { FlashList } from "@shopify/flash-list";
 

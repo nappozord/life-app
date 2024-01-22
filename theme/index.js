@@ -1,10 +1,10 @@
 export const themeColors = {
-  bgWhite: opacity => RGBAToHexA(255, 255, 255, opacity),
-  bgGrey: opacity => RGBAToHexA(179, 188, 185, opacity),
-  bgBlack: opacity => RGBAToHexA(31, 41, 55, opacity),
-  chartBlue: opacity => RGBAToHexA(42, 94, 167, opacity),
-  chartRed: opacity => RGBAToHexA(186, 26, 26, opacity),
-  chartGreen: opacity => RGBAToHexA(0, 110, 69, opacity),
+  bgWhite: (opacity) => RGBAToHexA(255, 255, 255, opacity),
+  bgGrey: (opacity) => RGBAToHexA(179, 188, 185, opacity),
+  bgBlack: (opacity) => RGBAToHexA(31, 41, 55, opacity),
+  chartBlue: (opacity) => RGBAToHexA(42, 94, 167, opacity),
+  chartRed: (opacity) => RGBAToHexA(186, 26, 26, opacity),
+  chartGreen: (opacity) => RGBAToHexA(0, 110, 69, opacity),
 
   primary: "#90B6FF",
   onPrimary: "#002f66",
@@ -30,23 +30,19 @@ export const themeColors = {
   surfaceVariant: "#44474e",
   onSurfaceVariant: "#c4c6d0",
   success: "#006e45",
-  onSuccess: "#f2ffff"
-}   
+  onSuccess: "#f2ffff",
+};
 
-function RGBAToHexA(r,g,b,a) {
+function RGBAToHexA(r, g, b, a) {
   r = r.toString(16);
   g = g.toString(16);
   b = b.toString(16);
   a = Math.round(a * 255).toString(16);
 
-  if (r.length == 1)
-    r = "0" + r;
-  if (g.length == 1)
-    g = "0" + g;
-  if (b.length == 1)
-    b = "0" + b;
-  if (a.length == 1)
-    a = "0" + a
+  if (r.length == 1) r = "0" + r;
+  if (g.length == 1) g = "0" + g;
+  if (b.length == 1) b = "0" + b;
+  if (a.length == 1) a = "0" + a;
 
   return "#" + r + g + b + a;
 }
