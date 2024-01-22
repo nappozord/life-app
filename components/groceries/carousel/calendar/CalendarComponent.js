@@ -55,7 +55,7 @@ export default function CalendarComponent({
       >
         <TouchableOpacity
           className="ml-3 mr-1 rounded-full"
-          style={{ backgroundColor: themeColors.onSecondary }}
+          style={{ backgroundColor: themeColors.onPrimary }}
         >
           <IconButton
             icon="calendar"
@@ -81,7 +81,7 @@ export default function CalendarComponent({
                 key={"calendar_" + day.date}
                 className="rounded-2xl px-2 py-2 items-center"
                 style={{
-                  backgroundColor: isSelected ? themeColors.onSecondary : null,
+                  backgroundColor: isSelected ? themeColors.onPrimary : null,
                 }}
                 onPress={() => {
                   setDate(new Date(day.date));

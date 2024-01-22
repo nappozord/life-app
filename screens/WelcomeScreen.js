@@ -55,7 +55,7 @@ export default function WelcomeScreen() {
     ? "Password Recovery"
     : "Welcome to Life!";
 
-  const dev = false;
+  const dev = true;
   const reset = false;
 
   useEffect(() => {

@@ -12,7 +12,7 @@ import {
 import React, { useRef } from "react";
 import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
-import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
+import Animated, { SlideInDown } from "react-native-reanimated";
 
 export default function IngredientModal({
   item,
@@ -64,7 +64,7 @@ export default function IngredientModal({
 
     if (name.current === "" || name.current === null)
       name.current = "New Ingredient";
-    
+
     const ingredient = ingredients.find((obj) => obj.id === item.id);
 
     ingredient.title = name.current;
@@ -114,7 +114,7 @@ export default function IngredientModal({
             <Animated.View
               entering={SlideInDown.duration(500)}
               style={{
-                backgroundColor: themeColors.bgWhite(0.6),
+                backgroundColor: themeColors.secondaryContainer,
                 borderTopLeftRadius: 24,
                 borderTopRightRadius: 24,
               }}
@@ -124,20 +124,29 @@ export default function IngredientModal({
                 <View
                   className="px-4 py-3 rounded-3xl -mt-16 items-center"
                   style={{
-                    backgroundColor: themeColors.bgBlack(1),
-                    borderColor: themeColors.bgGrey(1),
+                    backgroundColor: themeColors.background,
+                    borderColor: themeColors.secondaryContainer,
                     borderWidth: 5,
                   }}
                 >
                   {item ? (
                     <>
-                      <Text className="text-sm mb-1 text-gray-400">
+                      <Text
+                        className="text-sm mb-1 "
+                        style={{ color: themeColors.onBackground }}
+                      >
                         You have:
                       </Text>
-                      <Text className=" text-5xl font-semibold text-gray-400">
+                      <Text
+                        className=" text-5xl font-semibold "
+                        style={{ color: themeColors.onBackground }}
+                      >
                         {item.stock}
                       </Text>
-                      <Text className="text-xl font-semibold -mt-2 text-gray-400">
+                      <Text
+                        className="text-xl font-semibold -mt-2 "
+                        style={{ color: themeColors.onBackground }}
+                      >
                         {item.title}
                       </Text>
                     </>
@@ -146,18 +155,21 @@ export default function IngredientModal({
                       <View className="flex-row">
                         <IconButton
                           icon={"plus"}
-                          color={themeColors.bgGrey(1)}
+                          color={themeColors.onBackground}
                           size={30}
                           className="-mr-2"
                         />
                         <IconButton
                           icon={"apple"}
-                          color={themeColors.bgGrey(1)}
+                          color={themeColors.onBackground}
                           size={30}
                           className="-ml-2"
                         />
                       </View>
-                      <Text className="text-xl font-semibold -mt-4 mb-4 text-gray-400">
+                      <Text
+                        className="text-xl font-semibold -mt-4 mb-4"
+                        style={{ color: themeColors.onBackground }}
+                      >
                         Ingredient
                       </Text>
                     </>
@@ -167,37 +179,47 @@ export default function IngredientModal({
               </View>
               <View className="-mt-7">
                 <View className="space-y-1 p-5">
-                  <Text className="text-gray-700 font-semibold text-lg ml-2">
+                  <Text
+                    className="font-semibold text-lg ml-2"
+                    style={{ color: themeColors.onSecondaryContainer }}
+                  >
                     Name
                   </Text>
                   <TextInput
                     ref={inputRef}
-                    className="p-3 text-gray-700 rounded-2xl mb-2 text-base"
-                    style={{ backgroundColor: themeColors.bgWhite(0.6) }}
+                    className="p-3 rounded-2xl mb-2 text-base"
+                    style={{
+                      backgroundColor: themeColors.onSecondaryContainer,
+                      color: themeColors.background,
+                    }}
                     placeholder="E.g. Banana!"
-                    selectionColor={themeColors.bgBlack(1)}
+                    selectionColor={themeColors.background}
                     defaultValue={name.current}
                     onChangeText={(text) => {
                       name.current = text;
                     }}
                   />
                   <View className="flex-row justify-between items-center space-x-4">
-                    <View className="flex-1">
-                      <Text className="text-gray-700 font-semibold text-lg ml-2">
+                    <View className="flex-1 space-y-1">
+                      <Text
+                        className="font-semibold text-lg ml-2"
+                        style={{ color: themeColors.onSecondaryContainer }}
+                      >
                         Cost
                       </Text>
                       <View
                         className="flex-row items-center rounded-2xl p-1 overflow-visible"
                         style={{
-                          backgroundColor: themeColors.bgWhite(0.6),
+                          backgroundColor: themeColors.onSecondaryContainer,
                           height: 50,
                         }}
                       >
                         <TextInput
                           keyboardType="numeric"
                           placeholder="E.g. €12.34"
-                          className="px-2 flex-1 text-gray-700 text-base"
-                          selectionColor={themeColors.bgBlack(1)}
+                          className="px-2 flex-1 text-base"
+                          style={{ color: themeColors.background }}
+                          selectionColor={themeColors.background}
                           defaultValue={cost.current}
                           onChangeText={(text) => {
                             cost.current = text;
@@ -205,32 +227,36 @@ export default function IngredientModal({
                         />
                         <Pressable
                           className="rounded-2xl pr-0.5"
-                          style={{ backgroundColor: themeColors.bgBlack(1) }}
+                          style={{ backgroundColor: themeColors.background }}
                         >
                           <IconButton
                             size={20}
                             icon="currency-eur"
-                            color={themeColors.bgGrey(1)}
+                            color={themeColors.onBackground}
                           />
                         </Pressable>
                       </View>
                     </View>
-                    <View className="flex-1">
-                      <Text className="text-gray-700 font-semibold text-lg ml-2">
+                    <View className="flex-1 space-y-1">
+                      <Text
+                        className="font-semibold text-lg ml-2"
+                        style={{ color: themeColors.onSecondaryContainer }}
+                      >
                         Qty per pack
                       </Text>
                       <View
                         className="flex-row items-center rounded-2xl p-1 overflow-visible"
                         style={{
-                          backgroundColor: themeColors.bgWhite(0.6),
+                          backgroundColor: themeColors.onSecondaryContainer,
                           height: 50,
                         }}
                       >
                         <TextInput
                           keyboardType="numeric"
                           placeholder="E.g. x3"
-                          className="px-2 flex-1 text-gray-700 text-base"
-                          selectionColor={themeColors.bgBlack(1)}
+                          className="px-2 flex-1  text-base"
+                          style={{ color: themeColors.background }}
+                          selectionColor={themeColors.background}
                           defaultValue={quantity.current}
                           onChangeText={(text) => {
                             if (text === "" || text === null)
@@ -240,12 +266,12 @@ export default function IngredientModal({
                         />
                         <Pressable
                           className="rounded-2xl pr-0.5"
-                          style={{ backgroundColor: themeColors.bgBlack(1) }}
+                          style={{ backgroundColor: themeColors.background }}
                         >
                           <IconButton
                             size={20}
                             icon="counter"
-                            color={themeColors.bgGrey(1)}
+                            color={themeColors.onSecondaryContainer}
                           />
                         </Pressable>
                       </View>
@@ -258,8 +284,8 @@ export default function IngredientModal({
                       <TouchableOpacity
                         className="py-5 px-5 mt-1"
                         style={{
-                          backgroundColor: themeColors.chartBlue(1),
-                          borderRightColor: themeColors.bgGrey(1),
+                          backgroundColor: themeColors.primary,
+                          borderRightColor: themeColors.secondaryContainer,
                           borderRightWidth: 1,
                           borderTopLeftRadius: 24,
                         }}
@@ -268,7 +294,10 @@ export default function IngredientModal({
                           setModalVisible(false);
                         }}
                       >
-                        <Text className="text-gray-200 font-bold text-center text-xl">
+                        <Text
+                          className="font-bold text-center text-xl"
+                          style={{ color: themeColors.onPrimary }}
+                        >
                           Edit
                         </Text>
                       </TouchableOpacity>
@@ -277,8 +306,8 @@ export default function IngredientModal({
                       <TouchableOpacity
                         className="py-5 px-5 mt-1"
                         style={{
-                          backgroundColor: themeColors.bgBlack(1),
-                          borderLeftColor: themeColors.bgGrey(1),
+                          backgroundColor: themeColors.errorContainer,
+                          borderLeftColor: themeColors.secondaryContainer,
                           borderLeftWidth: 1,
                           borderTopRightRadius: 24,
                         }}
@@ -287,7 +316,10 @@ export default function IngredientModal({
                           setModalVisible(false);
                         }}
                       >
-                        <Text className="text-gray-200 font-bold text-center text-xl">
+                        <Text
+                          className="font-bold text-center text-xl"
+                          style={{ color: themeColors.onErrorContainer }}
+                        >
                           Delete
                         </Text>
                       </TouchableOpacity>
@@ -297,7 +329,7 @@ export default function IngredientModal({
                   <TouchableOpacity
                     className="py-5 mt-2"
                     style={{
-                      backgroundColor: themeColors.chartBlue(1),
+                      backgroundColor: themeColors.primary,
                       borderTopRightRadius: 24,
                       borderTopLeftRadius: 24,
                     }}
@@ -306,7 +338,10 @@ export default function IngredientModal({
                       setModalVisible(false);
                     }}
                   >
-                    <Text className="text-gray-200 font-bold text-center text-xl">
+                    <Text
+                      className="font-bold text-center text-xl"
+                      style={{ color: themeColors.onPrimary }}
+                    >
                       Add Ingredient
                     </Text>
                   </TouchableOpacity>

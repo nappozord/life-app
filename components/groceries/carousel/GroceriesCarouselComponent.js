@@ -38,7 +38,7 @@ export default function BudgetCarouselComponent({
               {
                 width: dimensions.width - 40,
                 borderRadius: 25,
-                backgroundColor: themeColors.secondaryContainer,
+                backgroundColor: themeColors.onSecondary,
               },
               item.index === 1
                 ? {

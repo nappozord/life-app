@@ -39,7 +39,7 @@ export default function CalendarModal({
               markedDates={{
                 [currentDate.toISOString().split("T")[0]]: {
                   selected: true,
-                  selectedColor: themeColors.onSecondary,
+                  selectedColor: themeColors.onPrimary,
                 },
               }}
               theme={{
