@@ -127,7 +127,7 @@ export default function GroceryComponent({
             }}
           >
             <View className="justify-between items-center space-y-1">
-              <View className="flex-1 pt-8 pb-7">
+              <View className="flex-1 pt-8 pb-6">
                 <Text
                   className={"text-base text-center "}
                   style={{ color: themeColors.onSecondary }}

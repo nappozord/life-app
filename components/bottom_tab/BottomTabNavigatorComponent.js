@@ -3,6 +3,7 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import BudgetScreen from "~/screens/BudgetScreen";
 import GroceryScreen from "~/screens/GroceryScreen";
+import SettingsScreen from "~/screens/SettingsScreen";
 import CustomBottomTabComponent from "./CustomBottomTabComponent";
 
 const Tab = createBottomTabNavigator();
@@ -20,7 +21,7 @@ export default function BottomTabNavigatorComponent() {
       <Tab.Screen name="chart-donut" component={BudgetScreen} />
       <Tab.Screen name="chart-line" component={BudgetScreen} />
       <Tab.Screen name="cart" component={GroceryScreen} />
-      <Tab.Screen name="cog-outline" component={BudgetScreen} />
+      <Tab.Screen name="cog-outline" component={SettingsScreen} />
     </Tab.Navigator>
   );
 }

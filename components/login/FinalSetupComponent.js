@@ -68,6 +68,19 @@ export default function FinalSetupComponent({ user, setFinalSetup, setLogin }) {
     navigation.push("Home");
   }
 
+  function onHowPress() {
+    Alert.alert(":)", "Do you accept the terms and conditions?", [
+      {
+        text: "Yes",
+        onPress: () => null,
+      },
+      {
+        text: "Yes",
+        onPress: () => null,
+      },
+    ]);
+  }
+
   return (
     <Animated.View
       entering={SlideInDown.duration(400).easing(Easing.ease)}
@@ -162,7 +175,10 @@ export default function FinalSetupComponent({ user, setFinalSetup, setLogin }) {
               />
             </Pressable>
           </View>
-          <TouchableOpacity className="flex items-end mb-7 mr-4">
+          <TouchableOpacity
+            className="flex items-end mb-7 mr-4"
+            onPress={() => onHowPress()}
+          >
             <Text
               className="underline"
               style={{ color: themeColors.onSecondaryContainer }}
@@ -205,7 +221,7 @@ export default function FinalSetupComponent({ user, setFinalSetup, setLogin }) {
             className="font-semibold"
             style={{ color: themeColors.onSecondaryContainer }}
           >
-            Want to change account? 
+            Want to change account?
           </Text>
           <TouchableOpacity
             onPress={() => {

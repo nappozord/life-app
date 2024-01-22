@@ -23,7 +23,7 @@ import LoginComponent from "~/components/login/LoginComponent";
 import SignUpComponent from "~/components/login/SignUpComponent";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { getCurrentUser, autoSignIn } from "@aws-amplify/auth";
+import { getCurrentUser } from "@aws-amplify/auth";
 import ConfirmCodeComponent from "../components/login/ConfirmCodeComponent";
 import { getUser } from "~/api/apiManager";
 import FinalSetupComponent from "../components/login/FinalSetupComponent";
@@ -57,7 +57,7 @@ export default function WelcomeScreen() {
     ? "Password Recovery"
     : "Welcome to Life!";
 
-  const dev = true;
+  const dev = false;
   const reset = false;
 
   useEffect(() => {
@@ -113,14 +113,18 @@ export default function WelcomeScreen() {
       />
       {loading ? (
         <View className="flex-1 justify-center items-center">
-        <View className="absolute">
-          <ActivityIndicator animating={true} color={themeColors.primary} size={250} />
-        </View>
-        <Image
-          className="absolute h-52 w-52"
-          source={require("~/assets/adaptive-icon.png")}
-          //blurRadius={80}
-      />
+          <View className="absolute">
+            <ActivityIndicator
+              animating={true}
+              color={themeColors.primary}
+              size={250}
+            />
+          </View>
+          <Image
+            className="absolute h-52 w-52"
+            source={require("~/assets/adaptive-icon.png")}
+            //blurRadius={80}
+          />
         </View>
       ) : (
         <View>

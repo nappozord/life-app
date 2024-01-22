@@ -114,8 +114,10 @@ export default function AddIngredientModal({
                       className="-ml-2"
                     />
                   </View>
-                  <Text className="text-xl font-semibold -mt-4 mb-4"
-                  style={{color: themeColors.onBackground}}>
+                  <Text
+                    className="text-xl font-semibold -mt-4 mb-4"
+                    style={{ color: themeColors.onBackground }}
+                  >
                     Ingredient
                   </Text>
                 </>
@@ -143,8 +145,10 @@ export default function AddIngredientModal({
                     setModalVisible(false);
                   }}
                 >
-                  <Text className="font-bold text-center text-xl"
-                  style={{color: themeColors.onPrimary}}>
+                  <Text
+                    className="font-bold text-center text-xl"
+                    style={{ color: themeColors.onPrimary }}
+                  >
                     Add to List
                   </Text>
                 </TouchableOpacity>
