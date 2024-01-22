@@ -86,7 +86,7 @@ export default function PassRecoveryComponent({
       <Image
         className="absolute w-full mt-16"
         source={require("~/assets/splash.png")}
-        blurRadius={80}
+        //blurRadius={80}
         style={{
           borderTopLeftRadius: 50,
           borderTopRightRadius: 50,

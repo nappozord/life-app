@@ -17,7 +17,12 @@ import { IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
 import { useNavigation } from "@react-navigation/native";
 
-import { signIn, signInWithRedirect, signOut, getCurrentUser } from "aws-amplify/auth";
+import {
+  signIn,
+  signInWithRedirect,
+  signOut,
+  getCurrentUser,
+} from "aws-amplify/auth";
 import { updateUser, getUser } from "~/api/apiManager";
 
 const height = Dimensions.get("window").height;
@@ -51,11 +56,9 @@ export default function FinalSetupComponent({ user, setFinalSetup, setLogin }) {
   }, []);
 
   function configureUser() {
-    if(!username.current || username.current === "")
-      username.current = "User";
+    if (!username.current || username.current === "") username.current = "User";
 
-    if(!balance.current || balance.current === "")
-      balance.current = "0";
+    if (!balance.current || balance.current === "") balance.current = "0";
 
     updateUser({
       ...user.current,
@@ -77,10 +80,13 @@ export default function FinalSetupComponent({ user, setFinalSetup, setLogin }) {
     >
       <View className="absolute w-full mt-2 z-10">
         <View className="flex-row justify-center">
-          <View className="bg-gray-300 rounded-full p-2">
+          <View
+            className="rounded-full p-2"
+            style={{ color: themeColors.onSecondaryContainer }}
+          >
             <IconButton
               icon={"account-cog"}
-              color={themeColors.bgBlack(1)}
+              color={themeColors.background}
               size={72}
             />
           </View>
@@ -89,7 +95,7 @@ export default function FinalSetupComponent({ user, setFinalSetup, setLogin }) {
       <Image
         className="absolute w-full mt-16"
         source={require("~/assets/splash.png")}
-        blurRadius={80}
+        //blurRadius={80}
         style={{
           borderTopLeftRadius: 50,
           borderTopRightRadius: 50,
@@ -98,86 +104,109 @@ export default function FinalSetupComponent({ user, setFinalSetup, setLogin }) {
       <View
         className="flex-1 px-8 pt-20"
         style={{
-          backgroundColor: themeColors.bgWhite(0.3),
+          backgroundColor: themeColors.secondaryContainer,
           borderTopLeftRadius: 50,
           borderTopRightRadius: 50,
         }}
       >
         <View className="form space-y-2">
-          <Text className="text-gray-300 ml-2">Username</Text>
+          <Text
+            className="ml-2"
+            style={{ color: themeColors.onSecondaryContainer }}
+          >
+            Username
+          </Text>
           <TextInput
-            className="p-3 text-gray-950 rounded-2xl mb-3"
-            style={{ backgroundColor: themeColors.bgWhite(0.6) }}
+            className="p-3 rounded-2xl mb-3"
+            style={{
+              backgroundColor: themeColors.onSecondaryContainer,
+              color: themeColors.background,
+            }}
             placeholder="Enter Username"
-            selectionColor={themeColors.bgBlack(1)}
+            selectionColor={themeColors.background}
             onChangeText={(text) => {
               username.current = text;
             }}
           />
-          <Text className="text-gray-300 ml-2">Initial Balance</Text>
+          <Text
+            className="ml-2"
+            style={{ color: themeColors.onSecondaryContainer }}
+          >
+            Initial Balance
+          </Text>
           <View
             className="flex-row items-center rounded-2xl p-1 mb-2"
             style={{
-              backgroundColor: themeColors.bgWhite(0.6),
+              backgroundColor: themeColors.onSecondaryContainer,
               height: 50,
             }}
           >
             <TextInput
               keyboardType="numeric"
               placeholder="Enter Balance"
-              className="px-2 flex-1 text-gray-700"
-              selectionColor={themeColors.bgBlack(1)}
+              className="px-2 flex-1 "
+              style={{ color: themeColors.background }}
+              selectionColor={themeColors.background}
               onChangeText={(text) => {
                 balance.current = text;
               }}
             />
             <Pressable
               className="rounded-2xl pr-0.5"
-              style={{ backgroundColor: themeColors.bgBlack(1) }}
+              style={{ backgroundColor: themeColors.background }}
             >
               <IconButton
                 size={20}
                 icon="currency-eur"
-                color={themeColors.bgGrey(1)}
+                color={themeColors.onBackground}
               />
             </Pressable>
           </View>
           <TouchableOpacity className="flex items-end mb-7 mr-4">
-            <Text className="text-gray-200 underline">
+            <Text
+              className="underline"
+              style={{ color: themeColors.onSecondaryContainer }}
+            >
               How do we use your data?
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             className="py-3 rounded-2xl"
-            style={{ backgroundColor: themeColors.chartBlue(1) }}
+            style={{ backgroundColor: themeColors.primary }}
             onPress={() => configureUser()}
           >
-            <Text className="text-gray-200 font-bold text-center text-xl">
+            <Text
+              className="font-bold text-center text-xl"
+              style={{ color: themeColors.onPrimary }}
+            >
               Confirm
             </Text>
           </TouchableOpacity>
         </View>
-        <Text className="text-xl text-gray-300 font-bold text-center py-5">
+        <Text
+          className="text-xl font-bold text-center py-5"
+          style={{ color: themeColors.onSecondaryContainer }}
+        >
           Or
         </Text>
         <View className="flex-row justify-center">
           <TouchableOpacity
             className="py-3 rounded-3xl w-full items-center"
-            style={{ backgroundColor: themeColors.bgWhite(0.7) }}
+            style={{ backgroundColor: themeColors.secondary }}
             onPress={() => {
               signInWithRedirect({ provider: "Google" });
             }}
           >
-            <Text className="text-gray-800 font-bold text-center text-xl">
-              Go Back
-            </Text>
+            <Text className="font-bold text-center text-xl">Go Back</Text>
           </TouchableOpacity>
         </View>
         <View className="flex-row justify-center mt-7">
-          <Text className="text-gray-300 font-semibold">
+          <Text
+            className="font-semibold"
+            style={{ color: themeColors.onSecondaryContainer }}
+          >
             Want to change account?
           </Text>
-          <Text> </Text>
           <TouchableOpacity
             onPress={() => {
               signOut().then((r) => {
@@ -186,7 +215,12 @@ export default function FinalSetupComponent({ user, setFinalSetup, setLogin }) {
               });
             }}
           >
-            <Text className="font-bold underline text-gray-300">Login</Text>
+            <Text
+              className="font-bold underline "
+              style={{ color: themeColors.primary }}
+            >
+              Login
+            </Text>
           </TouchableOpacity>
         </View>
       </View>

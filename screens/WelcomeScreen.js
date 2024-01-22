@@ -22,13 +22,14 @@ import { themeColors } from "~/theme";
 import LoginComponent from "~/components/login/LoginComponent";
 import SignUpComponent from "~/components/login/SignUpComponent";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { restoreBackup } from "~/api/apiManager";
 
 import { getCurrentUser, autoSignIn } from "@aws-amplify/auth";
 import ConfirmCodeComponent from "../components/login/ConfirmCodeComponent";
 import { getUser } from "~/api/apiManager";
 import FinalSetupComponent from "../components/login/FinalSetupComponent";
 import PassRecoveryComponent from "../components/login/PassRecoveryComponent";
+
+import { restoreBackup } from "~/api/apiManager";
 import { updateUser } from "../api/apiManager";
 
 const height = Dimensions.get("window").height;
@@ -42,20 +43,38 @@ export default function WelcomeScreen() {
   [passRecovery, setPassRecovery] = useState(false);
   const user = useRef({});
   const email = useRef("");
+  const pageTitle = login
+    ? "Login"
+    : signup
+    ? "Sign Up"
+    : confirmCode
+    ? "Confirm Email"
+    : finalSetup
+    ? "One Last Step"
+    : passRecovery
+    ? "Password Recovery"
+    : "Welcome to Life!";
+
+  const dev = false;
+  const reset = false;
 
   useEffect(() => {
-    updateUser({
-      userId: "abc",
-      username: "Nappozord",
-      balance: 2000,
-    }).then(() => navigation.push("Home"))
-    
-    //updateUser(defaultUser)
-    //restoreBackup("January, 2024");
-    //restoreBackup("December, 2023");
-    //AsyncStorage.clear();
-    //AsyncStorage.removeItem("groceries")
-    //AsyncStorage.removeItem("defaultCategories")
+    if (dev) {
+      updateUser({
+        userId: "abc",
+        username: "Nappozord",
+        balance: 2000,
+      }).then(() => navigation.push("Home"));
+    }
+
+    if (reset) {
+      updateUser(defaultUser);
+      restoreBackup("January, 2024");
+      restoreBackup("December, 2023");
+      AsyncStorage.clear();
+      AsyncStorage.removeItem("groceries");
+      AsyncStorage.removeItem("defaultCategories");
+    }
     AsyncStorage.getAllKeys().then((r) => console.log(r));
 
     getCurrentUser()
@@ -73,7 +92,7 @@ export default function WelcomeScreen() {
           });
         }
       })
-      .catch((e) => {});
+      .catch(() => {});
   }, []);
 
   return (
@@ -82,7 +101,7 @@ export default function WelcomeScreen() {
       <Image
         className="absolute h-full w-full"
         source={require("~/assets/splash.png")}
-        blurRadius={80}
+        //blurRadius={80}
       />
       <Pressable
         className="flex-1 absolute w-full"
@@ -94,24 +113,14 @@ export default function WelcomeScreen() {
       >
         <View className="flex-1 justify-around my-4 mt-16">
           <Animated.Text
-            key={login ? "login" : signup ? "signup" : "welcome"}
+            key={pageTitle}
             entering={SlideInLeft.duration(400).easing(Easing.ease)}
             exiting={SlideOutRight.duration(400).easing(Easing.ease)}
-            className="text-gray-200 font-bold text-4xl text-center"
+            className="font-bold text-4xl text-center"
+            style={{ color: themeColors.onBackground }}
           >
-            {login
-              ? "Login"
-              : signup
-              ? "Sign Up"
-              : confirmCode
-              ? "Confirm Email"
-              : finalSetup 
-              ? "One Last Step"
-              : passRecovery
-              ? "Password Recovery"
-              : "Welcome to Life!"}
+            {pageTitle}
           </Animated.Text>
-
           <Animated.View
             entering={FadeIn}
             exiting={FadeOut}
@@ -131,20 +140,31 @@ export default function WelcomeScreen() {
           >
             <TouchableOpacity
               className="py-3 mx-7 rounded-xl"
-              style={{ backgroundColor: themeColors.chartBlue(1) }}
+              style={{ backgroundColor: themeColors.primary }}
               onPress={() => setSignup(true)}
             >
-              <Text className="text-xl font-bold text-center text-gray-200">
+              <Text
+                className="text-xl font-bold text-center"
+                style={{ color: themeColors.onPrimary }}
+              >
                 Sign Up
               </Text>
             </TouchableOpacity>
             <View className="flex-row justify-center">
-              <Text className="text-gray-300 font-semibold">
+              <Text
+                className="font-semibold"
+                style={{ color: themeColors.onBackground }}
+              >
                 Already have an account?
               </Text>
               <Text> </Text>
               <TouchableOpacity onPress={() => setLogin(true)}>
-                <Text className="font-bold underline text-gray-300">Login</Text>
+                <Text
+                  className="font-bold underline"
+                  style={{ color: themeColors.primary }}
+                >
+                  Login
+                </Text>
               </TouchableOpacity>
             </View>
           </Animated.View>

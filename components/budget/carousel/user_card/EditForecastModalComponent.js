@@ -75,8 +75,8 @@ export default function EditForecastModalComponent({
       <Image
         className="absolute h-full w-full"
         source={require("~/assets/splash.png")}
-        blurRadius={80}
-        style={{ opacity: 0.95 }}
+        //blurRadius={80}
+        style={{ opacity: 0.9 }}
       />
       <KeyboardAvoidingView
         //keyboardVerticalOffset={-50}

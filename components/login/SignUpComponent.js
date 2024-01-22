@@ -10,23 +10,13 @@ import React, { useRef, useState } from "react";
 import Animated, {
   Easing,
   SlideInDown,
-  SlideInLeft,
-  SlideInRight,
   SlideOutDown,
-  SlideOutLeft,
-  SlideOutRight,
 } from "react-native-reanimated";
 import { ActivityIndicator, IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
 import { useNavigation } from "@react-navigation/native";
 
-import {
-  signUp,
-  signInWithRedirect,
-  confirmSignUp,
-  autoSignIn,
-  getCurrentUser,
-} from "aws-amplify/auth";
+import { signUp, signInWithRedirect } from "aws-amplify/auth";
 
 const height = Dimensions.get("window").height;
 
@@ -74,10 +64,13 @@ export default function SignUpComponent({
     >
       <View className="absolute w-full mt-2 z-10">
         <View className="flex-row justify-center">
-          <View className="bg-gray-300 rounded-full">
+          <View
+            className="rounded-full"
+            style={{ backgroundColor: themeColors.onBackground }}
+          >
             <IconButton
               icon={"account-supervisor-circle"}
-              color={themeColors.bgBlack(1)}
+              color={themeColors.background}
               size={80}
             />
           </View>
@@ -86,7 +79,7 @@ export default function SignUpComponent({
       <Image
         className="absolute w-full mt-16"
         source={require("~/assets/splash.png")}
-        blurRadius={80}
+        //blurRadius={80}
         style={{
           borderTopLeftRadius: 50,
           borderTopRightRadius: 50,
@@ -95,29 +88,45 @@ export default function SignUpComponent({
       <View
         className="flex-1 px-8 pt-20"
         style={{
-          backgroundColor: themeColors.bgWhite(0.3),
+          backgroundColor: themeColors.secondaryContainer,
           borderTopLeftRadius: 50,
           borderTopRightRadius: 50,
         }}
       >
         <View className="space-y-2">
-          <Text className="text-gray-300 ml-2">Email Addres</Text>
+          <Text
+            className="ml-2"
+            style={{ color: themeColors.onSecondaryContainer }}
+          >
+            Email Addres
+          </Text>
           <TextInput
             className="p-3 text-gray-950 rounded-2xl mb-3"
-            style={{ backgroundColor: themeColors.bgWhite(0.6) }}
+            style={{
+              backgroundColor: themeColors.onSecondaryContainer,
+              color: themeColors.background,
+            }}
             placeholder="Enter Email"
-            selectionColor={themeColors.bgBlack(1)}
+            selectionColor={themeColors.background}
             onChangeText={(text) => {
               email.current = text;
             }}
           />
-          <Text className="text-gray-300 ml-2">Password</Text>
+          <Text
+            className="ml-2"
+            style={{ color: themeColors.onSecondaryContainer }}
+          >
+            Password
+          </Text>
           <TextInput
-            className="p-3 text-gray-950 rounded-2xl mb-3"
-            style={{ backgroundColor: themeColors.bgWhite(0.6) }}
+            className="p-3 rounded-2xl mb-3"
+            style={{
+              backgroundColor: themeColors.onSecondaryContainer,
+              color: themeColors.background,
+            }}
             placeholder="Enter Password"
             secureTextEntry
-            selectionColor={themeColors.bgBlack(1)}
+            selectionColor={themeColors.background}
             onChangeText={(text) => {
               password.current = text;
             }}
@@ -129,40 +138,54 @@ export default function SignUpComponent({
               setSignup(false);
             }}
           >
-            <Text className="text-gray-200 underline">
+            <Text
+              className="underline"
+              style={{ color: themeColors.onSecondaryContainer }}
+            >
               Already have an OTP?
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             className="py-3 rounded-2xl"
-            style={{ backgroundColor: themeColors.chartBlue(1) }}
+            style={{ backgroundColor: themeColors.primary }}
             onPress={() => {
               handleSignUp();
             }}
           >
             {!loading ? (
-              <Text className="text-gray-200 font-bold text-center text-xl">
+              <Text
+                className="font-bold text-center text-xl"
+                style={{ color: themeColors.onPrimary }}
+              >
                 Sign Up
               </Text>
             ) : (
               <ActivityIndicator
                 className="py-0.5"
                 animating={true}
-                color={themeColors.bgWhite(0.8)}
+                color={themeColors.onPrimary}
               />
             )}
           </TouchableOpacity>
           {error ? (
-            <Text className="text-red-800 ml-1 text-base">{error}</Text>
+            <Text
+              className="ml-1 text-base"
+              style={{ color: themeColors.errorContainer }}
+            >
+              {error}
+            </Text>
           ) : null}
         </View>
-        <Text className="text-xl text-gray-300 font-bold text-center py-5">
+        <Text
+          className="text-xl font-bold text-center py-5"
+          style={{ color: themeColors.onSecondaryContainer }}
+        >
           Or
         </Text>
         <View className="flex-row justify-center">
           <TouchableOpacity
             className="p-2 rounded-3xl w-full items-center"
-            style={{ backgroundColor: themeColors.bgWhite(0.7) }}
+            style={{ backgroundColor: themeColors.secondary }}
             onPress={() => {
               signInWithRedirect({ provider: "Google" })
                 .then((r) => {
@@ -180,7 +203,10 @@ export default function SignUpComponent({
           </TouchableOpacity>
         </View>
         <View className="flex-row justify-center mt-7">
-          <Text className="text-gray-300 font-semibold">
+          <Text
+            className="font-semibold"
+            style={{ color: themeColors.onSecondaryContainer }}
+          >
             Already have an account?
           </Text>
           <Text> </Text>
@@ -190,7 +216,14 @@ export default function SignUpComponent({
               setSignup(false);
             }}
           >
-            <Text className="font-bold underline text-gray-300">Login</Text>
+            <Text
+              className="font-bold underline "
+              style={{
+                color: themeColors.primary,
+              }}
+            >
+              Login
+            </Text>
           </TouchableOpacity>
         </View>
       </View>

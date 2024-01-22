@@ -107,7 +107,7 @@ export default function BudgetScreen() {
       <Image
         className="absolute h-full w-full"
         source={require("~/assets/splash.png")}
-        blurRadius={80}
+        //blurRadius={80}
       />
       {user.userId ? (
         <View className="mt-16">

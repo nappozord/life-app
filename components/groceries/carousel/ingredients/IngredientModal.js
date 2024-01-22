@@ -98,7 +98,7 @@ export default function IngredientModal({
       <Image
         className="absolute h-full w-full"
         source={require("~/assets/splash.png")}
-        blurRadius={80}
+        //blurRadius={80}
         style={{ opacity: 0.9 }}
       />
       <KeyboardAvoidingView

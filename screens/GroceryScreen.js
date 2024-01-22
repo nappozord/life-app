@@ -93,7 +93,7 @@ export default function App() {
       <Image
         className="absolute h-full w-full"
         source={require("~/assets/splash.png")}
-        blurRadius={80}
+        //blurRadius={80}
       />
       {user.userId ? (
         <>
