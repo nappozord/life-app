@@ -21,11 +21,10 @@ import ChipListComponent from "~/components/groceries/chip/ChipListComponent";
 import HeaderComponent from "~/components/header/HeaderComponent";
 import GroceriesCarouselComponent from "~/components/groceries/carousel/GroceriesCarouselComponent";
 
-export default function App() {
+export default function GroceryScreen({ user, setUser }) {
   const [meals, setMeals] = useState();
   const [ingredients, setIngredients] = useState();
   const [recipes, setRecipes] = useState();
-  const [user, setUser] = useState({});
   const [activeChip, setActiveChip] = useState(0);
   const chipListRef = useRef(null);
 
@@ -49,10 +48,6 @@ export default function App() {
   ];
 
   const searchBarHeight = useSharedValue(76);
-
-  useEffect(() => {
-    !user.userId ? getUser().then((r) => setUser(r)) : updateUser(user);
-  }, [user]);
 
   useEffect(() => {
     !meals ? getMeals().then((r) => setMeals(r)) : updateMeals(meals);

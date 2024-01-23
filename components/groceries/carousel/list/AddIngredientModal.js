@@ -62,7 +62,7 @@ export default function AddIngredientModal({
 
   return (
     <Modal
-      animationType="slide"
+      animationType="fade"
       transparent={true}
       visible={modalVisible}
       statusBarTranslucent
@@ -84,7 +84,7 @@ export default function AddIngredientModal({
           <Animated.View
             entering={SlideInDown.duration(500)}
             style={{
-              backgroundColor: themeColors.secondaryContainer,
+              backgroundColor: themeColors.onSecondary,
               borderTopLeftRadius: 24,
               borderTopRightRadius: 24,
             }}
@@ -95,7 +95,7 @@ export default function AddIngredientModal({
                 className="px-4 py-3 rounded-3xl -mt-16 items-center"
                 style={{
                   backgroundColor: themeColors.background,
-                  borderColor: themeColors.secondaryContainer,
+                  borderColor: themeColors.onSecondary,
                   borderWidth: 5,
                 }}
               >

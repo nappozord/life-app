@@ -47,7 +47,7 @@ export default function IngredientSearchComponent({
         </View>
         <TouchableOpacity
           className="rounded-2xl p-0 m0"
-          style={{ backgroundColor: themeColors.secondary }}
+          style={{ backgroundColor: themeColors.onSecondaryContainer }}
           onPress={() => {
             setOnlySelected(!onlySelected);
           }}
@@ -55,7 +55,7 @@ export default function IngredientSearchComponent({
           <IconButton
             size={35}
             icon={onlySelected ? "select-inverse" : "select-group"}
-            color={themeColors.onSecondary}
+            color={themeColors.background}
             className="p-0 m-0"
           />
         </TouchableOpacity>

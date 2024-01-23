@@ -63,11 +63,11 @@ export default function RecipesIngredientsListComponent({
               {item.ingredients ? (
                 <Animated.View entering={SlideInRight}>
                   <TouchableOpacity
-                    className="px-2 py-2 m-1 rounded-full "
+                    className="px-2 py-2 my-1 rounded-2xl"
                     style={{
                       backgroundColor: isSelected
                         ? themeColors.success
-                        : themeColors.primaryContainer,
+                        : themeColors.secondaryContainer,
                     }}
                     onPress={() => {
                       saveRecipe(item);
@@ -78,12 +78,12 @@ export default function RecipesIngredientsListComponent({
                         <IconButton
                           size={24}
                           icon={icon}
-                          color={themeColors.onPrimaryContainer}
+                          color={themeColors.onSecondaryContainer}
                           className="p-0 m-0"
                         />
                         <Text
                           className="font-semibold text-lg "
-                          style={{ color: themeColors.onPrimaryContainer }}
+                          style={{ color: themeColors.onSecondaryContainer }}
                         >
                           {item.title}
                         </Text>
@@ -91,14 +91,14 @@ export default function RecipesIngredientsListComponent({
                           <IconButton
                             size={24}
                             icon={"check-bold"}
-                            color={themeColors.onPrimaryContainer}
+                            color={themeColors.onSecondaryContainer}
                             className="p-0 m-0"
                           />
                         ) : null}
                       </View>
                       <Text
                         className="font-semibold text-lg  px-2"
-                        style={{ color: themeColors.onPrimaryContainer }}
+                        style={{ color: themeColors.onSecondaryContainer }}
                       >
                         {"€" + cost}
                       </Text>

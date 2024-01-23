@@ -57,13 +57,13 @@ export default function IngredientSelectionComponent({
 
   return item.id !== -1 ? (
     <Animated.View
-      className="overflow-hidden px-2 py-2 m-1 roun"
+      className="overflow-hidden px-2 py-2 my-1 rounded-2xl"
       style={[
         animatedBorderStyle,
         {
           backgroundColor: isSelected
             ? themeColors.success
-            : themeColors.primaryContainer,
+            : themeColors.secondaryContainer,
         },
       ]}
       entering={SlideInRight}
@@ -78,12 +78,12 @@ export default function IngredientSelectionComponent({
             <IconButton
               size={24}
               icon={icon}
-              color={themeColors.onPrimaryContainer}
+              color={themeColors.onSecondaryContainer}
               className="p-0 m-0"
             />
             <Text
               className="font-semibold text-lg"
-              style={{ color: themeColors.onPrimaryContainer }}
+              style={{ color: themeColors.onSecondaryContainer }}
             >
               {item.title}
             </Text>
@@ -91,14 +91,14 @@ export default function IngredientSelectionComponent({
               <IconButton
                 size={24}
                 icon={"check-bold"}
-                color={themeColors.bgWhite(0.7)}
+                color={themeColors.onSecondaryContainer}
                 className="p-0 m-0"
               />
             ) : null}
           </View>
           <Text
             className="font-semibold text-lg  px-2"
-            style={{ color: themeColors.onPrimaryContainer }}
+            style={{ color: themeColors.onSecondaryContainer }}
           >
             {"€" + cost}
           </Text>
@@ -121,11 +121,11 @@ export default function IngredientSelectionComponent({
   ) : (
     <TouchableOpacity
       className="justify-center items-center rounded-3xl my-1"
-      style={{ height: 200, backgroundColor: themeColors.onSecondary }}
+      style={{ height: 200, backgroundColor: themeColors.secondaryContainer }}
     >
       <Text
         className="font-semibold text-xl"
-        style={{ color: themeColors.secondary }}
+        style={{ color: themeColors.onSecondaryContainer }}
       >
         Add more ingredients!
       </Text>

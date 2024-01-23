@@ -12,15 +12,12 @@ import { IconButton } from "react-native-paper";
 import { signOut } from "aws-amplify/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+import FinalSetupComponent from "~/components/login/FinalSetupComponent";
 
-export default function SettingsScreen() {
-  const [user, setUser] = useState({});
+export default function SettingsScreen({ user, setUser }) {
+  const [finalSetup, setFinalSetup] = useState(false);
   const searchBarHeight = useSharedValue(76);
   const navigation = useNavigation();
-
-  useEffect(() => {
-    !user.userId ? getUser().then((r) => setUser(r)) : updateUser(user);
-  }, [user]);
 
   const searchBarAnimatedStyle = useAnimatedStyle(() => ({
     height: searchBarHeight.value,
@@ -91,6 +88,36 @@ export default function SettingsScreen() {
                     className="text-xl"
                     style={{ color: themeColors.onBackground }}
                   >
+                    Update Information
+                  </Text>
+                  <Text
+                    className="text-sm"
+                    style={{ color: themeColors.onBackground }}
+                  >
+                    Edit username and balance
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  className="rounded-2xl px-7"
+                  style={{ backgroundColor: themeColors.primaryContainer }}
+                  onPress={() => setFinalSetup(true)}
+                >
+                  <IconButton
+                    size={24}
+                    color={themeColors.onPrimaryContainer}
+                    icon="account-edit-outline"
+                  />
+                </TouchableOpacity>
+              </View>
+              <View
+                style={{ backgroundColor: themeColors.onBackground, height: 1 }}
+              />
+              <View className="flex-row items-center justify-between mb-1">
+                <View>
+                  <Text
+                    className="text-xl"
+                    style={{ color: themeColors.onBackground }}
+                  >
                     Logout
                   </Text>
                   <Text
@@ -146,6 +173,13 @@ export default function SettingsScreen() {
                 style={{ backgroundColor: themeColors.onBackground, height: 1 }}
               />
             </View>
+            {finalSetup ? (
+              <FinalSetupComponent
+                user={user}
+                setFinalSetup={setFinalSetup}
+                setUser={setUser}
+              />
+            ) : null}
           </View>
         </>
       ) : (

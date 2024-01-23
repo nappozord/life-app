@@ -143,7 +143,7 @@ export default function EditExpenseModalComponent({
             <Animated.View
               entering={SlideInDown.duration(500)}
               style={{
-                backgroundColor: themeColors.secondaryContainer,
+                backgroundColor: themeColors.onSecondary,
                 borderTopLeftRadius: 24,
                 borderTopRightRadius: 24,
               }}
@@ -154,7 +154,7 @@ export default function EditExpenseModalComponent({
                   className="p-5 rounded-full -mt-20 items-center"
                   style={{
                     backgroundColor: themeColors.background,
-                    borderColor: themeColors.secondaryContainer,
+                    borderColor: themeColors.onSecondary,
                     borderWidth: 5,
                   }}
                 >

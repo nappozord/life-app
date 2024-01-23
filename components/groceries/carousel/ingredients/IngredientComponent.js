@@ -68,7 +68,7 @@ export default function IngredientComponent({
                   key={item.id + item.stock}
                 >
                   <Text
-                    className="text-lg"
+                    className="text-lg font-semibold"
                     style={{ color: themeColors.onSecondary }}
                   >
                     {Math.ceil(item.stock)}
@@ -94,7 +94,7 @@ export default function IngredientComponent({
                     style={{ backgroundColor: themeColors.secondary }}
                   >
                     <Text
-                      className=" text-xs "
+                      className=" text-xs font-semibold"
                       style={{ color: themeColors.onSecondary }}
                     >
                       {"x" + item.quantity}

@@ -24,13 +24,13 @@ import SignUpComponent from "~/components/login/SignUpComponent";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { getCurrentUser } from "@aws-amplify/auth";
-import ConfirmCodeComponent from "../components/login/ConfirmCodeComponent";
+import ConfirmCodeComponent from "~/components/login/ConfirmCodeComponent";
 import { getUser } from "~/api/apiManager";
-import FinalSetupComponent from "../components/login/FinalSetupComponent";
-import PassRecoveryComponent from "../components/login/PassRecoveryComponent";
+import FinalSetupComponent from "~/components/login/FinalSetupComponent";
+import PassRecoveryComponent from "~/components/login/PassRecoveryComponent";
 
 import { restoreBackup } from "~/api/apiManager";
-import { updateUser } from "../api/apiManager";
+import { updateUser } from "~/api/apiManager";
 import { ActivityIndicator } from "react-native-paper";
 
 const height = Dimensions.get("window").height;
@@ -61,30 +61,30 @@ export default function WelcomeScreen() {
   const reset = false;
 
   useEffect(() => {
-    if (dev) {
-      updateUser({
-        userId: "abc",
-        username: "Nappozord",
-        balance: 2000,
-      }).then(() => navigation.push("Home"));
-      AsyncStorage.getAllKeys().then((r) => console.log(r));
-    }
+    setTimeout(() => {
+      if (dev) {
+        updateUser({
+          userId: "abc",
+          username: "Nappozord",
+          balance: 2000,
+        }).then(() => navigation.push("Home"));
+        AsyncStorage.getAllKeys().then((r) => console.log(r));
+      }
+  
+      if (reset) {
+        updateUser(defaultUser);
+        restoreBackup("January, 2024");
+        restoreBackup("December, 2023");
+        AsyncStorage.clear();
+        AsyncStorage.removeItem("groceries");
+        AsyncStorage.removeItem("defaultCategories");
+      }
 
-    if (reset) {
-      updateUser(defaultUser);
-      restoreBackup("January, 2024");
-      restoreBackup("December, 2023");
-      AsyncStorage.clear();
-      AsyncStorage.removeItem("groceries");
-      AsyncStorage.removeItem("defaultCategories");
-    }
-
-    getCurrentUser()
+      getCurrentUser()
       .then((r) => {
         if (r && r.userId) {
           getUser().then((u) => {
             if (u && u.userId === r.userId) {
-              setLoading(false);
               navigation.push("Home");
             } else {
               setLoading(false);
@@ -101,6 +101,7 @@ export default function WelcomeScreen() {
       .catch(() => {
         setLoading(false);
       });
+    }, 700)
   }, []);
 
   return (

@@ -86,7 +86,7 @@ export default function LoginComponent({
       <View
         className="flex-1 px-8 pt-20"
         style={{
-          backgroundColor: themeColors.secondaryContainer,
+          backgroundColor: themeColors.onSecondary,
           borderTopLeftRadius: 50,
           borderTopRightRadius: 50,
         }}

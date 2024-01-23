@@ -6,6 +6,7 @@ import {
   TextInput,
   Pressable,
   Dimensions,
+  Alert,
 } from "react-native";
 import React, { useEffect, useRef } from "react";
 import Animated, {
@@ -17,20 +18,20 @@ import { IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
 import { useNavigation } from "@react-navigation/native";
 
-import {
-  signIn,
-  signInWithRedirect,
-  signOut,
-  getCurrentUser,
-} from "aws-amplify/auth";
+import { signOut, getCurrentUser } from "aws-amplify/auth";
 import { updateUser, getUser } from "~/api/apiManager";
 
 const height = Dimensions.get("window").height;
 
-export default function FinalSetupComponent({ user, setFinalSetup, setLogin }) {
+export default function FinalSetupComponent({
+  user,
+  setFinalSetup,
+  setLogin,
+  setUser,
+}) {
   const navigation = useNavigation();
-  const username = useRef("");
-  const balance = useRef("");
+  const username = useRef(setLogin ? null : user.username);
+  const balance = useRef(setLogin ? null : user.balance.toFixed(2));
 
   useEffect(() => {
     if (!user || !user.userId) {
@@ -49,7 +50,7 @@ export default function FinalSetupComponent({ user, setFinalSetup, setLogin }) {
             });
           }
         })
-        .catch((e) => {
+        .catch(() => {
           navigation.push("Welcome");
         });
     }
@@ -60,12 +61,15 @@ export default function FinalSetupComponent({ user, setFinalSetup, setLogin }) {
 
     if (!balance.current || balance.current === "") balance.current = "0";
 
-    updateUser({
-      ...user.current,
+    const u = {
+      userId: setLogin ? user.current.userId : user.userId,
       username: username.current,
       balance: parseFloat(parseFloat(balance.current).toFixed(2)),
-    });
-    navigation.push("Home");
+    };
+
+    setLogin ? updateUser(u) : setUser({ ...u });
+
+    setLogin ? navigation.push("Home") : setFinalSetup(false);
   }
 
   function onHowPress() {
@@ -87,7 +91,7 @@ export default function FinalSetupComponent({ user, setFinalSetup, setLogin }) {
       exiting={SlideOutDown.duration(400).easing(Easing.ease)}
       className="flex-1 bg-transparent pt-16 w-full absolute"
       style={{
-        top: height / 4,
+        top: height / (setLogin ? 4 : 10),
         height: height / 0.5,
       }}
     >
@@ -95,7 +99,7 @@ export default function FinalSetupComponent({ user, setFinalSetup, setLogin }) {
         <View className="flex-row justify-center">
           <View
             className="rounded-full p-2"
-            style={{ color: themeColors.onSecondaryContainer }}
+            style={{ backgroundColor: themeColors.onBackground }}
           >
             <IconButton
               icon={"account-cog"}
@@ -117,7 +121,7 @@ export default function FinalSetupComponent({ user, setFinalSetup, setLogin }) {
       <View
         className="flex-1 px-8 pt-20"
         style={{
-          backgroundColor: themeColors.secondaryContainer,
+          backgroundColor: themeColors.onSecondary,
           borderTopLeftRadius: 50,
           borderTopRightRadius: 50,
         }}
@@ -135,6 +139,7 @@ export default function FinalSetupComponent({ user, setFinalSetup, setLogin }) {
               backgroundColor: themeColors.onSecondaryContainer,
               color: themeColors.background,
             }}
+            defaultValue={username.current}
             placeholder="Enter Username"
             selectionColor={themeColors.background}
             onChangeText={(text) => {
@@ -158,6 +163,7 @@ export default function FinalSetupComponent({ user, setFinalSetup, setLogin }) {
               keyboardType="numeric"
               placeholder="Enter Balance"
               className="px-2 flex-1 "
+              defaultValue={balance.current}
               style={{ color: themeColors.background }}
               selectionColor={themeColors.background}
               onChangeText={(text) => {
@@ -210,35 +216,46 @@ export default function FinalSetupComponent({ user, setFinalSetup, setLogin }) {
             className="py-3 rounded-3xl w-full items-center"
             style={{ backgroundColor: themeColors.secondary }}
             onPress={() => {
-              signInWithRedirect({ provider: "Google" });
+              setLogin
+                ? signOut()
+                    .then(() => {
+                      navigation.push("Welcome");
+                    })
+                    .catch(() => {
+                      navigation.push("Welcome");
+                    })
+                : setFinalSetup(false);
             }}
           >
             <Text className="font-bold text-center text-xl">Go Back</Text>
           </TouchableOpacity>
         </View>
-        <View className="flex-row justify-center mt-7">
-          <Text
-            className="font-semibold"
-            style={{ color: themeColors.onSecondaryContainer }}
-          >
-            Want to change account?
-          </Text>
-          <TouchableOpacity
-            onPress={() => {
-              signOut().then((r) => {
-                setLogin(true);
-                setFinalSetup(false);
-              });
-            }}
-          >
+        {setLogin ? (
+          <View className="flex-row justify-center mt-7">
             <Text
-              className="font-bold underline "
-              style={{ color: themeColors.primary }}
+              className="font-semibold"
+              style={{ color: themeColors.onSecondaryContainer }}
             >
-              Login
+              Want to change account?
             </Text>
-          </TouchableOpacity>
-        </View>
+            <Text> </Text>
+            <TouchableOpacity
+              onPress={() => {
+                signOut().then((r) => {
+                  setLogin(true);
+                  setFinalSetup(false);
+                });
+              }}
+            >
+              <Text
+                className="font-bold underline "
+                style={{ color: themeColors.primary }}
+              >
+                Login
+              </Text>
+            </TouchableOpacity>
+          </View>
+        ) : null}
       </View>
     </Animated.View>
   );

@@ -114,7 +114,7 @@ export default function IngredientModal({
             <Animated.View
               entering={SlideInDown.duration(500)}
               style={{
-                backgroundColor: themeColors.secondaryContainer,
+                backgroundColor: themeColors.onSecondary,
                 borderTopLeftRadius: 24,
                 borderTopRightRadius: 24,
               }}
@@ -125,7 +125,7 @@ export default function IngredientModal({
                   className="px-4 py-3 rounded-3xl -mt-16 items-center"
                   style={{
                     backgroundColor: themeColors.background,
-                    borderColor: themeColors.secondaryContainer,
+                    borderColor: themeColors.onSecondary,
                     borderWidth: 5,
                   }}
                 >
@@ -199,7 +199,7 @@ export default function IngredientModal({
                       name.current = text;
                     }}
                   />
-                  <View className="flex-row justify-between items-center space-x-4">
+                  <View className="flex-row justify-between items-center space-x-4 mb-4">
                     <View className="flex-1 space-y-1">
                       <Text
                         className="font-semibold text-lg ml-2"
@@ -270,12 +270,47 @@ export default function IngredientModal({
                         >
                           <IconButton
                             size={20}
-                            icon="counter"
+                            icon="package-variant"
                             color={themeColors.onSecondaryContainer}
                           />
                         </Pressable>
                       </View>
                     </View>
+                  </View>
+                  <View className="flex-row justify-between items-center">
+                    <View className="flex-row items-center">
+                      <IconButton
+                        className="p-0 m-0"
+                        icon="update"
+                        size={20}
+                        color={themeColors.onSecondaryContainer}
+                      />
+                      <Text
+                        className="text-xs"
+                        style={{ color: themeColors.onSecondaryContainer }}
+                      >
+                        {"Last update: " +
+                          (item && item.lastUpdate
+                            ? item.lastUpdate
+                            : new Date().toLocaleDateString("it-IT"))}
+                      </Text>
+                    </View>
+                    {item ? (
+                      <TouchableOpacity className="flex-row items-center">
+                        <Text
+                          className="text-sm font-semibold"
+                          style={{ color: themeColors.primary }}
+                        >
+                          Check history
+                        </Text>
+                        <IconButton
+                          className="p-0 m-0"
+                          icon="clipboard-text-clock-outline"
+                          size={20}
+                          color={themeColors.primary}
+                        />
+                      </TouchableOpacity>
+                    ) : null}
                   </View>
                 </View>
                 {item ? (

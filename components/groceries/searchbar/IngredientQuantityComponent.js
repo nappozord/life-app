@@ -30,9 +30,9 @@ export default function IngredientQuantityComponent({
         icon="information"
         size={24}
         className="m-0 p-0"
-        color={themeColors.onPrimaryContainer}
+        color={themeColors.onSecondaryContainer}
       />
-      <Text className="font-semibold text-lg mr-4" style={{color: themeColors.onPrimaryContainer}}>
+      <Text className="font-semibold text-lg mr-4" style={{color: themeColors.onSecondaryContainer}}>
         {total == 1 || total > 50 ? "How much:" : "How many:"}
       </Text>
       <View className="flex-1">

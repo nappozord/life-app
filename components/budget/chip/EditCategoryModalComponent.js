@@ -115,7 +115,7 @@ export default function EditCategoryModalComponent({
             <Animated.View
               entering={SlideInDown.duration(500)}
               style={{
-                backgroundColor: themeColors.secondaryContainer,
+                backgroundColor: themeColors.onSecondary,
                 borderTopLeftRadius: 24,
                 borderTopRightRadius: 24,
               }}
@@ -126,7 +126,7 @@ export default function EditCategoryModalComponent({
                   className="p-5 rounded-full -mt-20 items-center"
                   style={{
                     backgroundColor: themeColors.background,
-                    borderColor: themeColors.secondaryContainer,
+                    borderColor: themeColors.onSecondary,
                     borderWidth: 5,
                   }}
                 >
@@ -164,7 +164,10 @@ export default function EditCategoryModalComponent({
                   <TextInput
                     ref={inputRef}
                     className="p-3 rounded-2xl mb-2 text-base"
-                    style={{ backgroundColor: themeColors.onBackground }}
+                    style={{
+                      backgroundColor: themeColors.onSecondaryContainer,
+                      color: themeColors.background,
+                    }}
                     placeholder="E.g. New Awesome Category!"
                     selectionColor={themeColors.background}
                     defaultValue={description.current}
@@ -181,13 +184,14 @@ export default function EditCategoryModalComponent({
                   <View
                     className="flex-row items-center rounded-2xl p-1 mb-4"
                     style={{
-                      backgroundColor: themeColors.onBackground,
+                      backgroundColor: themeColors.onSecondaryContainer,
                       height: 50,
                     }}
                   >
                     <TextInput
                       placeholder="E.g. basket"
-                      className="px-2 flex-1 text-gray-700 text-base"
+                      className="px-2 flex-1 text-base"
+                      style={{ color: themeColors.background }}
                       selectionColor={themeColors.background}
                       defaultValue={icon}
                       onChangeText={(text) => {

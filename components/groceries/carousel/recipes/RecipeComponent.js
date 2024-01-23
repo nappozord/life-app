@@ -68,7 +68,7 @@ export default function RecipeComponent({
                 </Text>
                 <View className="flex-row items-center space-x-1">
                   <Text
-                    className="text-sm "
+                    className="text-sm"
                     style={{ color: themeColors.onSecondaryContainer }}
                   >
                     {"# of ingredients:"}
@@ -78,7 +78,7 @@ export default function RecipeComponent({
                     style={{ backgroundColor: themeColors.secondary }}
                   >
                     <Text
-                      className=" text-xs"
+                      className=" text-xs font-semibold"
                       style={{ color: themeColors.onSecondary }}
                     >
                       {item.ingredients.length}
@@ -92,7 +92,7 @@ export default function RecipeComponent({
               style={{ backgroundColor: themeColors.primary, elevation: 10 }}
             >
               <Text
-                className="text-base"
+                className="text-base font-semibold"
                 style={{ color: themeColors.onPrimary }}
               >
                 {"€" + calculateRecipeCosts(item, ingredients)}

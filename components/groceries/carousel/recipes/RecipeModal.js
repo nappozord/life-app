@@ -96,7 +96,7 @@ export default function RecipeModal({
           <Animated.View
             entering={SlideInDown.duration(500)}
             style={{
-              backgroundColor: themeColors.secondaryContainer,
+              backgroundColor: themeColors.onSecondary,
               borderTopLeftRadius: 24,
               borderTopRightRadius: 24,
             }}
@@ -107,7 +107,7 @@ export default function RecipeModal({
                 className="px-4 py-3 rounded-3xl -mt-16 items-center"
                 style={{
                   backgroundColor: themeColors.background,
-                  borderColor: themeColors.secondaryContainer,
+                  borderColor: themeColors.onSecondary,
                   borderWidth: 5,
                 }}
               >
@@ -117,7 +117,7 @@ export default function RecipeModal({
                       className="text-sm mb-1 "
                       style={{ color: themeColors.onBackground }}
                     >
-                      You used:
+                      You prepared:
                     </Text>
                     <Text
                       className=" text-5xl font-semibold "

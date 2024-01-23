@@ -22,10 +22,9 @@ import HeaderComponent from "~/components/header/HeaderComponent";
 import { useNavigation } from "@react-navigation/native";
 import { signOut } from "aws-amplify/auth";
 
-export default function BudgetScreen() {
+export default function BudgetScreen({ user, setUser }) {
   const navigation = useNavigation();
   const [date, setDate] = useState(() => formatDate(new Date()));
-  const [user, setUser] = useState({});
   const [categories, setCategories] = useState([]);
   const [activeCategory, setActiveCategory] = useState(0);
   const [cardPressed, setCardPressed] = useState(false);
@@ -60,10 +59,6 @@ export default function BudgetScreen() {
 
     return () => backHandler.remove();
   }, []);
-
-  useEffect(() => {
-    !user.userId ? getUser().then((r) => setUser(r)) : updateUser(user);
-  }, [user]);
 
   useEffect(() => {
     cardPressed
