@@ -6,12 +6,11 @@ import {
   Modal,
   Pressable,
   TouchableOpacity,
-  KeyboardAvoidingView,
 } from "react-native";
 import React, { useRef, useState } from "react";
 import { themeColors } from "~/theme";
-import { Divider, IconButton } from "react-native-paper";
-import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
+import { IconButton } from "react-native-paper";
+import Animated, { SlideInDown } from "react-native-reanimated";
 import IngredientSearchComponent from "~/components/groceries/searchbar/IngredientSearchComponent";
 
 export default function RecipeModal({

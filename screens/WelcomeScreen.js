@@ -32,6 +32,7 @@ import PassRecoveryComponent from "~/components/login/PassRecoveryComponent";
 import { restoreBackup } from "~/api/apiManager";
 import { updateUser } from "~/api/apiManager";
 import { ActivityIndicator } from "react-native-paper";
+import { checkIngredientQuantity } from "~/utils/manageIngredients";
 
 const height = Dimensions.get("window").height;
 
@@ -61,6 +62,8 @@ export default function WelcomeScreen() {
   const reset = false;
 
   useEffect(() => {
+    checkIngredientQuantity();
+
     setTimeout(() => {
       if (dev) {
         updateUser({

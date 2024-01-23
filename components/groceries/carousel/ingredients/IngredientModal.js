@@ -26,8 +26,8 @@ export default function IngredientModal({
   const inputRef = useRef(null);
 
   const name = useRef(item ? item.title.toString() : null);
-  const cost = useRef(item ? item.cost.toString() : null);
-  const quantity = useRef(item ? item.quantity.toString() : "1");
+  const cost = useRef(item ? parseFloat(item.cost).toFixed(2) : null);
+  const quantity = useRef(item ? parseFloat(item.quantity).toFixed(2) : "1");
 
   function addIngredient() {
     if (cost.current === "" || cost.current === null) cost.current = 0.0;
@@ -47,10 +47,18 @@ export default function IngredientModal({
     ingredients.push({
       id: max + 1,
       title: name.current,
-      cost: cost.current,
-      quantity: quantity.current,
+      cost: parseFloat(cost.current),
+      quantity: parseFloat(quantity.current),
       stock: 0,
       duration: 7,
+      lastUpdate: new Date().toLocaleDateString("it-IT"),
+      history: [
+        {
+          id: 0,
+          date: new Date().toLocaleDateString("it-IT"),
+          cost: parseFloat(cost.current),
+        },
+      ],
     });
 
     setIngredients([...ingredients]);
@@ -68,8 +76,28 @@ export default function IngredientModal({
     const ingredient = ingredients.find((obj) => obj.id === item.id);
 
     ingredient.title = name.current;
-    ingredient.cost = cost.current;
-    ingredient.quantity = quantity.current;
+    ingredient.cost = parseFloat(cost.current);
+    ingredient.quantity = parseFloat(quantity.current);
+    ingredient.lastUpdate = new Date().toLocaleDateString("it-IT");
+    if (ingredient.history) {
+      if (
+        ingredient.history.find((i) => i.id === ingredient.history.length - 1)
+          .cost !== parseFloat(cost.current)
+      )
+        ingredient.history.push({
+          id: ingredient.history.length,
+          date: new Date().toLocaleDateString("it-IT"),
+          cost: parseFloat(cost.current),
+        });
+    } else {
+      ingredient.history = [
+        {
+          id: 0,
+          date: new Date().toLocaleDateString("it-IT"),
+          cost: parseFloat(cost.current),
+        },
+      ];
+    }
 
     setIngredients([...ingredients]);
   }
@@ -141,7 +169,7 @@ export default function IngredientModal({
                         className=" text-5xl font-semibold "
                         style={{ color: themeColors.onBackground }}
                       >
-                        {item.stock}
+                        {Math.ceil(item.stock)}
                       </Text>
                       <Text
                         className="text-xl font-semibold -mt-2 "

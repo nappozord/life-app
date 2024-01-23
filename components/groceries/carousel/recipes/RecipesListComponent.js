@@ -53,7 +53,7 @@ export default function RecipesListComponent({
           <TouchableOpacity
             className="rounded-full"
             style={{ backgroundColor: themeColors.onPrimary }}
-            onPress={() => setModalVisible(true)}
+            onPress={() => setModalVisible(!modalVisible)}
           >
             <IconButton
               icon="plus"

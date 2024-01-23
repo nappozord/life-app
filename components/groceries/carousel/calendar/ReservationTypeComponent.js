@@ -47,7 +47,7 @@ export default function ReservationTypeComponent({
       <TouchableOpacity
         style={{ backgroundColor: themeColors.secondary }}
         className="flex-1 rounded-2xl p-3"
-        onPress={() => setModalVisible(true)}
+        onPress={() => setModalVisible(!modalVisible)}
       >
         <View className="flex-row justify-between -mt-2">
           <View className="flex-row items-center">

@@ -1,3 +1,12 @@
+import {
+  getMeals,
+  getIngredients,
+  getRecipes,
+  updateIngredients,
+  updateMeals,
+  updateRecipes,
+} from "~/api/apiManager";
+
 export function getIngredientFromMeal(
   meal,
   type,
@@ -37,4 +46,90 @@ function searchIngredients(ingredient, ingredients, weeklyIngredients) {
       });
     }
   }
+}
+
+export function checkIngredientQuantity() {
+  getIngredients().then((ingredients) => {
+    if (ingredients) {
+      getRecipes().then((recipes) => {
+        if (recipes) {
+          getMeals().then((r) => {
+            if (r) {
+              let yesterday = new Date();
+              yesterday.setDate(yesterday.getDate() - 1);
+              const meals = r.filter(
+                (obj) => !obj.checked && new Date(obj.date) < yesterday
+              );
+              const weeklyIngredients = [];
+              meals.forEach((meal) => {
+                getIngredientFromMeal(
+                  meal,
+                  "breakfast",
+                  ingredients,
+                  recipes,
+                  weeklyIngredients
+                );
+                getIngredientFromMeal(
+                  meal,
+                  "snack",
+                  ingredients,
+                  recipes,
+                  weeklyIngredients
+                );
+                getIngredientFromMeal(
+                  meal,
+                  "lunch",
+                  ingredients,
+                  recipes,
+                  weeklyIngredients
+                );
+                getIngredientFromMeal(
+                  meal,
+                  "dinner",
+                  ingredients,
+                  recipes,
+                  weeklyIngredients
+                );
+
+                meal.breakfast.recipes.forEach((r) => {
+                  recipes.find((obj) => obj.id === r).used += 1;
+                });
+
+                meal.snack.recipes.forEach((r) => {
+                  recipes.find((obj) => obj.id === r).used += 1;
+                });
+
+                meal.dinner.recipes.forEach((r) => {
+                  recipes.find((obj) => obj.id === r).used += 1;
+                });
+
+                meal.lunch.recipes.forEach((r) => {
+                  recipes.find((obj) => obj.id === r).used += 1;
+                });
+
+                r.find((o) => o.date === meal.date).checked = true;
+              });
+
+              weeklyIngredients.forEach((i) => {
+                ingredients.find((obj) => obj.id === i.ingredient.id).stock -=
+                  parseFloat((i.needed / i.ingredient.quantity).toFixed(2));
+
+                if (
+                  ingredients.find((obj) => obj.id === i.ingredient.id).stock <
+                  0
+                )
+                  ingredients.find(
+                    (obj) => obj.id === i.ingredient.id
+                  ).stock = 0;
+              });
+
+              updateRecipes([...recipes]);
+              updateMeals([...r]);
+              updateIngredients([...ingredients]);
+            }
+          });
+        }
+      });
+    }
+  });
 }

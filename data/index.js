@@ -514,6 +514,7 @@ export const mealsDefault = [
       ingredients: [{ id: 1, quantity: 5 }],
       recipes: [],
     },
+    checked: false,
   },
   {
     date: "2024-01-09",

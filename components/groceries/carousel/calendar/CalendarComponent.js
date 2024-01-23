@@ -1,9 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  Text,
-  View,
-  TouchableOpacity,
-} from "react-native";
+import { Text, View, TouchableOpacity } from "react-native";
 import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
 
