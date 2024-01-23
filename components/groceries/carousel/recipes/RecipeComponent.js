@@ -24,19 +24,21 @@ export default function RecipeComponent({
 
   return (
     <>
-      {modalVisible ? <RecipeModal
-        item={item}
-        modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
-        ingredients={ingredients}
-        setIngredients={setIngredients}
-        recipes={recipes}
-        setRecipes={setRecipes}
-      /> : null}
+      {modalVisible ? (
+        <RecipeModal
+          item={item}
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          ingredients={ingredients}
+          setIngredients={setIngredients}
+          recipes={recipes}
+          setRecipes={setRecipes}
+        />
+      ) : null}
       <Animated.View entering={SlideInRight} exiting={SlideOutLeft}>
         <TouchableOpacity
           style={{
-            backgroundColor: themeColors.bgBlack(0.7),
+            backgroundColor: themeColors.secondaryContainer,
           }}
           className="mb-1 px-1 py-1 rounded-xl"
           onPress={() => setModalVisible(!modalVisible)}
@@ -45,26 +47,40 @@ export default function RecipeComponent({
             <View className="flex-row items-center">
               <View
                 className="rounded-full px-0 py-0 mx-1 overflow-hidden"
-                style={{ backgroundColor: themeColors.bgWhite(0.3) }}
+                style={{
+                  backgroundColor: themeColors.secondary,
+                  elevation: 10,
+                }}
               >
                 <IconButton
                   className="p-0 m-1"
                   icon={item.icon}
                   size={20}
-                  color={themeColors.bgWhite(0.7)}
+                  color={themeColors.onSecondary}
                 />
               </View>
               <View className="ml-1 items-start">
-                <Text className="text-lg text-gray-200">{item.title}</Text>
+                <Text
+                  className="text-lg "
+                  style={{ color: themeColors.onSecondaryContainer }}
+                >
+                  {item.title}
+                </Text>
                 <View className="flex-row items-center space-x-1">
-                  <Text className="text-sm text-gray-300">
+                  <Text
+                    className="text-sm"
+                    style={{ color: themeColors.onSecondaryContainer }}
+                  >
                     {"# of ingredients:"}
                   </Text>
                   <View
                     className="rounded-full px-1.5 py-0"
-                    style={{ backgroundColor: themeColors.bgWhite(0.4) }}
+                    style={{ backgroundColor: themeColors.secondary }}
                   >
-                    <Text className=" text-xs text-gray-300">
+                    <Text
+                      className=" text-xs font-semibold"
+                      style={{ color: themeColors.onSecondary }}
+                    >
                       {item.ingredients.length}
                     </Text>
                   </View>
@@ -73,9 +89,12 @@ export default function RecipeComponent({
             </View>
             <View
               className="rounded-2xl py-1 px-2 mr-2"
-              style={{ backgroundColor: themeColors.bgWhite(0.3) }}
+              style={{ backgroundColor: themeColors.primary, elevation: 10 }}
             >
-              <Text className="text-base text-gray-300">
+              <Text
+                className="text-base font-semibold"
+                style={{ color: themeColors.onPrimary }}
+              >
                 {"€" + calculateRecipeCosts(item, ingredients)}
               </Text>
             </View>

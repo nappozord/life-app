@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { useState } from "react";
+import { Text, View, TouchableOpacity } from "react-native";
 import { themeColors } from "~/theme";
 import { Divider, IconButton } from "react-native-paper";
 import MealPlanModalComponent from "./MealPlanModalComponent";
@@ -45,31 +45,43 @@ export default function ReservationTypeComponent({
         />
       ) : null}
       <TouchableOpacity
-        style={{ backgroundColor: themeColors.bgWhite(0.4) }}
+        style={{ backgroundColor: themeColors.secondary }}
         className="flex-1 rounded-2xl p-3"
-        onPress={() => setModalVisible(true)}
+        onPress={() => setModalVisible(!modalVisible)}
       >
         <View className="flex-row justify-between -mt-2">
           <View className="flex-row items-center">
-            <IconButton icon={type.icon} size={24} className="m-0 p-0" />
-            <Text className="text-lg text-gray-900 font-semibold ml-1">
+            <IconButton
+              icon={type.icon}
+              size={24}
+              className="m-0 p-0"
+              color={themeColors.onSecondary}
+            />
+            <Text
+              className="text-lg font-semibold ml-1"
+              style={{ color: themeColors.onSecondary }}
+            >
               {type.type[0].toUpperCase() + type.type.slice(1)}
             </Text>
           </View>
           <View className="flex-row justify-end">
             <View
               className="px-2 rounded-xl flex-row items-center my-1"
-              style={{ backgroundColor: themeColors.bgBlack(0.5) }}
+              style={{ backgroundColor: themeColors.primary }}
             >
-              <Text className="text-base text-gray-200">
-                {"€" + (dailyMeal
-                  ? calculateMealCosts(
-                      dailyMeal,
-                      type.type,
-                      ingredients,
-                      recipes
-                    )
-                  : "0.00")}
+              <Text
+                className="text-base font-semibold"
+                style={{ color: themeColors.onPrimary }}
+              >
+                {"€" +
+                  (dailyMeal
+                    ? calculateMealCosts(
+                        dailyMeal,
+                        type.type,
+                        ingredients,
+                        recipes
+                      )
+                    : "0.00")}
               </Text>
             </View>
           </View>

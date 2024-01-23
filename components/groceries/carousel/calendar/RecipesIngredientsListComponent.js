@@ -1,19 +1,6 @@
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  FlatList,
-} from "react-native";
+import { View, Text, TouchableOpacity, FlatList } from "react-native";
 import React, { useEffect, useState } from "react";
-import Animated, {
-  withTiming,
-  FadeIn,
-  FadeOut,
-  useSharedValue,
-  useAnimatedStyle,
-  SlideInRight,
-} from "react-native-reanimated";
+import Animated, { SlideInRight } from "react-native-reanimated";
 import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
 import { calculateRecipeCosts } from "~/utils/calculateCosts";
@@ -76,11 +63,11 @@ export default function RecipesIngredientsListComponent({
               {item.ingredients ? (
                 <Animated.View entering={SlideInRight}>
                   <TouchableOpacity
-                    className="px-2 py-2 m-1 rounded-full "
+                    className="px-2 py-2 my-1 rounded-2xl"
                     style={{
                       backgroundColor: isSelected
-                        ? themeColors.chartGreen(0.7)
-                        : themeColors.chartBlue(0.7),
+                        ? themeColors.success
+                        : themeColors.secondaryContainer,
                     }}
                     onPress={() => {
                       saveRecipe(item);
@@ -91,22 +78,28 @@ export default function RecipesIngredientsListComponent({
                         <IconButton
                           size={24}
                           icon={icon}
-                          color={themeColors.bgWhite(0.7)}
+                          color={themeColors.onSecondaryContainer}
                           className="p-0 m-0"
                         />
-                        <Text className="font-semibold text-lg text-gray-200">
+                        <Text
+                          className="font-semibold text-lg "
+                          style={{ color: themeColors.onSecondaryContainer }}
+                        >
                           {item.title}
                         </Text>
                         {isSelected > 0 ? (
                           <IconButton
                             size={24}
                             icon={"check-bold"}
-                            color={themeColors.bgWhite(0.7)}
+                            color={themeColors.onSecondaryContainer}
                             className="p-0 m-0"
                           />
                         ) : null}
                       </View>
-                      <Text className="font-semibold text-lg text-gray-200 px-2">
+                      <Text
+                        className="font-semibold text-lg  px-2"
+                        style={{ color: themeColors.onSecondaryContainer }}
+                      >
                         {"€" + cost}
                       </Text>
                     </View>

@@ -54,10 +54,20 @@ export default function DonutChartComponent({ item, showTotal }) {
   const fontSize = font ? font.getTextWidth(`€${Math.round(chartText)}`) : 0;
 
   let color;
+  let backgroundColor;
 
-  if (item.income)
-    color = -difference >= 0 ? themeColors.chartGreen(1) : themeColors.chartRed(1);
-  else color = difference >= 0 ? themeColors.chartBlue(1) : themeColors.chartRed(1);
+  if (item.income) {
+    color = -difference >= 0 ? themeColors.success : themeColors.errorContainer;
+    backgroundColor =
+      -difference >= 0 ? themeColors.onSuccess : themeColors.onErrorContainer;
+  } else {
+    color =
+      difference >= 0
+        ? themeColors.primaryContainer
+        : themeColors.errorContainer;
+    backgroundColor =
+      difference >= 0 ? themeColors.primary : themeColors.onErrorContainer;
+  }
 
   return (
     <View>
@@ -67,7 +77,7 @@ export default function DonutChartComponent({ item, showTotal }) {
       >
         <Path
           path={path}
-          color={themeColors.bgGrey(1)}
+          color={backgroundColor}
           style="stroke"
           strokeJoin="round"
           strokeWidth={OUTER_STROKE_WIDTH}
@@ -92,7 +102,7 @@ export default function DonutChartComponent({ item, showTotal }) {
           }
         />
         <Text
-          color={themeColors.bgBlack(1)}
+          color={themeColors.onSecondaryContainer}
           text={targetText}
           x={RADIUS - fontSize / 2}
           y={RADIUS + 10}

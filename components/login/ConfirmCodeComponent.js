@@ -5,17 +5,12 @@ import {
   Image,
   TextInput,
   Dimensions,
-  Touchable,
 } from "react-native";
 import React, { useRef, useState } from "react";
 import Animated, {
   Easing,
   SlideInDown,
-  SlideInLeft,
-  SlideInRight,
   SlideOutDown,
-  SlideOutLeft,
-  SlideOutRight,
 } from "react-native-reanimated";
 import { ActivityIndicator, IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
@@ -71,10 +66,13 @@ export default function ConfirmCodeComponent({
     >
       <View className="absolute w-full mt-2 z-10">
         <View className="flex-row justify-center">
-          <View className="bg-gray-300 rounded-full p-2">
+          <View
+            className="rounded-full p-2"
+            style={{ backgroundColor: themeColors.onBackground }}
+          >
             <IconButton
               icon={"email-newsletter"}
-              color={themeColors.bgBlack(1)}
+              color={themeColors.background}
               size={72}
             />
           </View>
@@ -82,8 +80,8 @@ export default function ConfirmCodeComponent({
       </View>
       <Image
         className="absolute w-full mt-16"
-        source={require("~/assets/bg.png")}
-        blurRadius={80}
+        source={require("~/assets/splash.png")}
+        //blurRadius={80}
         style={{
           borderTopLeftRadius: 50,
           borderTopRightRadius: 50,
@@ -92,36 +90,55 @@ export default function ConfirmCodeComponent({
       <View
         className="flex-1 px-8 pt-20"
         style={{
-          backgroundColor: themeColors.bgWhite(0.3),
+          backgroundColor: themeColors.onSecondary,
           borderTopLeftRadius: 50,
           borderTopRightRadius: 50,
         }}
       >
         <View className="space-y-2">
-          <Text className="text-gray-300 ml-2">Email Addres</Text>
+          <Text
+            className="ml-2"
+            style={{ color: themeColors.onSecondaryContainer }}
+          >
+            Email Addres
+          </Text>
           <TextInput
-            className="p-3 text-gray-950 rounded-2xl mb-3"
-            style={{ backgroundColor: themeColors.bgWhite(0.6) }}
+            className="p-3 rounded-2xl mb-3"
+            style={{
+              backgroundColor: themeColors.onSecondaryContainer,
+              color: themeColors.background,
+            }}
             placeholder="Enter Email"
             defaultValue={email ? email.current : null}
-            selectionColor={themeColors.bgBlack(1)}
+            selectionColor={themeColors.background}
             readOnly={email.current ? true : false}
             onChangeText={(text) => {
               email.current = text;
             }}
           />
-          <Text className="text-gray-300 ml-1">OTP Code</Text>
+          <Text
+            className="ml-1"
+            style={{ color: themeColors.onSecondaryContainer }}
+          >
+            OTP Code
+          </Text>
           <TextInput
             keyboardType="numeric"
-            className="p-3 text-gray-950 rounded-2xl mb-0"
-            style={{ backgroundColor: themeColors.bgWhite(0.6) }}
+            className="p-3 rounded-2xl mb-0"
+            style={{
+              backgroundColor: themeColors.onSecondaryContainer,
+              color: themeColors.background,
+            }}
             placeholder="Enter Code"
-            selectionColor={themeColors.bgBlack(1)}
+            selectionColor={themeColors.background}
             onChangeText={(text) => {
               code.current = text;
             }}
           />
-          <Text className="mb-3 text-gray-800 ml-1 text-base font-semibold">
+          <Text
+            className="mb-3 ml-1 text-base"
+            style={{ color: themeColors.onSecondaryContainer }}
+          >
             {"Check your email for the OTP code we sent you!"}
           </Text>
           {!loadingResend ? (
@@ -138,58 +155,83 @@ export default function ConfirmCodeComponent({
                   });
               }}
             >
-              <Text className="text-gray-200 underline">Resend Code</Text>
+              <Text
+                className="underline"
+                style={{ color: themeColors.primary }}
+              >
+                Resend Code
+              </Text>
             </TouchableOpacity>
           ) : (
             <View className="mr-4 mb-3 items-end">
-              <Text className="text-green-200">
+              <Text style={{ color: themeColors.onSecondaryContainer }}>
                 A new OTP code has been sent to your email
               </Text>
             </View>
           )}
           {errorResend ? (
             <View className="mr-4 mb-3 items-end">
-              <Text className="text-red-800">{errorResend}</Text>
+              <Text style={{ color: themeColors.errorContainer }}>
+                {errorResend}
+              </Text>
             </View>
           ) : null}
           <View className="flex items-end mb-7 mr-4">
             <View className="flex-row">
-              <Text className="text-gray-200">Don't have a code? </Text>
+              <Text style={{ color: themeColors.onSecondaryContainer }}>
+                Don't have a code?{" "}
+              </Text>
               <TouchableOpacity
                 onPress={() => {
                   setSignup(true);
                   setConfirmCode(false);
                 }}
               >
-                <Text className="text-gray-200 underline">Sign Up</Text>
+                <Text
+                  className="underline"
+                  style={{ color: themeColors.primary }}
+                >
+                  Sign Up
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
           <TouchableOpacity
             className="py-3 rounded-2xl"
-            style={{ backgroundColor: themeColors.chartBlue(1) }}
+            style={{ backgroundColor: themeColors.primary }}
             onPress={() => {
               handleConfirmation();
             }}
           >
             {!loading ? (
-              <Text className="text-gray-200 font-bold text-center text-xl">
+              <Text
+                className="font-bold text-center text-xl"
+                style={{ color: themeColors.onPrimary }}
+              >
                 Confirm Code
               </Text>
             ) : (
               <ActivityIndicator
                 className="py-0.5"
                 animating={true}
-                color={themeColors.bgWhite(0.8)}
+                color={themeColors.onSecondaryContainer}
               />
             )}
           </TouchableOpacity>
           {error ? (
-            <Text className="text-red-800 ml-1 text-base">{error}</Text>
+            <Text
+              className="ml-1 text-base"
+              style={{ color: themeColors.errorContainer }}
+            >
+              {error}
+            </Text>
           ) : null}
         </View>
         <View className="flex-row justify-center mt-7">
-          <Text className="text-gray-300 font-semibold">
+          <Text
+            className="font-semibold"
+            style={{ color: themeColors.onSecondaryContainer }}
+          >
             Already have an account?
           </Text>
           <Text> </Text>
@@ -199,7 +241,12 @@ export default function ConfirmCodeComponent({
               setConfirmCode(false);
             }}
           >
-            <Text className="font-bold underline text-gray-300">Login</Text>
+            <Text
+              className="font-bold underline"
+              style={{ color: themeColors.primary }}
+            >
+              Login
+            </Text>
           </TouchableOpacity>
         </View>
       </View>

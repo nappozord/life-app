@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
-import Carousel, { Pagination } from "react-native-snap-carousel";
+import React, { useRef } from "react";
+import Carousel from "react-native-snap-carousel";
 import { View, useWindowDimensions } from "react-native";
-import Animated, { FadeIn, useSharedValue } from "react-native-reanimated";
+import Animated, { FadeIn } from "react-native-reanimated";
 import { themeColors } from "~/theme";
 import CalendarComponent from "~/components/groceries/carousel/calendar/CalendarComponent";
 import IngredientsListComponent from "./ingredients/IngredientsListComponent";
@@ -18,8 +18,6 @@ export default function BudgetCarouselComponent({
   setRecipes,
   activeChip,
   setActiveChip,
-  user,
-  setUser,
   chipListRef,
 }) {
   const dimensions = useWindowDimensions();
@@ -40,7 +38,7 @@ export default function BudgetCarouselComponent({
               {
                 width: dimensions.width - 40,
                 borderRadius: 25,
-                backgroundColor: themeColors.bgWhite(0.3),
+                backgroundColor: themeColors.onSecondary,
               },
               item.index === 1
                 ? {

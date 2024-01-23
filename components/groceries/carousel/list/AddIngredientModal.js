@@ -1,17 +1,15 @@
 import {
   View,
   Text,
-  TextInput,
   Image,
   Modal,
   Pressable,
   TouchableOpacity,
-  KeyboardAvoidingView,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { themeColors } from "~/theme";
-import { Divider, IconButton } from "react-native-paper";
-import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
+import { IconButton } from "react-native-paper";
+import Animated, { SlideInDown } from "react-native-reanimated";
 import IngredientSearchComponent from "~/components/groceries/searchbar/IngredientSearchComponent";
 
 export default function AddIngredientModal({
@@ -64,7 +62,7 @@ export default function AddIngredientModal({
 
   return (
     <Modal
-      animationType="slide"
+      animationType="fade"
       transparent={true}
       visible={modalVisible}
       statusBarTranslucent
@@ -74,8 +72,8 @@ export default function AddIngredientModal({
     >
       <Image
         className="absolute h-full w-full"
-        source={require("~/assets/bg.png")}
-        blurRadius={80}
+        source={require("~/assets/splash.png")}
+        //blurRadius={80}
         style={{ opacity: 0.9 }}
       />
       <Pressable
@@ -86,7 +84,7 @@ export default function AddIngredientModal({
           <Animated.View
             entering={SlideInDown.duration(500)}
             style={{
-              backgroundColor: themeColors.bgWhite(0.6),
+              backgroundColor: themeColors.onSecondary,
               borderTopLeftRadius: 24,
               borderTopRightRadius: 24,
             }}
@@ -96,8 +94,8 @@ export default function AddIngredientModal({
               <View
                 className="px-4 py-3 rounded-3xl -mt-16 items-center"
                 style={{
-                  backgroundColor: themeColors.bgBlack(1),
-                  borderColor: themeColors.bgGrey(1),
+                  backgroundColor: themeColors.background,
+                  borderColor: themeColors.onSecondary,
                   borderWidth: 5,
                 }}
               >
@@ -105,18 +103,21 @@ export default function AddIngredientModal({
                   <View className="flex-row">
                     <IconButton
                       icon={"plus"}
-                      color={themeColors.bgGrey(1)}
+                      color={themeColors.onBackground}
                       size={30}
                       className="-mr-2"
                     />
                     <IconButton
                       icon={"apple"}
-                      color={themeColors.bgGrey(1)}
+                      color={themeColors.onBackground}
                       size={30}
                       className="-ml-2"
                     />
                   </View>
-                  <Text className="text-xl font-semibold -mt-4 mb-4 text-gray-400">
+                  <Text
+                    className="text-xl font-semibold -mt-4 mb-4"
+                    style={{ color: themeColors.onBackground }}
+                  >
                     Ingredient
                   </Text>
                 </>
@@ -135,18 +136,20 @@ export default function AddIngredientModal({
                 <TouchableOpacity
                   className="py-5 px-5 mt-1"
                   style={{
-                    backgroundColor: themeColors.chartBlue(1),
-                    borderRightColor: themeColors.bgGrey(1),
-                    borderRightWidth: 1,
+                    backgroundColor: themeColors.primary,
                     borderTopLeftRadius: 24,
+                    borderTopRightRadius: 24,
                   }}
                   onPress={() => {
                     updateIngredientList();
                     setModalVisible(false);
                   }}
                 >
-                  <Text className="text-gray-200 font-bold text-center text-xl">
-                    Edit
+                  <Text
+                    className="font-bold text-center text-xl"
+                    style={{ color: themeColors.onPrimary }}
+                  >
+                    Add to List
                   </Text>
                 </TouchableOpacity>
               </View>

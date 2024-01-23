@@ -57,33 +57,39 @@ export default function GroceriesCard({
       <View className="flex-1">
         <View
           className="flex-row items-center justify-between py-4 px-3"
-          style={{ backgroundColor: themeColors.chartBlue(1), elevation: 10 }}
+          style={{
+            backgroundColor: themeColors.primaryContainer,
+            elevation: 10,
+          }}
         >
           <View className="flex-row items-center space-x-2">
             <TouchableOpacity
               className="rounded-full"
-              style={{ backgroundColor: themeColors.bgBlack(0.4) }}
-              onPress={() => setModalVisible(true)}
+              style={{ backgroundColor: themeColors.onPrimary }}
+              onPress={() => setModalVisible(!modalVisible)}
             >
               <IconButton
                 icon="check"
                 size={24}
-                color={themeColors.bgWhite(0.7)}
+                color={themeColors.onPrimaryContainer}
               />
             </TouchableOpacity>
             <View>
               <View className="flex-row items-center">
-                <Text className="text-xl font-semibold text-gray-300">
+                <Text
+                  className="text-xl font-semibold "
+                  style={{ color: themeColors.onPrimaryContainer }}
+                >
                   Grocery List
                 </Text>
                 <IconButton
                   className="p-0 m-0"
                   icon="basket"
                   size={24}
-                  color={themeColors.bgWhite(0.7)}
+                  color={themeColors.onPrimaryContainer}
                 />
               </View>
-              <Text className="text-gray-400">
+              <Text style={{ color: themeColors.secondary }}>
                 {week[0].dateString === getCurrentWeek(new Date())[0].dateString
                   ? "This week"
                   : week[0].date.toLocaleString("default", {
@@ -117,7 +123,7 @@ export default function GroceriesCard({
             <TouchableOpacity
               className="rounded-full"
               style={{
-                backgroundColor: themeColors.bgWhite(0.7),
+                backgroundColor: themeColors.onPrimaryContainer,
                 borderTopRightRadius: 0,
                 borderBottomRightRadius: 0,
               }}
@@ -130,7 +136,7 @@ export default function GroceriesCard({
             <TouchableOpacity
               className="rounded-full"
               style={{
-                backgroundColor: themeColors.bgWhite(0.7),
+                backgroundColor: themeColors.onPrimaryContainer,
                 borderTopLeftRadius: 0,
                 borderBottomLeftRadius: 0,
                 borderLeftWidth: 1,

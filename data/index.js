@@ -514,6 +514,7 @@ export const mealsDefault = [
       ingredients: [{ id: 1, quantity: 5 }],
       recipes: [],
     },
+    checked: false,
   },
   {
     date: "2024-01-09",
@@ -960,9 +961,11 @@ export const recipesDefault = [
   },
 ];
 
-export const groceryListDefault = [{
-  date: "",
-  checked: [{ id: 1, quantity: 1 }],
-  added: [],
-  excluded: [],
-}];
+export const groceryListDefault = [
+  {
+    date: "",
+    checked: [{ id: 1, quantity: 1 }],
+    added: [],
+    excluded: [],
+  },
+];

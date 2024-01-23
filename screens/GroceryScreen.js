@@ -1,17 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  Alert,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Image,
-} from "react-native";
+import { View, Image } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import {
-  getCategories,
-  restoreBackup,
-  saveCategories,
   getUser,
   updateUser,
   getMeals,
@@ -22,7 +12,6 @@ import {
   updateRecipes,
 } from "~/api/apiManager";
 import Animated, {
-  withTiming,
   FadeIn,
   FadeOut,
   useSharedValue,
@@ -32,11 +21,10 @@ import ChipListComponent from "~/components/groceries/chip/ChipListComponent";
 import HeaderComponent from "~/components/header/HeaderComponent";
 import GroceriesCarouselComponent from "~/components/groceries/carousel/GroceriesCarouselComponent";
 
-export default function App() {
+export default function GroceryScreen({ user, setUser }) {
   const [meals, setMeals] = useState();
   const [ingredients, setIngredients] = useState();
   const [recipes, setRecipes] = useState();
-  const [user, setUser] = useState({});
   const [activeChip, setActiveChip] = useState(0);
   const chipListRef = useRef(null);
 
@@ -62,13 +50,7 @@ export default function App() {
   const searchBarHeight = useSharedValue(76);
 
   useEffect(() => {
-    !user.userId ? getUser().then((r) => setUser(r)) : updateUser(user);
-  }, [user]);
-
-  useEffect(() => {
-    !meals
-      ? getMeals().then((r) => setMeals(r))
-      : updateMeals(meals);
+    !meals ? getMeals().then((r) => setMeals(r)) : updateMeals(meals);
   }, [meals]);
 
   useEffect(() => {
@@ -78,9 +60,7 @@ export default function App() {
   }, [ingredients]);
 
   useEffect(() => {
-    !recipes
-      ? getRecipes().then((r) => setRecipes(r))
-      : updateRecipes(recipes);
+    !recipes ? getRecipes().then((r) => setRecipes(r)) : updateRecipes(recipes);
   }, [recipes]);
 
   const searchBarAnimatedStyle = useAnimatedStyle(() => ({
@@ -92,8 +72,8 @@ export default function App() {
       <StatusBar style="light" />
       <Image
         className="absolute h-full w-full"
-        source={require("~/assets/bg.png")}
-        blurRadius={80}
+        source={require("~/assets/splash.png")}
+        //blurRadius={80}
       />
       {user.userId ? (
         <>

@@ -1,11 +1,5 @@
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  RefreshControl,
-  FlatList,
-} from "react-native";
-import React, { useEffect, useState } from "react";
+import { View, TouchableOpacity, Text, RefreshControl } from "react-native";
+import React, { useState } from "react";
 import { IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
 import IngredientComponent from "./IngredientComponent";
@@ -46,33 +40,36 @@ export default function IngredientsListComponent({
       ) : null}
       <View
         className="flex-row items-center justify-between py-4 px-3"
-        style={{ backgroundColor: themeColors.chartBlue(1), elevation: 10 }}
+        style={{ backgroundColor: themeColors.primaryContainer, elevation: 10 }}
       >
         <View className="flex-row items-center space-x-2">
           <TouchableOpacity
             className="rounded-full"
-            style={{ backgroundColor: themeColors.bgBlack(0.4) }}
+            style={{ backgroundColor: themeColors.onPrimary }}
             onPress={() => setModalVisible(true)}
           >
             <IconButton
               icon="plus"
               size={24}
-              color={themeColors.bgWhite(0.7)}
+              color={themeColors.onPrimaryContainer}
             />
           </TouchableOpacity>
           <View>
             <View className="flex-row items-center">
-              <Text className="text-xl font-semibold text-gray-300">
+              <Text
+                className="text-xl font-semibold"
+                style={{ color: themeColors.onPrimaryContainer }}
+              >
                 Ingredients
               </Text>
               <IconButton
                 className="p-0 m-0"
                 icon="apple"
                 size={24}
-                color={themeColors.bgWhite(0.7)}
+                color={themeColors.onPrimaryContainer}
               />
             </View>
-            <Text className="text-gray-400">
+            <Text style={{ color: themeColors.secondary }}>
               {sort === "alphabetical" ? "A-Z order" : "Usage order"}
             </Text>
           </View>
@@ -83,8 +80,8 @@ export default function IngredientsListComponent({
             style={{
               backgroundColor:
                 sort === "alphabetical"
-                  ? themeColors.bgWhite(0.7)
-                  : themeColors.bgWhite(0.6),
+                  ? themeColors.primary
+                  : themeColors.onPrimaryContainer,
               borderTopRightRadius: 0,
               borderBottomRightRadius: 0,
             }}
@@ -102,8 +99,8 @@ export default function IngredientsListComponent({
             style={{
               backgroundColor:
                 sort === "use"
-                  ? themeColors.bgWhite(0.7)
-                  : themeColors.bgWhite(0.6),
+                  ? themeColors.primary
+                  : themeColors.onPrimaryContainer,
               borderTopLeftRadius: 0,
               borderBottomLeftRadius: 0,
               borderLeftWidth: 1,
@@ -122,8 +119,8 @@ export default function IngredientsListComponent({
             <RefreshControl
               refreshing={refreshing}
               onRefresh={onRefresh}
-              progressBackgroundColor={themeColors.chartBlue(1)}
-              colors={[themeColors.bgWhite(0.3)]}
+              progressBackgroundColor={themeColors.primaryContainer}
+              colors={[themeColors.onPrimaryContainer]}
             />
           }
           estimatedItemSize={45}

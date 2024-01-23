@@ -34,7 +34,9 @@ export default function BarChartComponent({ forecast, real }) {
   );
 
   const font = useFont(require("~/assets/fonts/Roboto-Bold.ttf"), 16);
-  const fontSize = font ? font.getTextWidth(`${Math.round(percentage * 100)}%`) : 0;
+  const fontSize = font
+    ? font.getTextWidth(`${Math.round(percentage * 100)}%`)
+    : 0;
 
   return (
     <View>
@@ -45,7 +47,7 @@ export default function BarChartComponent({ forecast, real }) {
           width={WIDTH}
           height={HEIGHT}
           r={10}
-          color={themeColors.bgGrey(1)}
+          color={themeColors.primary}
           opacity={0.8}
         />
         <RoundedRect
@@ -54,10 +56,10 @@ export default function BarChartComponent({ forecast, real }) {
           width={innerWidth}
           height={HEIGHT - 6}
           r={6}
-          color={themeColors.chartBlue(1)}
+          color={themeColors.primaryContainer}
         />
         <Text
-          color={themeColors.bgBlack(1)}
+          color={themeColors.onPrimaryContainer}
           text={targetText}
           x={WIDTH / 2 - fontSize / 2}
           y={HEIGHT / 2 + 6}

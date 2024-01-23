@@ -19,10 +19,13 @@ export default function UserCategoryExpensesComponent({
     <View className="px-5 mt-2 space-y-3">
       <View className="flex-row justify-between items-center">
         <View className="flex-row items-center space-x-1 -mb-1">
-          <Text className="text-3xl text-gray-800 font-semibold z-10">
+          <Text
+            className="text-3xl font-semibold z-10"
+            style={{ color: themeColors.onSecondaryContainer }}
+          >
             {item.title}
           </Text>
-          <IconButton icon={item.icon} color={themeColors.bgBlack(1)} />
+          <IconButton icon={item.icon} color={themeColors.primary} />
         </View>
         <EditExpenseButtonComponent
           icon={item.icon}
@@ -33,7 +36,7 @@ export default function UserCategoryExpensesComponent({
           setUser={setUser}
         />
       </View>
-      <View style={{height: 336}}>
+      <View style={{ height: 336 }}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           className="mt-3"

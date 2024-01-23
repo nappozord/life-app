@@ -179,14 +179,17 @@ export default function GroceriesList({
         <Animated.View
           entering={SlideInUp.duration(500)}
           exiting={SlideOutUp.duration(500)}
-          style={{ backgroundColor: "rgba(0, 0, 0, 0)", elevation: 10 }}
+          style={{ elevation: 10 }}
         >
           <View
             className="px-4 py-1"
-            style={{ backgroundColor: themeColors.chartGreen(0.6) }}
+            style={{ backgroundColor: themeColors.success }}
             needsOffscreenAlphaCompositing={true}
           >
-            <Text className="text-gray-200 text-lg font-semibold">
+            <Text
+              className=" text-lg font-semibold"
+              style={{ color: themeColors.onSuccess }}
+            >
               {"Total: €" + parseFloat(totalCost).toFixed(2)}
             </Text>
           </View>
@@ -199,8 +202,8 @@ export default function GroceriesList({
                 <RefreshControl
                   refreshing={refreshing}
                   onRefresh={onRefresh}
-                  progressBackgroundColor={themeColors.chartBlue(1)}
-                  colors={[themeColors.bgWhite(0.3)]}
+                  progressBackgroundColor={themeColors.primaryContainer}
+                  colors={[themeColors.onPrimaryContainer]}
                 />
               }
               estimatedItemSize={600}
@@ -236,26 +239,35 @@ export default function GroceriesList({
             <Animated.View entering={FadeIn} className="p-2">
               <TouchableOpacity
                 className="m-1 rounded-2xl p-10 overflow-hidden"
-                style={{ backgroundColor: themeColors.bgWhite(0.3) }}
+                style={{
+                  backgroundColor: themeColors.secondary,
+                  elevation: 10,
+                }}
               >
                 <View className="justify-between items-center space-y-1">
                   <View className="">
                     <TouchableOpacity
                       className="rounded-full"
-                      style={{ backgroundColor: themeColors.bgBlack(0.1) }}
+                      style={{ backgroundColor: themeColors.onSecondary }}
                     >
                       <IconButton
                         icon="emoticon-happy-outline"
                         size={28}
-                        color={themeColors.bgBlack(0.9)}
+                        color={themeColors.secondary}
                       />
                     </TouchableOpacity>
                   </View>
                   <View className="">
-                    <Text className="text-gray-800 text-lg text-center">
+                    <Text
+                      className="text-lg text-center"
+                      style={{ color: themeColors.onSecondary }}
+                    >
                       You are all set up!
                     </Text>
-                    <Text className="text-gray-800 text-sm text-center">
+                    <Text
+                      className="text-sm text-center"
+                      style={{ color: themeColors.onSecondary }}
+                    >
                       No more things to buy this week
                     </Text>
                   </View>

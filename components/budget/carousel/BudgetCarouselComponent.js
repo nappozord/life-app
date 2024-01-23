@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
-import Carousel, { Pagination } from "react-native-snap-carousel";
+import React, { useRef, useState } from "react";
+import Carousel from "react-native-snap-carousel";
 import CategoryCardComponent from "./CategoryCardComponent";
-import { View, useWindowDimensions } from "react-native";
-import Animated, { useSharedValue } from "react-native-reanimated";
+import { useWindowDimensions } from "react-native";
+import Animated from "react-native-reanimated";
 
 export default function BudgetCarouselComponent({
   date,
@@ -22,8 +22,7 @@ export default function BudgetCarouselComponent({
 
   const [finishedAnimation, setFinishedAnimation] = useState(false);
 
-  if(activeCategory === 0 && finishedAnimation)
-    setFinishedAnimation(false);
+  if (activeCategory === 0 && finishedAnimation) setFinishedAnimation(false);
 
   return (
     <Animated.View>
@@ -51,9 +50,7 @@ export default function BudgetCarouselComponent({
         inactiveSlideOpacity={1}
         inactiveSlideScale={1}
         sliderWidth={410}
-        itemWidth={
-          dimensions.width
-        }
+        itemWidth={dimensions.width}
         slideStyle={{ display: "flex", alignItems: "center" }}
         initialNumToRender={3}
         windowSize={3}

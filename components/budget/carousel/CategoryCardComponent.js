@@ -1,5 +1,5 @@
 import { Pressable, useWindowDimensions } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Animated, {
   FadeIn,
   FadeOut,
@@ -109,9 +109,10 @@ export default function CategoryCardComponent({
             animatedStyleInner,
             {
               borderRadius: 40,
-              backgroundColor: themeColors.bgWhite(0.4),
+              backgroundColor: themeColors.onSecondary,
               height: height,
               width: width,
+              elevation: 10,
             },
           ]}
         >

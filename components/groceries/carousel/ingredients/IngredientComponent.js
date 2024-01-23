@@ -48,7 +48,7 @@ export default function IngredientComponent({
       <Animated.View exiting={SlideOutLeft} entering={SlideInRight}>
         <TouchableOpacity
           style={{
-            backgroundColor: themeColors.bgBlack(0.7),
+            backgroundColor: themeColors.secondaryContainer,
           }}
           className="mb-1 px-1 py-1 rounded-xl overflow-hidden"
           onPress={() => setModalVisible(!modalVisible)}
@@ -57,29 +57,46 @@ export default function IngredientComponent({
             <View className="flex-row items-center">
               <View
                 className="rounded-full px-4 py-1 mx-1 overflow-hidden"
-                style={{ backgroundColor: themeColors.bgWhite(0.3) }}
+                style={{
+                  backgroundColor: themeColors.secondary,
+                  elevation: 10,
+                }}
               >
                 <Animated.View
                   entering={SlideInUp}
                   exiting={SlideOutDown}
                   key={item.id + item.stock}
                 >
-                  <Text className="text-lg text-gray-200">
+                  <Text
+                    className="text-lg font-semibold"
+                    style={{ color: themeColors.onSecondary }}
+                  >
                     {Math.ceil(item.stock)}
                   </Text>
                 </Animated.View>
               </View>
               <View className="ml-1 items-start">
-                <Text className="text-lg text-gray-200">{item.title}</Text>
+                <Text
+                  className="text-lg "
+                  style={{ color: themeColors.onSecondaryContainer }}
+                >
+                  {item.title}
+                </Text>
                 <View className="flex-row items-center space-x-1">
-                  <Text className="text-sm text-gray-300">
+                  <Text
+                    className="text-sm "
+                    style={{ color: themeColors.onSecondaryContainer }}
+                  >
                     {"€" + parseFloat(item.cost).toFixed(2)}
                   </Text>
                   <View
                     className="rounded-full px-1.5 py-0"
-                    style={{ backgroundColor: themeColors.bgWhite(0.3) }}
+                    style={{ backgroundColor: themeColors.secondary }}
                   >
-                    <Text className=" text-xs text-gray-300">
+                    <Text
+                      className=" text-xs font-semibold"
+                      style={{ color: themeColors.onSecondary }}
+                    >
                       {"x" + item.quantity}
                     </Text>
                   </View>
@@ -89,14 +106,14 @@ export default function IngredientComponent({
             <View className="flex-row items-center">
               <IconButton
                 icon={"minus"}
-                color={themeColors.bgWhite(0.7)}
+                color={themeColors.onSecondaryContainer}
                 size={28}
                 className="m-0 p-0"
                 onPress={() => subItem()}
               />
               <IconButton
                 icon={"plus"}
-                color={themeColors.bgWhite(0.7)}
+                color={themeColors.onSecondaryContainer}
                 size={28}
                 className="m-0 p-0"
                 onPress={() => addItem()}

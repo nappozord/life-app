@@ -4,10 +4,7 @@ import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
 import Animated, {
   FadeIn,
-  FadeOut,
-  SlideInLeft,
   SlideInUp,
-  SlideOutDown,
 } from "react-native-reanimated";
 import AddIngredientModal from "./AddIngredientModal";
 
@@ -105,7 +102,7 @@ export default function GroceryComponent({
             <TouchableOpacity
               className="rounded-full -mt-7 items-center"
               style={{
-                backgroundColor: themeColors.bgBlack(1),
+                backgroundColor: themeColors.primary,
                 elevation: 10,
               }}
               onPress={() => {
@@ -115,7 +112,7 @@ export default function GroceryComponent({
               <IconButton
                 icon={"plus"}
                 size={20}
-                color={themeColors.bgWhite(0.9)}
+                color={themeColors.onPrimary}
               />
             </TouchableOpacity>
             <View />
@@ -123,15 +120,18 @@ export default function GroceryComponent({
           <TouchableOpacity
             className="-mt-7 rounded-2xl p-2"
             style={{
-              backgroundColor: themeColors.bgWhite(0.3),
+              backgroundColor: themeColors.secondary,
             }}
             onPress={() => {
               setModalVisible(!modalVisible);
             }}
           >
             <View className="justify-between items-center space-y-1">
-              <View className="flex-1 pt-8 pb-7">
-                <Text className={"text-base text-center text-gray-800"}>
+              <View className="flex-1 pt-8 pb-6">
+                <Text
+                  className={"text-base text-center "}
+                  style={{ color: themeColors.onSecondary }}
+                >
                   {item.ingredient.title}
                 </Text>
               </View>
@@ -161,9 +161,12 @@ export default function GroceryComponent({
           </View>
           <View
             className="rounded-full py-1 px-2"
-            style={{ backgroundColor: themeColors.bgWhite(1), elevation: 10 }}
+            style={{ backgroundColor: themeColors.secondary, elevation: 10 }}
           >
-            <Text className="text-base text-center font-semibold text-gray-800">
+            <Text
+              className="text-base text-center font-semibold "
+              style={{ color: themeColors.onSecondary }}
+            >
               {"€" +
                 (
                   parseFloat(item.ingredient.cost) *
@@ -174,7 +177,7 @@ export default function GroceryComponent({
           <View
             className="px-2 py-0 rounded-full"
             style={{
-              backgroundColor: themeColors.bgBlack(1),
+              backgroundColor: themeColors.onSecondary,
               elevation: 10,
             }}
           >
@@ -183,10 +186,18 @@ export default function GroceryComponent({
                 entering={SlideInUp}
                 key={item.ingredient.id + item.onCart}
               >
-                <Text className="text-gray-200 text-sm">{item.onCart}</Text>
+                <Text
+                  className="text-sm"
+                  style={{ color: themeColors.secondary }}
+                >
+                  {item.onCart}
+                </Text>
               </Animated.View>
 
-              <Text className="text-gray-200 text-sm">
+              <Text
+                className="text-sm"
+                style={{ color: themeColors.secondary }}
+              >
                 {"/" + Math.ceil(item.needed / item.ingredient.quantity)}
               </Text>
             </View>
@@ -199,17 +210,15 @@ export default function GroceryComponent({
         style={{
           backgroundColor:
             item.onCart === Math.ceil(item.needed / item.ingredient.quantity)
-              ? themeColors.chartGreen(0.4)
-              : themeColors.bgBlack(0.7),
+              ? themeColors.success
+              : themeColors.secondaryContainer,
         }}
       >
         <View className="justify-between items-center space-y-1 -mt-2">
           <View className="flex-1 pt-5">
             <Text
-              className={
-                "text-base text-center " +
-                (item.ingredient.id < 0 ? "text-gray-800" : "text-gray-300")
-              }
+              className="text-base text-center"
+              style={{ color: themeColors.onSecondaryContainer }}
             >
               {item.ingredient.title}
             </Text>
@@ -219,10 +228,10 @@ export default function GroceryComponent({
               <TouchableOpacity
                 className="flex-row items-center justify-evenly"
                 style={{
-                  backgroundColor: themeColors.bgBlack(0.3),
+                  backgroundColor: themeColors.secondaryContainer,
                   borderBottomLeftRadius: 16,
                   borderTopWidth: 1,
-                  borderTopColor: themeColors.bgWhite(0.3),
+                  borderTopColor: themeColors.onSecondaryContainer,
                 }}
                 onPress={() => {
                   saveGroceryList(1);
@@ -231,7 +240,7 @@ export default function GroceryComponent({
                 <IconButton
                   icon={"basket-plus"}
                   size={20}
-                  color={themeColors.bgWhite(1)}
+                  color={themeColors.onSecondaryContainer}
                 />
               </TouchableOpacity>
             </View>
@@ -239,10 +248,10 @@ export default function GroceryComponent({
               <TouchableOpacity
                 className="items-center"
                 style={{
-                  backgroundColor: themeColors.chartRed(1),
+                  backgroundColor: themeColors.errorContainer,
                   borderBottomRightRadius: 16,
                   borderTopWidth: 1,
-                  borderTopColor: themeColors.bgWhite(0.3),
+                  borderTopColor: themeColors.onSecondaryContainer,
                 }}
                 onPress={() => {
                   saveGroceryList(-1);
@@ -254,7 +263,7 @@ export default function GroceryComponent({
                 <IconButton
                   icon={"basket-remove"}
                   size={20}
-                  color={themeColors.bgWhite(1)}
+                  color={themeColors.onErrorContainer}
                 />
               </TouchableOpacity>
             </View>

@@ -12,7 +12,6 @@ export default function ChipCategoryComponent({
   categories,
   setCategories,
 }) {
-  let activeTextClass = isActive ? "text-gray-300" : "text-gray-800";
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
@@ -39,19 +38,26 @@ export default function ChipCategoryComponent({
         style={{
           marginLeft: item.index === -1 ? 18 : 0,
           backgroundColor: isActive
-            ? themeColors.bgWhite(0.1)
-            : themeColors.bgWhite(0.4),
+            ? themeColors.primary
+            : themeColors.secondary,
         }}
       >
         {item.id === -1 ? (
           <IconButton
             icon="plus"
-            color={themeColors.bgBlack(1)}
+            color={themeColors.onSecondary}
             size={30}
             style={{ margin: -14, marginTop: -12 }}
           />
         ) : (
-          <Text className={"font-bold " + activeTextClass}>{item.title}</Text>
+          <Text
+            className="font-bold"
+            style={{
+              color: isActive ? themeColors.onPrimary : themeColors.onSecondary,
+            }}
+          >
+            {item.title}
+          </Text>
         )}
       </TouchableOpacity>
     </>

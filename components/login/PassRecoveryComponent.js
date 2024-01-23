@@ -21,10 +21,7 @@ import { confirmResetPassword, resetPassword } from "aws-amplify/auth";
 
 const height = Dimensions.get("window").height;
 
-export default function PassRecoveryComponent({
-  setPassRecovery,
-  setLogin,
-}) {
+export default function PassRecoveryComponent({ setPassRecovery, setLogin }) {
   const navigation = useNavigation();
   const code = useRef("");
   const email = useRef("");
@@ -47,19 +44,23 @@ export default function PassRecoveryComponent({
       });
   }
 
-  function handleCodeConfirmation(){
+  function handleCodeConfirmation() {
     setLoading(true);
     setError(false);
-    confirmResetPassword({username: email.current, confirmationCode: code.current, newPassword: password.current})
-    .then(r => {
-      setLoading(false);
-      setLogin(true);
-      setPassRecovery(false);
+    confirmResetPassword({
+      username: email.current,
+      confirmationCode: code.current,
+      newPassword: password.current,
     })
-    .catch((e) => {
-      setError(e.message);
-      setLoading(false);
-    });
+      .then((r) => {
+        setLoading(false);
+        setLogin(true);
+        setPassRecovery(false);
+      })
+      .catch((e) => {
+        setError(e.message);
+        setLoading(false);
+      });
   }
 
   return (
@@ -74,10 +75,13 @@ export default function PassRecoveryComponent({
     >
       <View className="absolute w-full mt-2 z-10">
         <View className="flex-row justify-center">
-          <View className="bg-gray-300 rounded-full p-2">
+          <View
+            className="rounded-full p-2"
+            style={{ backgroundColor: themeColors.onBackground }}
+          >
             <IconButton
               icon={"lock-reset"}
-              color={themeColors.bgBlack(1)}
+              color={themeColors.background}
               size={72}
             />
           </View>
@@ -85,8 +89,8 @@ export default function PassRecoveryComponent({
       </View>
       <Image
         className="absolute w-full mt-16"
-        source={require("~/assets/bg.png")}
-        blurRadius={80}
+        source={require("~/assets/splash.png")}
+        //blurRadius={80}
         style={{
           borderTopLeftRadius: 50,
           borderTopRightRadius: 50,
@@ -95,77 +99,115 @@ export default function PassRecoveryComponent({
       <View
         className="flex-1 px-8 pt-20"
         style={{
-          backgroundColor: themeColors.bgWhite(0.3),
+          backgroundColor: themeColors.onSecondary,
           borderTopLeftRadius: 50,
           borderTopRightRadius: 50,
         }}
       >
         <View className="space-y-2">
-          <Text className="text-gray-300 ml-2">Email Addres</Text>
+          <Text
+            className="ml-2"
+            style={{ color: themeColors.onSecondaryContainer }}
+          >
+            Email Addres
+          </Text>
           <TextInput
-            className={"p-3 text-gray-950 rounded-2xl " + (emailSent ? "mb-3" : "mb-7")}
-            style={{ backgroundColor: themeColors.bgWhite(0.6) }}
+            className={"p-3 rounded-2xl " + (emailSent ? "mb-3" : "mb-7")}
+            style={{
+              backgroundColor: themeColors.onSecondaryContainer,
+              color: themeColors.background,
+            }}
             placeholder="Enter Email"
             readOnly={emailSent}
-            selectionColor={themeColors.bgBlack(1)}
+            selectionColor={themeColors.background}
             onChangeText={(text) => {
               email.current = text;
             }}
           />
           {emailSent ? (
             <View className="space-y-2">
-              <Text className="text-gray-300 ml-2">Password</Text>
+              <Text
+                className=" ml-2"
+                style={{ color: themeColors.onSecondaryContainer }}
+              >
+                Password
+              </Text>
               <TextInput
-                className="p-3 text-gray-950 rounded-2xl mb-3"
-                style={{ backgroundColor: themeColors.bgWhite(0.6) }}
+                className="p-3  rounded-2xl mb-3"
+                style={{
+                  backgroundColor: themeColors.onSecondaryContainer,
+                  color: themeColors.background,
+                }}
                 placeholder="Enter Password"
                 secureTextEntry
-                selectionColor={themeColors.bgBlack(1)}
+                selectionColor={themeColors.background}
                 onChangeText={(text) => {
                   password.current = text;
                 }}
               />
-              <Text className="text-gray-300 ml-1">OTP Code</Text>
+              <Text
+                className="ml-1"
+                style={{ color: themeColors.onSecondaryContainer }}
+              >
+                OTP Code
+              </Text>
               <TextInput
                 keyboardType="numeric"
-                className="p-3 text-gray-950 rounded-2xl mb-0"
-                style={{ backgroundColor: themeColors.bgWhite(0.6) }}
+                className="p-3 rounded-2xl mb-0"
+                style={{
+                  backgroundColor: themeColors.onSecondaryContainer,
+                  color: themeColors.background,
+                }}
                 placeholder="Enter Code"
-                selectionColor={themeColors.bgBlack(1)}
+                selectionColor={themeColors.background}
                 onChangeText={(text) => {
                   code.current = text;
                 }}
               />
-              <Text className="mb-7 text-gray-800 ml-1 text-base font-semibold">
+              <Text
+                className="mb-7  ml-1 text-base font-semibold"
+                style={{ color: themeColors.onSecondaryContainer }}
+              >
                 {"Check your email for the OTP code we sent you!"}
               </Text>
             </View>
           ) : null}
           <TouchableOpacity
             className="py-3 rounded-2xl"
-            style={{ backgroundColor: themeColors.chartBlue(1) }}
+            style={{ backgroundColor: themeColors.primary }}
             onPress={() => {
               !emailSent ? handleEmailConfirmation() : handleCodeConfirmation();
             }}
           >
             {!loading ? (
-              <Text className="text-gray-200 font-bold text-center text-xl">
+              <Text
+                className="font-bold text-center text-xl"
+                style={{ color: themeColors.onPrimary }}
+              >
                 {!emailSent ? "Confirm email and send code" : "Confirm Code"}
               </Text>
             ) : (
               <ActivityIndicator
                 className="py-0.5"
                 animating={true}
-                color={themeColors.bgWhite(0.8)}
+                color={themeColors.onPrimary}
               />
             )}
           </TouchableOpacity>
           {error ? (
-            <Text className="text-red-800 ml-1 text-base">{error}</Text>
+            <Text
+              className="ml-1 text-base"
+              style={{ color: themeColors.errorContainer }}
+            >
+              {error}
+            </Text>
           ) : null}
         </View>
         <View className="flex-row justify-center mt-7">
-          <Text className="text-gray-300 font-semibold">
+          <Text
+            className="font-semibold"
+            style={{ color: themeColors.onSecondaryContainer }}
+          >
             Or you can choose to
           </Text>
           <Text> </Text>
@@ -175,7 +217,12 @@ export default function PassRecoveryComponent({
               setPassRecovery(false);
             }}
           >
-            <Text className="font-bold underline text-gray-300">Login</Text>
+            <Text
+              className="font-bold underline "
+              style={{ color: themeColors.primary }}
+            >
+              Login
+            </Text>
           </TouchableOpacity>
         </View>
       </View>

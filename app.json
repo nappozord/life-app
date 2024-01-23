@@ -1,13 +1,22 @@
 {
   "expo": {
-    "name": "life-app",
+    "name": "Life",
     "slug": "life-app",
     "extra": {
       "eas": {
         "projectId": "ff34ffd3-4d6e-4799-9cd0-c3d2706d7e89"
       }
     },
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1A1B1E"
+    },
     "android": {
+      "adaptiveIcon": { 
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1A1B1E"
+      },
       "package": "com.nappozord.lifeapp",
       "permissions": ["CAMERA", "ACCESS_FINE_LOCATION"],
       "intentFilters": [

@@ -1,30 +1,19 @@
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  FlatList,
-} from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import Animated, {
   withTiming,
-  FadeIn,
-  FadeOut,
   useSharedValue,
   useAnimatedStyle,
-  FadeInLeft,
   SlideInRight,
 } from "react-native-reanimated";
 import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
-import { calculateRecipeCosts } from "~/utils/calculateCosts";
 import IngredientQuantityComponent from "./IngredientQuantityComponent";
 
 export default function IngredientSelectionComponent({
   item,
   selected,
   setSelected,
-  ingredients,
 }) {
   const icon = "apple";
 
@@ -68,13 +57,13 @@ export default function IngredientSelectionComponent({
 
   return item.id !== -1 ? (
     <Animated.View
-      className="overflow-hidden px-2 py-2 m-1 roun"
+      className="overflow-hidden px-2 py-2 my-1 rounded-2xl"
       style={[
         animatedBorderStyle,
         {
           backgroundColor: isSelected
-            ? themeColors.chartGreen(0.7)
-            : themeColors.chartBlue(0.7),
+            ? themeColors.success
+            : themeColors.secondaryContainer,
         },
       ]}
       entering={SlideInRight}
@@ -89,22 +78,28 @@ export default function IngredientSelectionComponent({
             <IconButton
               size={24}
               icon={icon}
-              color={themeColors.bgWhite(0.7)}
+              color={themeColors.onSecondaryContainer}
               className="p-0 m-0"
             />
-            <Text className="font-semibold text-lg text-gray-200">
+            <Text
+              className="font-semibold text-lg"
+              style={{ color: themeColors.onSecondaryContainer }}
+            >
               {item.title}
             </Text>
             {isSelected > 0 ? (
               <IconButton
                 size={24}
                 icon={"check-bold"}
-                color={themeColors.bgWhite(0.7)}
+                color={themeColors.onSecondaryContainer}
                 className="p-0 m-0"
               />
             ) : null}
           </View>
-          <Text className="font-semibold text-lg text-gray-200 px-2">
+          <Text
+            className="font-semibold text-lg  px-2"
+            style={{ color: themeColors.onSecondaryContainer }}
+          >
             {"€" + cost}
           </Text>
         </View>
@@ -126,9 +121,12 @@ export default function IngredientSelectionComponent({
   ) : (
     <TouchableOpacity
       className="justify-center items-center rounded-3xl my-1"
-      style={{ height: 200, backgroundColor: themeColors.bgBlack(0.2) }}
+      style={{ height: 200, backgroundColor: themeColors.secondaryContainer }}
     >
-      <Text className="text-gray-300 font-semibold text-xl">
+      <Text
+        className="font-semibold text-xl"
+        style={{ color: themeColors.onSecondaryContainer }}
+      >
         Add more ingredients!
       </Text>
     </TouchableOpacity>

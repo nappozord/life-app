@@ -1,4 +1,4 @@
-import { View, FlatList } from "react-native";
+import { View } from "react-native";
 import React from "react";
 import ChipComponent from "./ChipComponent";
 import { FlashList } from "@shopify/flash-list";
@@ -9,7 +9,6 @@ export default function ChipListComponent({
   setActiveChip,
   chipListRef,
 }) {
-
   return (
     <View>
       <FlashList

@@ -1,4 +1,4 @@
-import { TouchableOpacity, Modal } from "react-native";
+import { TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
@@ -33,9 +33,9 @@ export default function EditExpenseButtonComponent({
           setModalVisible(true);
         }}
         className="p-0 rounded-full justify-end"
-        style={{ backgroundColor: themeColors.bgWhite(0.4) }}
+        style={{ backgroundColor: themeColors.primary }}
       >
-        <IconButton icon="plus" color={themeColors.bgBlack(1)} size={30} />
+        <IconButton icon="plus" color={themeColors.onPrimary} size={30} />
       </TouchableOpacity>
     </>
   );

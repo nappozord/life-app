@@ -1,4 +1,4 @@
-import { View, Text, Pressable, TouchableOpacity, Modal } from "react-native";
+import { View, Pressable, TouchableOpacity, Modal } from "react-native";
 import React, { useState } from "react";
 import Animated, {
   SlideInLeft,
@@ -40,7 +40,11 @@ export default function DatePickerComponent({ date, setDate }) {
           setDate(formatDate(dateCopy));
         }}
       >
-        <IconButton icon="chevron-left" size={30} color={themeColors.bgGrey(1)} />
+        <IconButton
+          icon="chevron-left"
+          size={30}
+          color={themeColors.onBackground}
+        />
       </TouchableOpacity>
       <Pressable
         className="flex-row justify-between items-center -ml-6"
@@ -52,13 +56,14 @@ export default function DatePickerComponent({ date, setDate }) {
           className="ml-0"
           icon="calendar"
           size={24}
-          color={themeColors.bgGrey(1)}
+          color={themeColors.primary}
         />
         <Animated.Text
           key={date.title}
           entering={animation === "left" ? SlideInLeft : SlideInRight}
           exiting={animation === "left" ? SlideOutRight : SlideOutLeft}
-          className="font-semibold text-2xl text-gray-200"
+          className="font-semibold text-2xl"
+          style={{ color: themeColors.onBackground }}
         >
           {date.title}
         </Animated.Text>
@@ -71,7 +76,11 @@ export default function DatePickerComponent({ date, setDate }) {
           setDate(formatDate(dateCopy));
         }}
       >
-        <IconButton icon="chevron-right" size={30} color={themeColors.bgGrey(1)} />
+        <IconButton
+          icon="chevron-right"
+          size={30}
+          color={themeColors.onBackground}
+        />
       </TouchableOpacity>
     </View>
   );

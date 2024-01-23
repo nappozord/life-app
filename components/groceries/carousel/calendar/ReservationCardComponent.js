@@ -1,7 +1,5 @@
-import { useRef, useState } from "react";
-import { View, FlatList } from "react-native";
+import { View } from "react-native";
 import ReservationTypeComponent from "./ReservationTypeComponent";
-import { FlashList } from "@shopify/flash-list";
 import Animated, { SlideInRight } from "react-native-reanimated";
 
 export default function ReservationCardComponent({

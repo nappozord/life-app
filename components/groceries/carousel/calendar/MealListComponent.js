@@ -1,15 +1,8 @@
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  Pressable,
-} from "react-native";
+import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import Animated, { SlideInRight, SlideOutRight } from "react-native-reanimated";
 import React from "react";
 import { themeColors } from "~/theme";
-import { Divider, IconButton } from "react-native-paper";
-import { FlashList } from "@shopify/flash-list";
+import { IconButton } from "react-native-paper";
 
 export default function MealListComponent({
   meals,
@@ -57,7 +50,7 @@ export default function MealListComponent({
             >
               <TouchableOpacity
                 style={{
-                  backgroundColor: themeColors.chartBlue(0.6),
+                  backgroundColor: themeColors.secondaryContainer,
                 }}
                 className="mt-2 px-2 py-1 rounded-lg"
               >
@@ -65,18 +58,21 @@ export default function MealListComponent({
                   <View className="flex-row items-center">
                     <IconButton
                       icon={recipe ? "food" : "apple"}
-                      color={themeColors.bgWhite(0.7)}
+                      color={themeColors.onSecondaryContainer}
                       size={18}
                       className="m-0 p-0"
                     />
-                    <Text className="text-base text-gray-200 ml-2">
+                    <Text
+                      className="text-base ml-2"
+                      style={{ color: themeColors.onSecondaryContainer }}
+                    >
                       {item.title}
                     </Text>
                   </View>
                   <TouchableOpacity
                     className="rounded-3xl p-0 -mr-1 pl-5"
                     style={{
-                      backgroundColor: themeColors.chartRed(1),
+                      backgroundColor: themeColors.errorContainer,
                       borderTopLeftRadius: 50,
                       borderBottomLeftRadius: 50,
                     }}
@@ -86,7 +82,7 @@ export default function MealListComponent({
                   >
                     <IconButton
                       icon="delete-sweep"
-                      color={themeColors.bgWhite(0.8)}
+                      color={themeColors.onErrorContainer}
                       size={24}
                       className="m-0 p-0"
                     />

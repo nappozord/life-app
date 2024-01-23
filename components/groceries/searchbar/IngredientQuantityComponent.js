@@ -1,23 +1,6 @@
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  FlatList,
-  TextInput,
-  Pressable,
-} from "react-native";
+import { View, Text, TextInput, Pressable } from "react-native";
 import React from "react";
-import Animated, {
-  withTiming,
-  FadeIn,
-  FadeOut,
-  useSharedValue,
-  useAnimatedStyle,
-  FadeInLeft,
-  FadeInDown,
-  FadeInUp,
-} from "react-native-reanimated";
+import Animated, { FadeInUp } from "react-native-reanimated";
 import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
 
@@ -47,23 +30,24 @@ export default function IngredientQuantityComponent({
         icon="information"
         size={24}
         className="m-0 p-0"
-        color={themeColors.bgWhite(0.7)}
+        color={themeColors.onSecondaryContainer}
       />
-      <Text className="text-gray-200 font-semibold text-lg mr-4">
+      <Text className="font-semibold text-lg mr-4" style={{color: themeColors.onSecondaryContainer}}>
         {total == 1 || total > 50 ? "How much:" : "How many:"}
       </Text>
       <View className="flex-1">
         <View
           className="flex-row items-center rounded-2xl px-1 py-1"
           style={{
-            backgroundColor: themeColors.bgWhite(0.6),
+            backgroundColor: themeColors.onSuccess,
           }}
         >
           <TextInput
             keyboardType="numeric"
             placeholder="E.g. 1"
-            className="flex-1 text-gray-700 text-xl px-2"
-            selectionColor={themeColors.bgBlack(1)}
+            className="flex-1 text-xl px-2"
+            style={{color: themeColors.background}}
+            selectionColor={themeColors.background}
             defaultValue={item.quantity.toString()}
             onChangeText={(text) => {
               saveQuantity(text);
@@ -71,9 +55,9 @@ export default function IngredientQuantityComponent({
           />
           <Pressable
             className="rounded-2xl pr-2 pl-3 py-1"
-            style={{ backgroundColor: themeColors.bgBlack(1) }}
+            style={{ backgroundColor: themeColors.background }}
           >
-            <Text className="text-gray-200 font-semibold text-xl -mt-0.5">
+            <Text className="font-semibold text-xl -mt-0.5" style={{color: themeColors.onBackground}}>
               {"/ " + total}
             </Text>
           </Pressable>

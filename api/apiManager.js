@@ -1,4 +1,10 @@
-import { defaultCategories, realCategories, defaultUser, mealsDefault, ingredientsDefault, recipesDefault } from "~/data";
+import {
+  defaultCategories,
+  realCategories,
+  mealsDefault,
+  ingredientsDefault,
+  recipesDefault,
+} from "~/data";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export async function getCategories(date) {
@@ -39,7 +45,10 @@ export async function addDefaultCategory(category) {
   const defCategories = JSON.parse(jsonValue);
   defCategories.push(category);
 
-  await AsyncStorage.setItem("defaultCategories", JSON.stringify(defCategories));
+  await AsyncStorage.setItem(
+    "defaultCategories",
+    JSON.stringify(defCategories)
+  );
 }
 
 export async function deleteDefaultCategory(category) {
@@ -47,19 +56,25 @@ export async function deleteDefaultCategory(category) {
   let defCategories = JSON.parse(jsonValue);
   defCategories = defCategories.filter((obj) => obj.id !== category.id);
 
-  await AsyncStorage.setItem("defaultCategories", JSON.stringify(defCategories));
+  await AsyncStorage.setItem(
+    "defaultCategories",
+    JSON.stringify(defCategories)
+  );
 }
 
 export async function updateDeafultCategory(category) {
   const jsonValue = await AsyncStorage.getItem("defaultCategories");
   let defCategories = JSON.parse(jsonValue);
 
-  if(defCategories.find((obj) => obj.id === category.id)){
+  if (defCategories.find((obj) => obj.id === category.id)) {
     defCategories.find((obj) => obj.id === category.id).title = category.title;
     defCategories.find((obj) => obj.id === category.id).icon = category.icon;
   }
 
-  await AsyncStorage.setItem("defaultCategories", JSON.stringify(defCategories));
+  await AsyncStorage.setItem(
+    "defaultCategories",
+    JSON.stringify(defCategories)
+  );
 }
 
 export async function setDefaultCategoryForecast(category) {
@@ -77,7 +92,10 @@ export async function setDefaultCategoryForecast(category) {
     defCategories[0].forecast.out =
       parseFloat(defCategories[0].forecast.out) + parseFloat(category.forecast);
 
-  await AsyncStorage.setItem("defaultCategories", JSON.stringify(defCategories));
+  await AsyncStorage.setItem(
+    "defaultCategories",
+    JSON.stringify(defCategories)
+  );
 }
 
 export function restoreBackup(date) {
@@ -129,17 +147,17 @@ export async function getGroceryList() {
 export async function updateGroceryList(grocery) {
   let groceries = await getGroceryList();
 
-  if(groceries){
-    let g = groceries.find(obj => obj.date === grocery.date);
-    if(g){
+  if (groceries) {
+    let g = groceries.find((obj) => obj.date === grocery.date);
+    if (g) {
       g.checked = grocery.checked;
       g.added = grocery.added;
       g.excluded = grocery.excluded;
     } else {
-      groceries.push({...grocery});
+      groceries.push({ ...grocery });
     }
   } else {
-    groceries = [{...grocery}];
+    groceries = [{ ...grocery }];
   }
 
   await AsyncStorage.setItem("groceries", JSON.stringify(groceries));

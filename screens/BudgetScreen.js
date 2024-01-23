@@ -1,11 +1,4 @@
-import {
-  View,
-  Image,
-  Dimensions,
-  SafeAreaView,
-  BackHandler,
-  Alert,
-} from "react-native";
+import { View, Image, BackHandler, Alert } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useRef, useEffect } from "react";
 import ChipCategoryListComponent from "~/components/budget/chip/ChipCategoryListComponent";
@@ -21,21 +14,17 @@ import Animated, {
 import { formatDate } from "~/utils/manageDate";
 import {
   getCategories,
-  restoreBackup,
   saveCategories,
   getUser,
   updateUser,
 } from "~/api/apiManager";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { defaultUser, realCategories } from "~/data";
 import HeaderComponent from "~/components/header/HeaderComponent";
 import { useNavigation } from "@react-navigation/native";
 import { signOut } from "aws-amplify/auth";
 
-export default function BudgetScreen() {
+export default function BudgetScreen({ user, setUser }) {
   const navigation = useNavigation();
   const [date, setDate] = useState(() => formatDate(new Date()));
-  const [user, setUser] = useState({});
   const [categories, setCategories] = useState([]);
   const [activeCategory, setActiveCategory] = useState(0);
   const [cardPressed, setCardPressed] = useState(false);
@@ -72,10 +61,6 @@ export default function BudgetScreen() {
   }, []);
 
   useEffect(() => {
-    !user.userId ? getUser().then((r) => setUser(r)) : updateUser(user);
-  }, [user]);
-
-  useEffect(() => {
     cardPressed
       ? (searchBarHeight.value = withTiming(0, { duration: 500 }))
       : (searchBarHeight.value = withTiming(76, { duration: 500 }));
@@ -106,8 +91,8 @@ export default function BudgetScreen() {
       <StatusBar style="light" />
       <Image
         className="absolute h-full w-full"
-        source={require("~/assets/bg.png")}
-        blurRadius={80}
+        source={require("~/assets/splash.png")}
+        //blurRadius={80}
       />
       {user.userId ? (
         <View className="mt-16">
