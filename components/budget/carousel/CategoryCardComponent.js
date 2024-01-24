@@ -112,7 +112,7 @@ export default function CategoryCardComponent({
               backgroundColor: themeColors.onSecondary,
               height: height,
               width: width,
-              elevation: 10,
+              elevation: 5,
             },
           ]}
         >

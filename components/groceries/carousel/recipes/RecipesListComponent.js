@@ -69,7 +69,7 @@ export default function RecipesListComponent({
         className="flex-row items-center justify-between py-3 px-4"
         style={{
           backgroundColor: themeColors.onSecondary,
-          elevation: 10,
+          elevation: 5,
           borderTopLeftRadius: 24,
           borderTopRightRadius: 24,
         }}
@@ -145,7 +145,7 @@ export default function RecipesListComponent({
           </TouchableOpacity>
         </View>
       </View>
-      <View className="mx-4 mt-2 -mb-2 flex-1">
+      <View className="mx-4 flex-1">
         <FlashList
           refreshControl={
             <RefreshControl
@@ -167,17 +167,24 @@ export default function RecipesListComponent({
                 )
               : recipes.sort((a, b) => b.used - a.used)
           }
-          renderItem={({ item }) => {
+          renderItem={({ index, item }) => {
             return (
-              <RecipeComponent
-                item={item}
-                meals={meals}
-                setMeals={setMeals}
-                ingredients={ingredients}
-                setIngredients={setIngredients}
-                recipes={recipes}
-                setRecipes={setRecipes}
-              />
+              <View
+                className={
+                  (index === 0 ? "mt-3 " : "") +
+                  (index === recipes.length - 1 ? "mb-2 " : "")
+                }
+              >
+                <RecipeComponent
+                  item={item}
+                  meals={meals}
+                  setMeals={setMeals}
+                  ingredients={ingredients}
+                  setIngredients={setIngredients}
+                  recipes={recipes}
+                  setRecipes={setRecipes}
+                />
+              </View>
             );
           }}
         />

@@ -21,7 +21,7 @@ export default function DatePickerModalComponent({
         className="m-5 rounded-3xl"
         style={{
           backgroundColor: themeColors.secondaryContainer,
-          elevation: 10,
+          elevation: 5,
         }}
       >
         <View className="space-y-2">

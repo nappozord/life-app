@@ -77,7 +77,7 @@ export default function GroceriesCard({
         className="flex-row items-center justify-between py-3 px-4"
         style={{
           backgroundColor: themeColors.onSecondary,
-          elevation: 10,
+          elevation: 5,
           borderTopLeftRadius: 24,
           borderTopRightRadius: 24,
         }}

@@ -23,7 +23,7 @@ export default function RecipeComponent({
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
-    <>
+    <View>
       {modalVisible ? (
         <RecipeModal
           item={item}
@@ -49,7 +49,7 @@ export default function RecipeComponent({
                 className="rounded-full px-0 py-0 mx-1 overflow-hidden"
                 style={{
                   backgroundColor: themeColors.secondary,
-                  elevation: 10,
+                  elevation: 5,
                 }}
               >
                 <IconButton
@@ -89,7 +89,7 @@ export default function RecipeComponent({
             </View>
             <View
               className="rounded-2xl py-1 px-2 mr-2"
-              style={{ backgroundColor: themeColors.primary, elevation: 10 }}
+              style={{ backgroundColor: themeColors.primary, elevation: 5 }}
             >
               <Text
                 className="text-base font-semibold"
@@ -101,6 +101,6 @@ export default function RecipeComponent({
           </View>
         </TouchableOpacity>
       </Animated.View>
-    </>
+    </View>
   );
 }

@@ -103,7 +103,7 @@ export default function GroceryComponent({
               className="rounded-full -mt-7 items-center"
               style={{
                 backgroundColor: themeColors.primary,
-                elevation: 10,
+                elevation: 5,
               }}
               onPress={() => {
                 setModalVisible(!modalVisible);
@@ -178,7 +178,7 @@ export default function GroceryComponent({
           </View>
           <View
             className="rounded-full py-1 px-2"
-            style={{ backgroundColor: themeColors.secondary, elevation: 10 }}
+            style={{ backgroundColor: themeColors.secondary, elevation: 5 }}
           >
             <Text
               className="text-base text-center font-semibold "
@@ -195,7 +195,7 @@ export default function GroceryComponent({
             className="px-2 py-0 rounded-full"
             style={{
               backgroundColor: themeColors.background,
-              elevation: 10,
+              elevation: 5,
               maxWidth: 50,
             }}
           >

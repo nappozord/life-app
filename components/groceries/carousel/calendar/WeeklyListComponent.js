@@ -18,7 +18,7 @@ export default function WeeklyListComponent({
   initialIndex,
 }) {
   return (
-    <View className="flex-1 mt-1">
+    <View className="flex-1">
       <FlashList
         ref={weekListRef}
         initialScrollIndex={initialIndex}
@@ -27,10 +27,12 @@ export default function WeeklyListComponent({
         showsVerticalScrollIndicator={false}
         data={getCurrentWeek(date)}
         keyExtractor={(item) => item.date}
-        renderItem={({ item }) => {
+        renderItem={({ index, item }) => {
           let meal = meals.find((obj) => obj.date === item.dateString);
           return (
-            <View className="m-5 my-2 flex-row">
+            <View
+              className={"m-5 my-2 flex-row " + (index === 0 ? "mt-4" : "")}
+            >
               <View className="items-center">
                 <Text style={{ color: themeColors.onSecondaryContainer }}>
                   {item.dayName}

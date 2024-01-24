@@ -51,7 +51,7 @@ export default function StatsChipListComponent({ items }) {
           <View className="flex-1" key={item.title + item.description}>
             <TouchableOpacity
               className="px-3 py-1 rounded-2xl"
-              style={{ backgroundColor: item.color }}
+              style={{ backgroundColor: item.color, elevation: 5 }}
             >
               <Text
                 className="text-base font-semibold"

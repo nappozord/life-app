@@ -25,11 +25,11 @@ export default function YearStatsScreen({ user, setUser }) {
   }));
 
   useEffect(() => {
-    if(loading)
+    if (loading)
       setTimeout(() => {
         setLoading(false);
       }, 700);
-  }, [loading])
+  }, [loading]);
 
   useEffect(() => {
     setLoading(true);
@@ -37,10 +37,11 @@ export default function YearStatsScreen({ user, setUser }) {
     yearCategories = [];
     const months = getYTDMonths(year);
 
-    getCategories(months).then(r => {
-      setYearCategories([...r]);
-    }).catch(e => console.log(e));
-
+    getCategories(months)
+      .then((r) => {
+        setYearCategories([...r]);
+      })
+      .catch((e) => console.log(e));
   }, [year]);
 
   return (
@@ -56,13 +57,16 @@ export default function YearStatsScreen({ user, setUser }) {
           <Animated.View style={searchBarAnimatedStyle} className="mx-5">
             <HeaderComponent user={user} setUser={setUser} />
           </Animated.View>
-          <View className="mb-2 -mt-4">
+          <View className="mb-4 -mt-4">
             <YearPickerComponent year={year} setYear={setYear} />
           </View>
-          <View className="mb-12">
+          <View className="mb-14">
             <StatsChipListComponent items={yearCategories} />
           </View>
-          <StatsCarouselComponent yearCategories={yearCategories} loading={loading} />
+          <StatsCarouselComponent
+            yearCategories={yearCategories}
+            loading={loading}
+          />
         </View>
       ) : (
         <View></View>

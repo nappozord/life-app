@@ -67,7 +67,7 @@ export default function ReservationTypeComponent({
           <View className="flex-row justify-end">
             <View
               className="px-2 rounded-xl flex-row items-center my-1"
-              style={{ backgroundColor: themeColors.primary }}
+              style={{ backgroundColor: themeColors.primary, elevation: 5 }}
             >
               <Text
                 className="text-base font-semibold"
