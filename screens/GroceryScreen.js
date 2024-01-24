@@ -81,7 +81,7 @@ export default function GroceryScreen({ user, setUser }) {
             <Animated.View style={searchBarAnimatedStyle} className="mx-5">
               <HeaderComponent user={user} setUser={setUser} />
             </Animated.View>
-            <View className="mb-7 -mt-1">
+            <View className="mb-4 -mt-1">
               <ChipListComponent
                 categories={categories}
                 activeChip={activeChip}
@@ -91,7 +91,7 @@ export default function GroceryScreen({ user, setUser }) {
             </View>
             {meals && ingredients && recipes ? (
               <Animated.View
-                className="justify-end overflow-hidden flex-1"
+                className="justify-end flex-1"
                 entering={FadeIn}
                 exiting={FadeOut}
               >
@@ -114,7 +114,7 @@ export default function GroceryScreen({ user, setUser }) {
               </Animated.View>
             ) : (
               <View
-                className="justify-end mx-5 overflow-hidden flex-1"
+                className="justify-end mx-5 flex-1"
                 style={{
                   borderRadius: 25,
                 }}

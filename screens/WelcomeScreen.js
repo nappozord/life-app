@@ -70,17 +70,19 @@ export default function WelcomeScreen() {
           userId: "abc",
           username: "Nappozord",
           balance: 2000,
+          startingBalance: 2000,
         }).then(() => navigation.push("Home"));
         AsyncStorage.getAllKeys().then((r) => console.log(r));
       }
   
       if (reset) {
-        updateUser(defaultUser);
+        /*updateUser(defaultUser);
         restoreBackup("January, 2024");
         restoreBackup("December, 2023");
         AsyncStorage.clear();
         AsyncStorage.removeItem("groceries");
-        AsyncStorage.removeItem("defaultCategories");
+        AsyncStorage.removeItem("defaultCategories");*/
+        AsyncStorage.removeItem("categories");
       }
 
       getCurrentUser()

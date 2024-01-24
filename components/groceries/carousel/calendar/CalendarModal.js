@@ -22,12 +22,11 @@ export default function CalendarModal({
       <Pressable
         onPress={() => setModalVisible(false)}
         className="flex-1"
-        style={{ paddingTop: 285 }}
+        style={{ paddingTop: 255 }}
       >
         <Pressable>
           <View
-            className="mx-5 rounded-2xl overflow-hidden"
-            style={{ borderTopLeftRadius: 0, borderTopRightRadius: 0 }}
+            className="mx-5 rounded-3xl overflow-hidden"
           >
             <Calendar
               onDayPress={(day) => {

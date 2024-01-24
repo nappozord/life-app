@@ -30,7 +30,8 @@ export default function DatePickerModalComponent({
             style={{
               borderTopLeftRadius: 20,
               borderTopRightRadius: 20,
-              backgroundColor: themeColors.primaryContainer,
+              backgroundColor: themeColors.onSecondary,
+              elevation:10,
             }}
             onPress={() => {
               setModalVisible(false);
@@ -39,7 +40,7 @@ export default function DatePickerModalComponent({
           >
             <Text
               className="font-bold text-center text-xl"
-              style={{ color: themeColors.onPrimaryContainer }}
+              style={{ color: themeColors.onBackground }}
             >
               This Month
             </Text>
@@ -60,7 +61,7 @@ export default function DatePickerModalComponent({
             <View className="flex-row justify-between items-center -ml-6">
               <IconButton
                 className="ml-0"
-                icon="calendar"
+                icon="calendar-month"
                 size={24}
                 color={themeColors.onSecondaryContainer}
               />

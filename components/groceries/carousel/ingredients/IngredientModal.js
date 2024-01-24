@@ -27,7 +27,7 @@ export default function IngredientModal({
 
   const name = useRef(item ? item.title.toString() : null);
   const cost = useRef(item ? parseFloat(item.cost).toFixed(2) : null);
-  const quantity = useRef(item ? parseFloat(item.quantity).toFixed(2) : "1");
+  const quantity = useRef(item ? item.quantity.toString() : "1");
 
   function addIngredient() {
     if (cost.current === "" || cost.current === null) cost.current = 0.0;

@@ -53,43 +53,62 @@ export default function GroceriesCard({
   }, [week]);
 
   return (
-    <>
-      <View className="flex-1">
-        <View
-          className="flex-row items-center justify-between py-4 px-3"
-          style={{
-            backgroundColor: themeColors.primaryContainer,
-            elevation: 10,
-          }}
-        >
-          <View className="flex-row items-center space-x-2">
-            <TouchableOpacity
-              className="rounded-full"
-              style={{ backgroundColor: themeColors.onPrimary }}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
+    <View className="flex-1">
+      <View className="absolute w-full -mt-10 z-10">
+        <View className="flex-row justify-center">
+          <TouchableOpacity
+            className="rounded-full"
+            style={{
+              backgroundColor: themeColors.primary,
+              borderColor: themeColors.onSecondary,
+              borderWidth: 8,
+            }}
+          >
+            <IconButton
+              icon="basket-check"
+              size={40}
+              color={themeColors.onPrimary}
+              className="p-0 m-0.5"
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View
+        className="flex-row items-center justify-between py-3 px-4"
+        style={{
+          backgroundColor: themeColors.onSecondary,
+          elevation: 10,
+          borderTopLeftRadius: 24,
+          borderTopRightRadius: 24,
+        }}
+      >
+        <View className="flex-row items-center space-x-2">
+          <View>
+            <View className="flex-row items-center">
+              <Text
+                className="text-xl font-semibold"
+                style={{ color: themeColors.onBackground }}
+              >
+                Grocery List
+              </Text>
               <IconButton
-                icon="check"
+                className="p-0 m-0"
+                icon="blank"
                 size={24}
-                color={themeColors.onPrimaryContainer}
+                color={themeColors.onBackground}
               />
-            </TouchableOpacity>
-            <View>
-              <View className="flex-row items-center">
-                <Text
-                  className="text-xl font-semibold "
-                  style={{ color: themeColors.onPrimaryContainer }}
-                >
-                  Grocery List
-                </Text>
-                <IconButton
-                  className="p-0 m-0"
-                  icon="basket"
-                  size={24}
-                  color={themeColors.onPrimaryContainer}
-                />
-              </View>
-              <Text style={{ color: themeColors.secondary }}>
+            </View>
+            <View className="flex-row items-center">
+              <IconButton
+                className="p-0 m-0 -ml-1"
+                icon="calendar-week-begin"
+                size={15}
+                color={themeColors.secondary}
+              />
+              <Text
+                className="text-sm"
+                style={{ color: themeColors.secondary }}
+              >
                 {week[0].dateString === getCurrentWeek(new Date())[0].dateString
                   ? "This week"
                   : week[0].date.toLocaleString("default", {
@@ -119,50 +138,50 @@ export default function GroceriesCard({
               </Text>
             </View>
           </View>
-          <View className="flex-row items-center space-x-0">
-            <TouchableOpacity
-              className="rounded-full"
-              style={{
-                backgroundColor: themeColors.onPrimaryContainer,
-                borderTopRightRadius: 0,
-                borderBottomRightRadius: 0,
-              }}
-              onPress={() => {
-                offsetDate(-7);
-              }}
-            >
-              <IconButton size={24} icon="menu-left" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              className="rounded-full"
-              style={{
-                backgroundColor: themeColors.onPrimaryContainer,
-                borderTopLeftRadius: 0,
-                borderBottomLeftRadius: 0,
-                borderLeftWidth: 1,
-              }}
-              onPress={() => {
-                offsetDate(7);
-              }}
-            >
-              <IconButton size={24} icon="menu-right" />
-            </TouchableOpacity>
-          </View>
         </View>
-        {groceryList ? (
-          <GroceriesList
-            meals={meals}
-            setMeals={setMeals}
-            ingredients={ingredients}
-            setIngredients={setIngredients}
-            recipes={recipes}
-            setRecipes={setRecipes}
-            groceryList={groceryList}
-            setGroceryList={setGroceryList}
-            week={week}
-          />
-        ) : null}
+        <View className="flex-row items-center space-x-0">
+          <TouchableOpacity
+            className="rounded-full"
+            style={{
+              backgroundColor: themeColors.onPrimaryContainer,
+              borderTopRightRadius: 0,
+              borderBottomRightRadius: 0,
+            }}
+            onPress={() => {
+              offsetDate(-7);
+            }}
+          >
+            <IconButton size={24} icon="menu-left" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="rounded-full"
+            style={{
+              backgroundColor: themeColors.onPrimaryContainer,
+              borderTopLeftRadius: 0,
+              borderBottomLeftRadius: 0,
+              borderLeftWidth: 1,
+            }}
+            onPress={() => {
+              offsetDate(7);
+            }}
+          >
+            <IconButton size={24} icon="menu-right" />
+          </TouchableOpacity>
+        </View>
       </View>
-    </>
+      {groceryList ? (
+        <GroceriesList
+          meals={meals}
+          setMeals={setMeals}
+          ingredients={ingredients}
+          setIngredients={setIngredients}
+          recipes={recipes}
+          setRecipes={setRecipes}
+          groceryList={groceryList}
+          setGroceryList={setGroceryList}
+          week={week}
+        />
+      ) : null}
+    </View>
   );
 }

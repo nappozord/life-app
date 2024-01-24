@@ -52,7 +52,7 @@ export default function WeeklyListComponent({
                     icon={"check-circle-outline"}
                     size={24}
                     className="m-0 p-0"
-                    color={themeColors.onSecondaryContainer}
+                    color={themeColors.primary}
                   />
                 ) : null}
               </View>
