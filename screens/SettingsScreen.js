@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { View, Image, Text, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Image,
+  useWindowDimensions,
+  Text,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { getUser, updateUser } from "~/api/apiManager";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
+  FadeIn,
 } from "react-native-reanimated";
 import HeaderComponent from "~/components/header/HeaderComponent";
 import { themeColors } from "~/theme";
@@ -15,6 +23,8 @@ import { useNavigation } from "@react-navigation/native";
 import FinalSetupComponent from "~/components/login/FinalSetupComponent";
 
 export default function SettingsScreen({ user, setUser }) {
+  const dimensions = useWindowDimensions();
+
   const [finalSetup, setFinalSetup] = useState(false);
   const searchBarHeight = useSharedValue(76);
   const navigation = useNavigation();
@@ -59,39 +69,66 @@ export default function SettingsScreen({ user, setUser }) {
         //blurRadius={80}
       />
       {user.userId ? (
-        <>
-          <View className="mt-16 flex-1">
-            <Animated.View style={searchBarAnimatedStyle} className="mx-5">
-              <HeaderComponent user={user} setUser={setUser} />
-            </Animated.View>
-            <View className="flex-row mx-5 space-x-3 mt-5 items-center">
+        <View className="mt-16 flex-1">
+          <Animated.View style={searchBarAnimatedStyle} className="mx-5 mb-10">
+            <HeaderComponent user={user} setUser={setUser} />
+          </Animated.View>
+
+          <Animated.View
+            entering={FadeIn}
+            className="h-full"
+            style={{
+              width: dimensions.width,
+              borderRadius: 25,
+              backgroundColor: themeColors.onSecondary,
+            }}
+          >
+            <View className="absolute w-full -mt-10 z-10">
+              <View className="flex-row justify-center">
+                <TouchableOpacity
+                  className="rounded-full p-0 m-0"
+                  style={{
+                    backgroundColor: themeColors.primary,
+                    borderColor: themeColors.onSecondary,
+                    borderWidth: 8,
+                  }}
+                >
+                  <IconButton
+                    icon={"cogs"}
+                    size={40}
+                    color={themeColors.onPrimary}
+                    className="p-0 m-0.5"
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View className="flex-row mx-5 space-x-3 mt-10 items-center">
               <Text
-                className="font-semibold text-4xl -mr-2"
+                className="font-semibold text-3xl -mr-2"
                 style={{ color: themeColors.onBackground }}
               >
                 Settings
               </Text>
               <IconButton
                 className="-m-3"
-                size={30}
-                icon="cog"
-                color={themeColors.onBackground}
+                icon="wrench"
+                color={themeColors.primary}
               />
             </View>
             <View className="mx-5 my-3 space-y-3">
               <View
-                style={{ backgroundColor: themeColors.onBackground, height: 1 }}
-              />
-              <View className="flex-row items-center justify-between mb-1">
+                className="flex-row items-center justify-between mt-2 p-3 rounded-2xl"
+                style={{ backgroundColor: themeColors.secondaryContainer }}
+              >
                 <View>
                   <Text
-                    className="text-xl"
+                    className="text-lg"
                     style={{ color: themeColors.onBackground }}
                   >
                     Update Information
                   </Text>
                   <Text
-                    className="text-sm"
+                    className="text-xs"
                     style={{ color: themeColors.onBackground }}
                   >
                     Edit username and balance
@@ -110,18 +147,18 @@ export default function SettingsScreen({ user, setUser }) {
                 </TouchableOpacity>
               </View>
               <View
-                style={{ backgroundColor: themeColors.onBackground, height: 1 }}
-              />
-              <View className="flex-row items-center justify-between mb-1">
+                className="flex-row items-center justify-between p-3 rounded-2xl"
+                style={{ backgroundColor: themeColors.secondaryContainer }}
+              >
                 <View>
                   <Text
-                    className="text-xl"
+                    className="text-lg"
                     style={{ color: themeColors.onBackground }}
                   >
                     Logout
                   </Text>
                   <Text
-                    className="text-sm"
+                    className="text-xs"
                     style={{ color: themeColors.onBackground }}
                   >
                     Log out the application
@@ -140,18 +177,18 @@ export default function SettingsScreen({ user, setUser }) {
                 </TouchableOpacity>
               </View>
               <View
-                style={{ backgroundColor: themeColors.onBackground, height: 1 }}
-              />
-              <View className="flex-row items-center justify-between mb-1">
+                className="flex-row items-center justify-between p-3 rounded-2xl"
+                style={{ backgroundColor: themeColors.secondaryContainer }}
+              >
                 <View>
                   <Text
-                    className="text-xl"
+                    className="text-lg"
                     style={{ color: themeColors.onBackground }}
                   >
                     Reset
                   </Text>
                   <Text
-                    className="text-sm"
+                    className="text-xs"
                     style={{ color: themeColors.onBackground }}
                   >
                     Delete all of your account data
@@ -169,19 +206,16 @@ export default function SettingsScreen({ user, setUser }) {
                   />
                 </TouchableOpacity>
               </View>
-              <View
-                style={{ backgroundColor: themeColors.onBackground, height: 1 }}
-              />
             </View>
-            {finalSetup ? (
-              <FinalSetupComponent
-                user={user}
-                setFinalSetup={setFinalSetup}
-                setUser={setUser}
-              />
-            ) : null}
-          </View>
-        </>
+          </Animated.View>
+          {finalSetup ? (
+            <FinalSetupComponent
+              user={user}
+              setFinalSetup={setFinalSetup}
+              setUser={setUser}
+            />
+          ) : null}
+        </View>
       ) : (
         <View></View>
       )}

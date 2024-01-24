@@ -100,7 +100,7 @@ export default function FinalSetupComponent({
       exiting={SlideOutDown.duration(400).easing(Easing.ease)}
       className="flex-1 bg-transparent pt-16 w-full absolute"
       style={{
-        top: height / (setLogin ? 4 : 10),
+        top: height / (setLogin ? 4 : 12),
         height: height / 0.5,
       }}
     >

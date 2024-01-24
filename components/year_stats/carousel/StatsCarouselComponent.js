@@ -5,6 +5,7 @@ import Animated, { FadeIn } from "react-native-reanimated";
 import { themeColors } from "~/theme";
 import IncomeSummaryComponent from "~/components/year_stats/carousel/cards/IncomeSummaryComponent";
 import { IconButton } from "react-native-paper";
+import ForecastSummaryComponent from "./cards/ForecastSummaryComponent";
 
 export default function StatsCarouselComponent({ loading, yearCategories }) {
   const dimensions = useWindowDimensions();
@@ -19,18 +20,19 @@ export default function StatsCarouselComponent({ loading, yearCategories }) {
         backgroundColor: themeColors.onSecondary,
       }}
     >
-      <View className="absolute w-full -mt-8 z-10">
+      <View className="absolute w-full -mt-10 z-10">
         <View className="flex-row justify-center">
           <TouchableOpacity
             className="rounded-full p-0 m-0"
-            style={{ backgroundColor: themeColors.onBackground,
+            style={{ backgroundColor: themeColors.primary,
             borderColor: themeColors.onSecondary,
             borderWidth: 8 }}
           >
             <IconButton
-              icon={"account-cog"}
-              color={themeColors.background}
-              size={30}
+              icon={"chart-timeline-variant-shimmer"}
+              size={40}
+              color={themeColors.onPrimary}
+              className="p-0 m-0.5"
             />
           </TouchableOpacity>
         </View>
@@ -53,7 +55,12 @@ export default function StatsCarouselComponent({ loading, yearCategories }) {
                   loading={loading}
                   yearCategories={yearCategories}
                 />
-              ) : null}
+              ) : (
+                <ForecastSummaryComponent
+                  loading={loading}
+                  yearCategories={yearCategories}
+                />
+              )}
             </View>
           );
         }}
