@@ -3,13 +3,12 @@ import React, { useEffect, useState } from "react";
 import { LineChart } from "react-native-chart-kit";
 import { hexToRGBA, themeColors } from "~/theme";
 import { months } from "~/utils/manageDate";
+import { calculateMonthlyInOut } from "~/utils/calculateMoneyFlow";
 
 export default function BezierChartComponent({ items }) {
   let [labels, setLabels] = useState([]);
   let [datasets, setDatasets] = useState([]);
 
-  {
-  }
   useEffect(() => {
     labels = [];
     datasets = [];
@@ -17,17 +16,19 @@ export default function BezierChartComponent({ items }) {
     const short = items.length > 4;
 
     items.forEach((i) => {
-      const difference = i.categories[0].real.in - i.categories[0].real.out;
+      calculateMonthlyInOut(i.categories).then((inOut) => {
+        const difference = inOut.real.in - inOut.real.out;
 
-      const totalBalance = i.startingBalance + difference;
+        const totalBalance = i.startingBalance + difference;
 
-      labels.push(
-        short ? months[i.month - 1].shortName : months[i.month - 1].fullName
-      );
-      datasets.push(totalBalance);
+        labels.push(
+          short ? months[i.month - 1].shortName : months[i.month - 1].fullName
+        );
+        datasets.push(totalBalance);
 
-      setDatasets([...datasets]);
-      setLabels([...labels]);
+        setDatasets([...datasets]);
+        setLabels([...labels]);
+      });
     });
   }, [items]);
 
@@ -47,7 +48,6 @@ export default function BezierChartComponent({ items }) {
             width={Dimensions.get("window").width - 10}
             height={250}
             yAxisLabel="€"
-            //fromZero
             yAxisInterval={1}
             chartConfig={{
               backgroundGradientFrom: themeColors.onSecondary,

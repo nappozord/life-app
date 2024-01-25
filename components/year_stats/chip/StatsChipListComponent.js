@@ -2,47 +2,37 @@ import { View, TouchableOpacity, Text } from "react-native";
 import React, { useEffect, useState } from "react";
 import StatsChipComponent from "./StatsChipComponent";
 import { themeColors } from "~/theme";
+import { calculateYearlyInOut } from "~/utils/calculateMoneyFlow";
 
 export default function StatsChipListComponent({ items }) {
-  let [totalIncome, setTotalIncome] = useState(0);
-  let [totalOutcome, setTotalOutcome] = useState(0);
+  let [data, setData] = useState([]);
+
+  console.log("RENDER CHIP");
 
   useEffect(() => {
-    calculateTotals();
-  }, [items]);
-
-  function calculateTotals() {
-    totalIncome = 0;
-    totalOutcome = 0;
-
-    items.forEach((i) => {
-      totalIncome += i.categories[0].real.in;
-      totalOutcome += i.categories[0].real.out;
-      setTotalIncome(totalIncome);
-      setTotalOutcome(totalOutcome);
+    calculateYearlyInOut(items).then((r) => {
+      setData([
+        {
+          title: "Income",
+          description: r.real.in,
+          color: themeColors.success,
+          textColor: themeColors.onSuccess,
+        },
+        {
+          title: "Difference",
+          description: r.real.in - r.real.out,
+          color: themeColors.primary,
+          textColor: themeColors.onPrimary,
+        },
+        {
+          title: "Outcome",
+          description: r.real.out,
+          color: themeColors.errorContainer,
+          textColor: themeColors.onErrorContainer,
+        },
+      ]);
     });
-  }
-
-  const data = [
-    {
-      title: "Income",
-      description: totalIncome,
-      color: themeColors.success,
-      textColor: themeColors.onSuccess,
-    },
-    {
-      title: "Difference",
-      description: totalIncome - totalOutcome,
-      color: themeColors.primary,
-      textColor: themeColors.onPrimary,
-    },
-    {
-      title: "Outcome",
-      description: totalOutcome,
-      color: themeColors.errorContainer,
-      textColor: themeColors.onErrorContainer,
-    },
-  ];
+  }, [items]);
 
   return (
     <View className="flex-row justify-between mx-5 space-x-3">

@@ -7,7 +7,10 @@ import IncomeSummaryComponent from "~/components/year_stats/carousel/cards/Incom
 import { IconButton } from "react-native-paper";
 import ForecastSummaryComponent from "./cards/ForecastSummaryComponent";
 
-export default function StatsCarouselComponent({ loading, yearCategories }) {
+export default function StatsCarouselComponent({
+  loading,
+  yearCategories,
+}) {
   const dimensions = useWindowDimensions();
 
   return (
@@ -24,9 +27,11 @@ export default function StatsCarouselComponent({ loading, yearCategories }) {
         <View className="flex-row justify-center">
           <TouchableOpacity
             className="rounded-full p-0 m-0"
-            style={{ backgroundColor: themeColors.primary,
-            borderColor: themeColors.onSecondary,
-            borderWidth: 8 }}
+            style={{
+              backgroundColor: themeColors.primary,
+              borderColor: themeColors.onSecondary,
+              borderWidth: 8,
+            }}
           >
             <IconButton
               icon={"chart-timeline-variant-shimmer"}

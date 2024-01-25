@@ -15,7 +15,6 @@ export default function ForecastChartComponent({ items }) {
     const short = items.length > 4;
 
     items.forEach((i) => {
-      console.log(months[i.month - 1].fullName, i.categories[0])
       const differenceReal = i.categories[0].real.in - i.categories[0].real.out;
 
       const differenceForecast = i.categories[0].forecast.in - i.categories[0].forecast.out;

@@ -24,6 +24,8 @@ export default function YearStatsScreen({ user, setUser }) {
     height: searchBarHeight.value,
   }));
 
+  console.log("RENDER SCREEN");
+
   useEffect(() => {
     if (loading)
       setTimeout(() => {
