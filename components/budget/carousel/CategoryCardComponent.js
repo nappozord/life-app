@@ -126,6 +126,7 @@ export default function CategoryCardComponent({
           ) : (
             <UserCategoryComponent
               item={item}
+              date={date}
               loading={loading}
               categories={categories}
               setCategories={setCategories}

@@ -345,14 +345,6 @@ export const defaultCategories = [
   {
     id: 0,
     title: "Overall",
-    real: {
-      in: 0,
-      out: 0,
-    },
-    forecast: {
-      in: 0,
-      out: 0,
-    },
     icon: "chart-bar",
     index: 0,
   },

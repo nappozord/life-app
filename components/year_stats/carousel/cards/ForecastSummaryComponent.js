@@ -29,34 +29,6 @@ export default function ForecastSummaryComponent({ loading, yearCategories }) {
           </Text>
           <IconButton icon={"calendar-check"} color={themeColors.primary} />
         </View>
-        <View className="flex-row items-center space-x-1 mx-5">
-          <Text
-            className="text-lg font-semibold z-10"
-            style={{ color: themeColors.onSecondaryContainer }}
-          >
-            {"Real Income: €" + yearCategories[0].categories[0].real.in}
-          </Text>
-          <Text
-            className="text-lg font-semibold z-10"
-            style={{ color: themeColors.onSecondaryContainer }}
-          >
-            {"Budget Income: €" + yearCategories[0].categories[0].forecast.in}
-          </Text>
-        </View>
-        <View className="flex-row items-center space-x-1 mx-5">
-          <Text
-            className="text-lg font-semibold z-10"
-            style={{ color: themeColors.onSecondaryContainer }}
-          >
-            {"Real Outcome: €" + yearCategories[0].categories[0].real.out}
-          </Text>
-          <Text
-            className="text-lg font-semibold z-10"
-            style={{ color: themeColors.onSecondaryContainer }}
-          >
-            {"Budget Outcome: €" + yearCategories[0].categories[0].forecast.out}
-          </Text>
-        </View>
       </View>
     </View>
   );

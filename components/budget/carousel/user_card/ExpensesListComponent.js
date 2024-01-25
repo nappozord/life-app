@@ -11,6 +11,7 @@ export default function UserCategoryExpensesComponent({
   setCategories,
   user,
   setUser,
+  date,
 }) {
   const icon = item.icon;
   const category = item.title;
@@ -28,6 +29,7 @@ export default function UserCategoryExpensesComponent({
           <IconButton icon={item.icon} color={themeColors.primary} />
         </View>
         <EditExpenseButtonComponent
+          date={date}
           icon={item.icon}
           category={item.title}
           categories={categories}

@@ -102,7 +102,7 @@ export default function DatePickerModalComponent({
                     }}
                     className="px-3 py-1 rounded-full"
                     style={
-                      date.month === index + 1
+                      (date.month === index + 1 && date.year === year)
                         ? {
                             backgroundColor: themeColors.onSecondaryContainer,
                           }
@@ -113,7 +113,7 @@ export default function DatePickerModalComponent({
                       className="text-base font-semibold"
                       style={{
                         color:
-                          date.month === index + 1
+                          (date.month === index + 1 && date.year === year)
                             ? themeColors.secondaryContainer
                             : themeColors.onSecondaryContainer,
                       }}
@@ -141,7 +141,7 @@ export default function DatePickerModalComponent({
                     }}
                     className="px-3 py-1 rounded-full"
                     style={
-                      date.month === index + 1
+                      (date.month === index + 1 && date.year === year)
                         ? {
                             backgroundColor: themeColors.onSecondaryContainer,
                           }
@@ -152,7 +152,7 @@ export default function DatePickerModalComponent({
                       className="text-base font-semibold"
                       style={{
                         color:
-                          date.month === index + 1
+                          (date.month === index + 1 && date.year === year)
                             ? themeColors.secondaryContainer
                             : themeColors.onSecondaryContainer,
                       }}

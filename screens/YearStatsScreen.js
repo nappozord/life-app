@@ -7,11 +7,10 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 import HeaderComponent from "~/components/header/HeaderComponent";
-import BezierChartComponent from "~/components/year_stats/charts/BezierChartComponent";
-import { getYTDMonths } from "~/utils/manageDate";
+import { getYTDMonths, sortDatesDescending } from "~/utils/manageDate";
 import { getCategories } from "~/api/apiManager";
 import StatsChipListComponent from "~/components/year_stats/chip/StatsChipListComponent";
-import StatsCarouselComponent from "../components/year_stats/carousel/StatsCarouselComponent";
+import StatsCarouselComponent from "~/components/year_stats/carousel/StatsCarouselComponent";
 
 export default function YearStatsScreen({ user, setUser }) {
   const [year, setYear] = useState(() => new Date().getFullYear());
@@ -24,15 +23,6 @@ export default function YearStatsScreen({ user, setUser }) {
     height: searchBarHeight.value,
   }));
 
-  console.log("RENDER SCREEN");
-
-  useEffect(() => {
-    if (loading)
-      setTimeout(() => {
-        setLoading(false);
-      }, 700);
-  }, [loading]);
-
   useEffect(() => {
     setLoading(true);
 
@@ -42,6 +32,7 @@ export default function YearStatsScreen({ user, setUser }) {
     getCategories(months)
       .then((r) => {
         setYearCategories([...r]);
+        setLoading(false);
       })
       .catch((e) => console.log(e));
   }, [year]);

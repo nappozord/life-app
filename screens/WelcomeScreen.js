@@ -70,7 +70,6 @@ export default function WelcomeScreen() {
           userId: "abc",
           username: "Nappozord",
           balance: 2000,
-          startingBalance: 2000,
         }).then(() => navigation.push("Home"));
         AsyncStorage.getAllKeys().then((r) => console.log(r));
       }

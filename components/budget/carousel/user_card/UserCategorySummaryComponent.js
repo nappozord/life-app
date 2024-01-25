@@ -11,6 +11,7 @@ export default function UserCategorySummaryComponent({
   setCategories,
   user,
   setUser,
+  date,
 }) {
   const percentage = calculatePercentage([item.real], item.forecast);
 
@@ -31,6 +32,7 @@ export default function UserCategorySummaryComponent({
       >
         <Text
           className="text-base font-semibold"
+          numberOfLines={1}
           style={{ color: themeColors.onPrimary }}
         >
           {percentage}%
@@ -72,6 +74,7 @@ export default function UserCategorySummaryComponent({
           setCategories={setCategories}
           user={user}
           setUser={setUser}
+          date={date}
         />
       </View>
     </View>

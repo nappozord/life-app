@@ -107,12 +107,12 @@ export function getYTDMonths(year) {
       });
     }
   } else {
-    for (let i = 0; i <= 11; i++){
+    for (let i = 0; i <= 11; i++) {
       monthsArray.push({
         ...months[i],
         year: year,
-      })
-    };
+      });
+    }
   }
 
   return monthsArray;
@@ -120,4 +120,24 @@ export function getYTDMonths(year) {
 
 export function getMonthNumber(monthName) {
   return months.find((obj) => obj.fullName === monthName).index;
+}
+
+export function isPreviousMonth(targetMonth, targetYear) {
+  const currentDate = new Date();
+
+  const isPrevious =
+    targetYear < currentDate.getFullYear() ||
+    (targetYear === currentDate.getFullYear() &&
+      targetMonth < currentDate.getMonth() + 1);
+
+  return isPrevious;
+}
+
+export function sortDatesDescending(items) {
+  return items.sort(function(a, b) {
+    if (b.year !== a.year) {
+      return b.year - a.year;
+    }
+    return b.month - a.month;
+  });
 }

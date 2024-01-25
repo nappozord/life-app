@@ -13,6 +13,7 @@ import React, { useRef } from "react";
 import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
 import Animated, { SlideInDown } from "react-native-reanimated";
+import { isPreviousMonth } from "~/utils/manageDate";
 
 export default function EditExpenseModalComponent({
   item,
@@ -24,6 +25,7 @@ export default function EditExpenseModalComponent({
   setCategories,
   user,
   setUser,
+  date,
 }) {
   const inputRef = useRef(null);
 
@@ -42,14 +44,12 @@ export default function EditExpenseModalComponent({
 
     if (category.income) {
       category.real -= parseFloat(amount.current);
-      categories[0].real.in =
-        parseFloat(categories[0].real.in) + parseFloat(amount.current);
-      user.balance = parseFloat(user.balance) + parseFloat(amount.current);
+      if (!isPreviousMonth(date.month, date.year))
+        user.balance = parseFloat(user.balance) + parseFloat(amount.current);
     } else {
       category.real += parseFloat(amount.current);
-      categories[0].real.out =
-        parseFloat(categories[0].real.out) + parseFloat(amount.current);
-      user.balance = parseFloat(user.balance) - parseFloat(amount.current);
+      if (!isPreviousMonth(date.month, date.year))
+        user.balance = parseFloat(user.balance) - parseFloat(amount.current);
     }
 
     let occurrences = 1;
@@ -81,14 +81,12 @@ export default function EditExpenseModalComponent({
 
     if (category.income) {
       category.real += parseFloat(item.total);
-      categories[0].real.in =
-        parseFloat(categories[0].real.in) - parseFloat(item.total);
-      user.balance = parseFloat(user.balance) - parseFloat(item.total);
+      if (!isPreviousMonth(date.year, date.month))
+        user.balance = parseFloat(user.balance) - parseFloat(item.total);
     } else {
       category.real -= parseFloat(item.total);
-      categories[0].real.out =
-        parseFloat(categories[0].real.out) - parseFloat(item.total);
-      user.balance = parseFloat(user.balance) + parseFloat(item.total);
+      if (!isPreviousMonth(date.year, date.month))
+        user.balance = parseFloat(user.balance) + parseFloat(item.total);
     }
 
     const filteredArray = category.expenses.filter((obj) => obj.id !== item.id);

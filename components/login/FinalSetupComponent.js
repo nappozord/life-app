@@ -32,9 +32,6 @@ export default function FinalSetupComponent({
   const navigation = useNavigation();
   const username = useRef(setLogin ? null : user.username);
   const balance = useRef(setLogin ? null : user.balance.toFixed(2));
-  const startingBalance = useRef(
-    !user.startingBalance ? null : user.startingBalance.toFixed(2)
-  );
 
   useEffect(() => {
     if (!user || !user.userId) {
@@ -64,16 +61,10 @@ export default function FinalSetupComponent({
 
     if (!balance.current || balance.current === "") balance.current = "0";
 
-    if (!startingBalance.current || startingBalance.current === "")
-      startingBalance.current = balance.current;
-
     const u = {
       userId: setLogin ? user.current.userId : user.userId,
       username: username.current,
       balance: parseFloat(parseFloat(balance.current).toFixed(2)),
-      startingBalance: parseFloat(
-        parseFloat(startingBalance.current).toFixed(2)
-      ),
     };
 
     setLogin ? updateUser(u) : setUser({ ...u });
@@ -193,45 +184,6 @@ export default function FinalSetupComponent({
                 </Pressable>
               </View>
             </View>
-            {!setLogin ? (
-              <View className="flex-1 space-y-2">
-                <Text
-                  className="ml-2"
-                  style={{ color: themeColors.onSecondaryContainer }}
-                >
-                  Initial Balance
-                </Text>
-                <View
-                  className="flex-row items-center rounded-2xl p-1 mb-2"
-                  style={{
-                    backgroundColor: themeColors.onSecondaryContainer,
-                    height: 50,
-                  }}
-                >
-                  <TextInput
-                    keyboardType="numeric"
-                    placeholder="Enter Balance"
-                    className="px-2 flex-1 "
-                    defaultValue={startingBalance.current}
-                    style={{ color: themeColors.background }}
-                    selectionColor={themeColors.background}
-                    onChangeText={(text) => {
-                      startingBalance.current = text;
-                    }}
-                  />
-                  <Pressable
-                    className="rounded-2xl pr-0.5"
-                    style={{ backgroundColor: themeColors.background }}
-                  >
-                    <IconButton
-                      size={20}
-                      icon="currency-eur"
-                      color={themeColors.onBackground}
-                    />
-                  </Pressable>
-                </View>
-              </View>
-            ) : null}
           </View>
           <TouchableOpacity
             className="flex items-end mb-7 mr-4"

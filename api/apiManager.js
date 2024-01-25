@@ -6,25 +6,25 @@ import {
   recipesDefault,
 } from "~/data";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getMonthNumber } from "../utils/manageDate";
+import { getMonthNumber, sortDatesDescending } from "~/utils/manageDate";
+import { calculateMonthlyInOut } from "~/utils/calculateMoneyFlow";
 
 async function calculateMonthStartingBalance(totalCategories, date) {
   const jsonValue = await AsyncStorage.getItem("user");
   const user = JSON.parse(jsonValue);
-  let balance = user.startingBalance ? user.startingBalance : user.balance;
+  let balance = user.balance;
 
   if (totalCategories) {
     const parts = date.title.split(", ");
     const month = getMonthNumber(parts[0]);
     const year = parseInt(parts[1]);
 
-    totalCategories.forEach((obj) => {
-      if (obj.year < year || (obj.year === year && obj.month < month)) {
-        const difference =
-          obj.categories[0].real.in - obj.categories[0].real.out;
-        balance += difference;
+    for (obj of sortDatesDescending(totalCategories)) {
+      if (obj.year > year || (obj.year === year && obj.month >= month)) {
+        const monthlyBalance = await calculateMonthlyInOut(obj.categories);
+        balance -= monthlyBalance.real.in - monthlyBalance.real.out;
       }
-    });
+    }
   }
 
   return balance;
@@ -66,10 +66,7 @@ async function getMonthCategories(totalCategories, date) {
     title: date.title,
     month: getMonthNumber(month),
     year: year,
-    startingBalance: await calculateMonthStartingBalance(
-      totalCategories,
-      date
-    ),
+    startingBalance: await calculateMonthStartingBalance(totalCategories, date),
   };
 
   if (totalCategories === null) {
@@ -97,8 +94,10 @@ export async function getCategories(range) {
   if (!range.title) {
     const categories = [];
 
-    for (const m of range){
-      const monthCategories = await getMonthCategories(totalCategories, { title: m.fullName + ", " + m.year });
+    for (const m of range) {
+      const monthCategories = await getMonthCategories(totalCategories, {
+        title: m.fullName + ", " + m.year,
+      });
       categories.push(monthCategories);
     }
 
@@ -113,12 +112,15 @@ export async function saveCategories(categories, date) {
 
   const defCategories = jsonValue ? JSON.parse(jsonValue) : defaultCategories;
 
+  const defTotals = await calculateMonthlyInOut(defCategories);
+  const catTotals = await calculateMonthlyInOut(categories);
+
   if (
     categories.length === 0 ||
-    (categories[0].real.in === defCategories[0].real.in &&
-      categories[0].real.out === defCategories[0].real.out &&
-      categories[0].forecast.in === defCategories[0].forecast.in &&
-      categories[0].forecast.out === defCategories[0].forecast.out)
+    (catTotals.real.in === defTotals.real.in &&
+      catTotals.real.out === defTotals.real.out &&
+      catTotals.forecast.in === defTotals.forecast.in &&
+      catTotals.forecast.out === defTotals.forecast.out)
   )
     return;
 

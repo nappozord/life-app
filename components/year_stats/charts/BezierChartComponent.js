@@ -33,7 +33,7 @@ export default function BezierChartComponent({ items }) {
   }, [items]);
 
   return (
-    <View className="mr-5">
+    <View className="">
       {labels.length > 0 && datasets.length > 0 ? (
         <View>
           <LineChart
@@ -45,7 +45,7 @@ export default function BezierChartComponent({ items }) {
                 },
               ],
             }}
-            width={Dimensions.get("window").width - 10}
+            width={Dimensions.get("window").width}
             height={250}
             yAxisLabel="€"
             yAxisInterval={1}

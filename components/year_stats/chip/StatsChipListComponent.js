@@ -7,8 +7,6 @@ import { calculateYearlyInOut } from "~/utils/calculateMoneyFlow";
 export default function StatsChipListComponent({ items }) {
   let [data, setData] = useState([]);
 
-  console.log("RENDER CHIP");
-
   useEffect(() => {
     calculateYearlyInOut(items).then((r) => {
       setData([
