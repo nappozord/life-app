@@ -55,6 +55,7 @@ export default function UserCategoryExpensesComponent({
                 itemCategory={category}
                 user={user}
                 setUser={setUser}
+                date={date}
               />
             );
           })}

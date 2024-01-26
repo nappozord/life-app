@@ -7,7 +7,7 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 import HeaderComponent from "~/components/header/HeaderComponent";
-import { getYTDMonths, sortDatesDescending } from "~/utils/manageDate";
+import { getYTDMonths } from "~/utils/manageDate";
 import { getCategories } from "~/api/apiManager";
 import StatsChipListComponent from "~/components/year_stats/chip/StatsChipListComponent";
 import StatsCarouselComponent from "~/components/year_stats/carousel/StatsCarouselComponent";
