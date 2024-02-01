@@ -140,6 +140,7 @@ export default function IngredientsListComponent({
       </View>
       <View className="mx-3 flex-1">
         <FlashList
+          key={"ingredients_" + sort}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
@@ -158,7 +159,7 @@ export default function IngredientsListComponent({
               ? ingredients.sort((a, b) =>
                   a.title > b.title ? 1 : b.title > a.title ? -1 : 0
                 )
-              : ingredients.sort((a, b) => b.quantity - a.quantity)
+              : ingredients.sort((a, b) => b.stock - a.stock)
           }
           renderItem={({ index, item }) => {
             return (
