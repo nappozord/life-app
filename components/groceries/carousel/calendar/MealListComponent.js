@@ -34,7 +34,9 @@ export default function MealListComponent({
   return (
     <View className="flex-1 overflow-hidden">
       <FlatList
-        keyExtractor={(item) => day + "_" + type + "_" + item.id}
+        keyExtractor={(item) =>
+          day + "_" + type + "_" + (item.id ? item.id : item)
+        }
         showsVerticalScrollIndicator={false}
         data={meal[type][recipe ? "recipes" : "ingredients"]}
         renderItem={(id) => {
