@@ -21,6 +21,7 @@ export default function EditForecastModalComponent({
   setModalVisible,
   categories,
   setCategories,
+  date,
 }) {
   const amount = useRef(Math.abs(item.forecast).toString());
   const [checked, setChecked] = React.useState(false);
@@ -36,16 +37,8 @@ export default function EditForecastModalComponent({
     const prevForecast = parseFloat(category.forecast);
 
     if (category.income) {
-      categories[0].forecast.in =
-        parseFloat(categories[0].forecast.in) +
-        prevForecast +
-        parseFloat(amount.current);
       category.forecast = -parseFloat(amount.current);
     } else {
-      categories[0].forecast.out =
-        parseFloat(categories[0].forecast.out) -
-        prevForecast +
-        parseFloat(amount.current);
       category.forecast = parseFloat(amount.current);
     }
 

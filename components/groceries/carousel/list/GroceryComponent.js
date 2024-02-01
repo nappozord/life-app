@@ -103,7 +103,7 @@ export default function GroceryComponent({
               className="rounded-full -mt-7 items-center"
               style={{
                 backgroundColor: themeColors.primary,
-                elevation: 10,
+                elevation: 5,
               }}
               onPress={() => {
                 setModalVisible(!modalVisible);
@@ -129,7 +129,7 @@ export default function GroceryComponent({
             <View className="justify-between items-center space-y-1">
               <View className="flex-1 pt-8 pb-6">
                 <Text
-                  className={"text-base text-center "}
+                  className={"text-base text-center"}
                   style={{ color: themeColors.onSecondary }}
                 >
                   {item.ingredient.title}
@@ -147,21 +147,38 @@ export default function GroceryComponent({
       <View className="flex-row justify-between align-center rounded-full z-10">
         <View />
         <View className="flex-row -mt-7 space-x-2 items-center">
-          <View
-            className="px-2 py-1 rounded-full"
+        <View
+            className="px-2 py-0 rounded-full onverflow-hidden"
             style={{
               backgroundColor: "transparent",
+              maxWidth: 50,
             }}
           >
-            <Text className="text-transparent">
-              {item.onCart +
-                "/" +
-                Math.ceil(item.needed / item.ingredient.quantity)}
-            </Text>
+            <View className="flex-row overflow-hidden">
+              <Animated.View
+                entering={SlideInUp}
+                key={item.ingredient.id + item.onCart}
+              >
+                <Text
+                  className="text-sm"
+                  style={{ color: "transparent" }}
+                  numberOfLines={1}
+                >
+                  {item.onCart}
+                </Text>
+              </Animated.View>
+              <Text
+                className="text-sm"
+                style={{ color: "transparent" }}
+                numberOfLines={1}
+              >
+                {"/" + Math.ceil(item.needed / item.ingredient.quantity)}
+              </Text>
+            </View>
           </View>
           <View
             className="rounded-full py-1 px-2"
-            style={{ backgroundColor: themeColors.secondary, elevation: 10 }}
+            style={{ backgroundColor: themeColors.secondary, elevation: 5 }}
           >
             <Text
               className="text-base text-center font-semibold "
@@ -177,8 +194,9 @@ export default function GroceryComponent({
           <View
             className="px-2 py-0 rounded-full"
             style={{
-              backgroundColor: themeColors.onSecondary,
-              elevation: 10,
+              backgroundColor: themeColors.background,
+              elevation: 5,
+              maxWidth: 50,
             }}
           >
             <View className="flex-row overflow-hidden">
@@ -188,7 +206,8 @@ export default function GroceryComponent({
               >
                 <Text
                   className="text-sm"
-                  style={{ color: themeColors.secondary }}
+                  style={{ color: themeColors.onBackground }}
+                  numberOfLines={1}
                 >
                   {item.onCart}
                 </Text>
@@ -196,7 +215,8 @@ export default function GroceryComponent({
 
               <Text
                 className="text-sm"
-                style={{ color: themeColors.secondary }}
+                style={{ color: themeColors.onBackground }}
+                numberOfLines={1}
               >
                 {"/" + Math.ceil(item.needed / item.ingredient.quantity)}
               </Text>
@@ -217,7 +237,7 @@ export default function GroceryComponent({
         <View className="justify-between items-center space-y-1 -mt-2">
           <View className="flex-1 pt-5">
             <Text
-              className="text-base text-center"
+              className="text-base text-center font-semibold"
               style={{ color: themeColors.onSecondaryContainer }}
             >
               {item.ingredient.title}
@@ -230,7 +250,7 @@ export default function GroceryComponent({
                 style={{
                   backgroundColor: themeColors.secondaryContainer,
                   borderBottomLeftRadius: 16,
-                  borderTopWidth: 1,
+                  borderTopWidth: 0.5,
                   borderTopColor: themeColors.onSecondaryContainer,
                 }}
                 onPress={() => {
@@ -250,7 +270,7 @@ export default function GroceryComponent({
                 style={{
                   backgroundColor: themeColors.errorContainer,
                   borderBottomRightRadius: 16,
-                  borderTopWidth: 1,
+                  borderTopWidth: 0.5,
                   borderTopColor: themeColors.onSecondaryContainer,
                 }}
                 onPress={() => {

@@ -1,3 +1,18 @@
+export const months = [
+  { index: 1, fullName: "January", shortName: "JAN" },
+  { index: 2, fullName: "February", shortName: "FEB" },
+  { index: 3, fullName: "March", shortName: "MAR" },
+  { index: 4, fullName: "April", shortName: "APR" },
+  { index: 5, fullName: "May", shortName: "MAY" },
+  { index: 6, fullName: "June", shortName: "JUN" },
+  { index: 7, fullName: "July", shortName: "JUL" },
+  { index: 8, fullName: "August", shortName: "AUG" },
+  { index: 9, fullName: "September", shortName: "SEP" },
+  { index: 10, fullName: "October", shortName: "OCT" },
+  { index: 11, fullName: "November", shortName: "NOV" },
+  { index: 12, fullName: "December", shortName: "DEC" },
+];
+
 export function formatDate(inputDate) {
   const month = inputDate.toLocaleString("default", { month: "long" });
   const year = inputDate.getFullYear();
@@ -66,4 +81,63 @@ export function getNextDays(date, range) {
   }
 
   return result;
+}
+
+export function getYTDMonths(year) {
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth();
+  const currentYear = currentDate.getFullYear();
+
+  let monthsArray = [];
+
+  if (year === currentYear) {
+    if (currentMonth === 0) {
+      monthsArray.push({
+        index: 0,
+        fullName: "December",
+        shortName: "DEC",
+        year: currentYear - 1,
+      });
+    }
+
+    for (let i = 0; i <= currentMonth; i++) {
+      monthsArray.push({
+        ...months[i],
+        year: year,
+      });
+    }
+  } else {
+    for (let i = 0; i <= 11; i++) {
+      monthsArray.push({
+        ...months[i],
+        year: year,
+      });
+    }
+  }
+
+  return monthsArray;
+}
+
+export function getMonthNumber(monthName) {
+  return months.find((obj) => obj.fullName === monthName).index;
+}
+
+export function isPreviousMonth(targetMonth, targetYear) {
+  const currentDate = new Date();
+
+  const isPrevious =
+    targetYear < currentDate.getFullYear() ||
+    (targetYear === currentDate.getFullYear() &&
+      targetMonth < currentDate.getMonth() + 1);
+
+  return isPrevious;
+}
+
+export function sortDatesDescending(items) {
+  return items.sort(function(a, b) {
+    if (b.year !== a.year) {
+      return b.year - a.year;
+    }
+    return b.month - a.month;
+  });
 }

@@ -45,27 +45,41 @@ export default function RecipesListComponent({
           setRecipes={setRecipes}
         />
       ) : null}
-      <View
-        className="flex-row items-center justify-between py-4 px-3"
-        style={{ backgroundColor: themeColors.primaryContainer, elevation: 10 }}
-      >
-        <View className="flex-row items-center space-x-2">
+      <View className="absolute w-full -mt-10 z-10">
+        <View className="flex-row justify-center">
           <TouchableOpacity
             className="rounded-full"
-            style={{ backgroundColor: themeColors.onPrimary }}
-            onPress={() => setModalVisible(!modalVisible)}
+            style={{
+              backgroundColor: themeColors.primary,
+              borderColor: themeColors.onSecondary,
+              borderWidth: 8,
+            }}
           >
             <IconButton
               icon="plus"
-              size={24}
-              color={themeColors.onPrimaryContainer}
+              size={40}
+              color={themeColors.onPrimary}
+              className="p-0 m-0.5"
+              onPress={() => setModalVisible(!modalVisible)}
             />
           </TouchableOpacity>
+        </View>
+      </View>
+      <View
+        className="flex-row items-center justify-between py-3 px-4"
+        style={{
+          backgroundColor: themeColors.onSecondary,
+          elevation: 5,
+          borderTopLeftRadius: 24,
+          borderTopRightRadius: 24,
+        }}
+      >
+        <View className="flex-row items-center space-x-2">
           <View>
             <View className="flex-row items-center">
               <Text
                 className="text-xl font-semibold "
-                style={{ color: themeColors.onPrimaryContainer }}
+                style={{ color: themeColors.onBackground }}
               >
                 Recipes
               </Text>
@@ -73,12 +87,23 @@ export default function RecipesListComponent({
                 className="p-0 m-0"
                 icon="food"
                 size={24}
-                color={themeColors.onPrimaryContainer}
+                color={themeColors.onBackground}
               />
             </View>
-            <Text style={{ color: themeColors.secondary }}>
-              {sort === "alphabetical" ? "A-Z order" : "Usage order"}
-            </Text>
+            <View className="flex-row items-center">
+              <IconButton
+                className="p-0 m-0 -ml-1"
+                icon="sort"
+                size={15}
+                color={themeColors.secondary}
+              />
+              <Text
+                className="text-sm"
+                style={{ color: themeColors.secondary }}
+              >
+                {sort === "alphabetical" ? "A-Z order" : "Usage order"}
+              </Text>
+            </View>
           </View>
         </View>
         <View className="flex-row items-center space-x-0">
@@ -120,7 +145,7 @@ export default function RecipesListComponent({
           </TouchableOpacity>
         </View>
       </View>
-      <View className="mx-5 mt-2 -mb-2 flex-1">
+      <View className="mx-4 flex-1">
         <FlashList
           refreshControl={
             <RefreshControl
@@ -142,17 +167,24 @@ export default function RecipesListComponent({
                 )
               : recipes.sort((a, b) => b.used - a.used)
           }
-          renderItem={({ item }) => {
+          renderItem={({ index, item }) => {
             return (
-              <RecipeComponent
-                item={item}
-                meals={meals}
-                setMeals={setMeals}
-                ingredients={ingredients}
-                setIngredients={setIngredients}
-                recipes={recipes}
-                setRecipes={setRecipes}
-              />
+              <View
+                className={
+                  (index === 0 ? "mt-3 " : "") +
+                  (index === recipes.length - 1 ? "mb-2 " : "")
+                }
+              >
+                <RecipeComponent
+                  item={item}
+                  meals={meals}
+                  setMeals={setMeals}
+                  ingredients={ingredients}
+                  setIngredients={setIngredients}
+                  recipes={recipes}
+                  setRecipes={setRecipes}
+                />
+              </View>
             );
           }}
         />

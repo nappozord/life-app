@@ -91,7 +91,7 @@ export default function FinalSetupComponent({
       exiting={SlideOutDown.duration(400).easing(Easing.ease)}
       className="flex-1 bg-transparent pt-16 w-full absolute"
       style={{
-        top: height / (setLogin ? 4 : 10),
+        top: height / (setLogin ? 4 : 12),
         height: height / 0.5,
       }}
     >
@@ -146,40 +146,44 @@ export default function FinalSetupComponent({
               username.current = text;
             }}
           />
-          <Text
-            className="ml-2"
-            style={{ color: themeColors.onSecondaryContainer }}
-          >
-            Initial Balance
-          </Text>
-          <View
-            className="flex-row items-center rounded-2xl p-1 mb-2"
-            style={{
-              backgroundColor: themeColors.onSecondaryContainer,
-              height: 50,
-            }}
-          >
-            <TextInput
-              keyboardType="numeric"
-              placeholder="Enter Balance"
-              className="px-2 flex-1 "
-              defaultValue={balance.current}
-              style={{ color: themeColors.background }}
-              selectionColor={themeColors.background}
-              onChangeText={(text) => {
-                balance.current = text;
-              }}
-            />
-            <Pressable
-              className="rounded-2xl pr-0.5"
-              style={{ backgroundColor: themeColors.background }}
-            >
-              <IconButton
-                size={20}
-                icon="currency-eur"
-                color={themeColors.onBackground}
-              />
-            </Pressable>
+          <View className="flex-row justify-between space-x-3">
+            <View className="flex-1 space-y-2">
+              <Text
+                className="ml-2"
+                style={{ color: themeColors.onSecondaryContainer }}
+              >
+                Current Balance
+              </Text>
+              <View
+                className="flex-row items-center rounded-2xl p-1 mb-2"
+                style={{
+                  backgroundColor: themeColors.onSecondaryContainer,
+                  height: 50,
+                }}
+              >
+                <TextInput
+                  keyboardType="numeric"
+                  placeholder="Enter Balance"
+                  className="px-2 flex-1 "
+                  defaultValue={balance.current}
+                  style={{ color: themeColors.background }}
+                  selectionColor={themeColors.background}
+                  onChangeText={(text) => {
+                    balance.current = text;
+                  }}
+                />
+                <Pressable
+                  className="rounded-2xl pr-0.5"
+                  style={{ backgroundColor: themeColors.background }}
+                >
+                  <IconButton
+                    size={20}
+                    icon="currency-eur"
+                    color={themeColors.onBackground}
+                  />
+                </Pressable>
+              </View>
+            </View>
           </View>
           <TouchableOpacity
             className="flex items-end mb-7 mr-4"

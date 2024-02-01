@@ -59,7 +59,7 @@ export default function IngredientComponent({
                 className="rounded-full px-4 py-1 mx-1 overflow-hidden"
                 style={{
                   backgroundColor: themeColors.secondary,
-                  elevation: 10,
+                  elevation: 5,
                 }}
               >
                 <Animated.View

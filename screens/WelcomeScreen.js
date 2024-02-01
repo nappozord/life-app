@@ -75,12 +75,13 @@ export default function WelcomeScreen() {
       }
   
       if (reset) {
-        updateUser(defaultUser);
+        /*updateUser(defaultUser);
         restoreBackup("January, 2024");
         restoreBackup("December, 2023");
         AsyncStorage.clear();
         AsyncStorage.removeItem("groceries");
-        AsyncStorage.removeItem("defaultCategories");
+        AsyncStorage.removeItem("defaultCategories");*/
+        AsyncStorage.removeItem("categories");
       }
 
       getCurrentUser()

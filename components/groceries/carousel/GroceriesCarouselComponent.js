@@ -33,11 +33,12 @@ export default function BudgetCarouselComponent({
         renderItem={({ item }) => (
           <Animated.View
             entering={FadeIn}
-            className="justify-end h-full overflow-hidden pb-3"
+            className="justify-end h-full"
+            style={{width: dimensions.width - 40}}
+          >
+            <View className="flex-1 mt-10 rounded-3xl"
             style={[
               {
-                width: dimensions.width - 40,
-                borderRadius: 25,
                 backgroundColor: themeColors.onSecondary,
               },
               item.index === 1
@@ -47,45 +48,47 @@ export default function BudgetCarouselComponent({
                     paddingBottom: 0,
                   }
                 : {},
-            ]}
-          >
-            {item.index === 0 ? (
-              <CalendarComponent
-                meals={meals}
-                setMeals={setMeals}
-                ingredients={ingredients}
-                setIngredients={setIngredients}
-                recipes={recipes}
-                setRecipes={setRecipes}
-              />
-            ) : item.index === 1 ? (
-              <GroceriesCard
-                meals={meals}
-                setMeals={setMeals}
-                ingredients={ingredients}
-                setIngredients={setIngredients}
-                recipes={recipes}
-                setRecipes={setRecipes}
-              />
-            ) : item.index === 2 ? (
-              <RecipesListComponent
-                meals={meals}
-                setMeals={setMeals}
-                ingredients={ingredients}
-                setIngredients={setIngredients}
-                recipes={recipes}
-                setRecipes={setRecipes}
-              />
-            ) : item.index === 3 ? (
-              <IngredientsListComponent
-                meals={meals}
-                setMeals={setMeals}
-                ingredients={ingredients}
-                setIngredients={setIngredients}
-                recipes={recipes}
-                setRecipes={setRecipes}
-              />
-            ) : null}
+            ]}>
+              {item.index === 0 ? (
+                <>
+                  <CalendarComponent
+                    meals={meals}
+                    setMeals={setMeals}
+                    ingredients={ingredients}
+                    setIngredients={setIngredients}
+                    recipes={recipes}
+                    setRecipes={setRecipes}
+                  />
+                </>
+              ) : item.index === 1 ? (
+                <GroceriesCard
+                  meals={meals}
+                  setMeals={setMeals}
+                  ingredients={ingredients}
+                  setIngredients={setIngredients}
+                  recipes={recipes}
+                  setRecipes={setRecipes}
+                />
+              ) : item.index === 2 ? (
+                <RecipesListComponent
+                  meals={meals}
+                  setMeals={setMeals}
+                  ingredients={ingredients}
+                  setIngredients={setIngredients}
+                  recipes={recipes}
+                  setRecipes={setRecipes}
+                />
+              ) : item.index === 3 ? (
+                <IngredientsListComponent
+                  meals={meals}
+                  setMeals={setMeals}
+                  ingredients={ingredients}
+                  setIngredients={setIngredients}
+                  recipes={recipes}
+                  setRecipes={setRecipes}
+                />
+              ) : null}
+            </View>
           </Animated.View>
         )}
         firstItem={activeChip}

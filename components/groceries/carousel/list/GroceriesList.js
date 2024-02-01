@@ -179,7 +179,7 @@ export default function GroceriesList({
         <Animated.View
           entering={SlideInUp.duration(500)}
           exiting={SlideOutUp.duration(500)}
-          style={{ elevation: 10 }}
+          style={{ elevation: 5 }}
         >
           <View
             className="px-4 py-1"
@@ -241,7 +241,7 @@ export default function GroceriesList({
                 className="m-1 rounded-2xl p-10 overflow-hidden"
                 style={{
                   backgroundColor: themeColors.secondary,
-                  elevation: 10,
+                  elevation: 5,
                 }}
               >
                 <View className="justify-between items-center space-y-1">

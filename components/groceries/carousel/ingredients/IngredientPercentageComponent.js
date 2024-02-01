@@ -22,7 +22,7 @@ export default function IngredientPercentageComponent({
       progress={progress}
       color={
         progress > 0.5
-          ? themeColors.primaryContainer
+          ? themeColors.primary
           : themeColors.errorContainer
       }
     />

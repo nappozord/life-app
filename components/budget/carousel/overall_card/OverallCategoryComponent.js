@@ -1,21 +1,34 @@
 import { View, Text, Pressable } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { themeColors } from "~/theme";
 import DonutChartComponent from "~/components/budget/charts/DonutChartComponent";
 import { IconButton } from "react-native-paper";
 import BarChartComponent from "~/components/budget/charts/BarChartComponent";
 import { getRemainingDaysInMonth } from "~/utils/manageDate";
+import { calculateMonthlyInOut } from "~/utils/calculateMoneyFlow";
 
-export default function OverallCategoryComponent({ item, date }) {
+export default function OverallCategoryComponent({ date, item, categories }) {
+  const [total, setTotal] = useState(() => getOverall())
+
+  useEffect(() => {
+    getOverall();
+  }, [categories]);
+
+  function getOverall(){
+    calculateMonthlyInOut(categories).then((inOut) => {
+      setTotal(inOut);
+    });
+  }
+
   return (
     <Pressable>
-      <View className="flex-row justify-center -mt-12">
+      {total ? <><View className="flex-row justify-center -mt-12">
         <DonutChartComponent
           item={{
             id: item.id,
             title: item.title,
-            real: item.real.out,
-            forecast: item.real.in,
+            real: total.real.out,
+            forecast: total.real.in,
           }}
         />
       </View>
@@ -39,8 +52,8 @@ export default function OverallCategoryComponent({ item, date }) {
             </Text>
             <View className="flex-row justify-between items-center">
               <BarChartComponent
-                forecast={item.forecast.in}
-                real={item.real.in}
+                forecast={total.forecast.in}
+                real={total.real.in}
               />
               <View
                 className="p-1 px-3 rounded-full ml-3"
@@ -50,7 +63,7 @@ export default function OverallCategoryComponent({ item, date }) {
                   className="text-base font-semibold"
                   style={{ color: themeColors.onPrimary }}
                 >
-                  {"€" + Math.ceil(item.real.in)}
+                  {"€" + Math.ceil(total.real.in)}
                 </Text>
               </View>
             </View>
@@ -66,8 +79,8 @@ export default function OverallCategoryComponent({ item, date }) {
             </Text>
             <View className="flex-row justify-between items-center">
               <BarChartComponent
-                forecast={item.forecast.out}
-                real={item.real.out}
+                forecast={total.forecast.out}
+                real={total.real.out}
               />
               <View
                 className="p-1 px-3 rounded-full ml-3"
@@ -77,7 +90,7 @@ export default function OverallCategoryComponent({ item, date }) {
                   className="text-base font-semibold"
                   style={{ color: themeColors.onPrimary }}
                 >
-                  {"€" + Math.ceil(item.real.out)}
+                  {"€" + Math.ceil(total.real.out)}
                 </Text>
               </View>
             </View>
@@ -97,12 +110,12 @@ export default function OverallCategoryComponent({ item, date }) {
             >
               €
               {(
-                -(item.real.out - item.real.in) / getRemainingDaysInMonth(date)
+                -(total.real.out - total.real.in) / getRemainingDaysInMonth(date)
               ).toFixed(2)}
             </Text>
           </View>
         </View>
-      </View>
+      </View></> : null}
     </Pressable>
   );
 }

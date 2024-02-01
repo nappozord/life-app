@@ -112,7 +112,7 @@ export default function CategoryCardComponent({
               backgroundColor: themeColors.onSecondary,
               height: height,
               width: width,
-              elevation: 10,
+              elevation: 5,
             },
           ]}
         >
@@ -126,6 +126,7 @@ export default function CategoryCardComponent({
           ) : (
             <UserCategoryComponent
               item={item}
+              date={date}
               loading={loading}
               categories={categories}
               setCategories={setCategories}

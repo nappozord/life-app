@@ -20,6 +20,7 @@ export default function UserCategoryComponent({
   setFinishedAnimation,
   user,
   setUser,
+  date,
 }) {
   const [modalForecastVisible, setModalForecastVisible] = useState(false);
   const [modalCategoryVisible, setModalCategoryVisible] = useState(false);
@@ -54,6 +55,7 @@ export default function UserCategoryComponent({
           <View></View>
         )}
         <EditForecastModalComponent
+          date={date}
           item={item}
           modalVisible={modalForecastVisible}
           setModalVisible={setModalForecastVisible}
@@ -117,6 +119,7 @@ export default function UserCategoryComponent({
             item={item}
             user={user}
             setUser={setUser}
+            date={date}
           />
         </Animated.View>
       ) : (
@@ -130,6 +133,7 @@ export default function UserCategoryComponent({
             setCategories={setCategories}
             user={user}
             setUser={setUser}
+            date={date}
           />
         </Animated.View>
       )}

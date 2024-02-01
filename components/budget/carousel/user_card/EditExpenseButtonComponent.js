@@ -11,6 +11,7 @@ export default function EditExpenseButtonComponent({
   category,
   user,
   setUser,
+  date,
 }) {
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -26,6 +27,7 @@ export default function EditExpenseButtonComponent({
           itemCategory={category}
           user={user}
           setUser={setUser}
+          date={date}
         />
       ) : null}
       <TouchableOpacity

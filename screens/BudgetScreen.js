@@ -15,8 +15,6 @@ import { formatDate } from "~/utils/manageDate";
 import {
   getCategories,
   saveCategories,
-  getUser,
-  updateUser,
 } from "~/api/apiManager";
 import HeaderComponent from "~/components/header/HeaderComponent";
 import { useNavigation } from "@react-navigation/native";
@@ -78,7 +76,7 @@ export default function BudgetScreen({ user, setUser }) {
 
   useEffect(() => {
     getCategories(date).then((r) => {
-      setCategories(r);
+      setCategories(r.categories);
     });
   }, [date]);
 

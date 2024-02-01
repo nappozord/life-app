@@ -33,7 +33,7 @@ export const themeColors = {
   onSuccess: "#f2ffff",
 };
 
-function RGBAToHexA(r, g, b, a) {
+export function RGBAToHexA(r, g, b, a) {
   r = r.toString(16);
   g = g.toString(16);
   b = b.toString(16);
@@ -45,4 +45,22 @@ function RGBAToHexA(r, g, b, a) {
   if (a.length == 1) a = "0" + a;
 
   return "#" + r + g + b + a;
+}
+
+export function hexToRGBA(hex, opacity) {
+  let c;
+  if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+    c = hex.substring(1).split("");
+    if (c.length == 3) {
+      c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+    }
+    c = "0x" + c.join("");
+    return (
+      "rgba(" +
+      [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(",") +
+      "," +
+      opacity +
+      ")"
+    );
+  };
 }

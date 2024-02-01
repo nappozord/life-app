@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { themeColors } from "~/theme";
 import EditExpenseModalComponent from "./EditExpenseModalComponent";
 
-export default function ExpenseCardComponent({
+export default function ExpenseComponent({
   item,
   itemIcon,
   itemCategory,
@@ -11,6 +11,7 @@ export default function ExpenseCardComponent({
   setCategories,
   user,
   setUser,
+  date,
 }) {
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -33,6 +34,7 @@ export default function ExpenseCardComponent({
           setCategories={setCategories}
           user={user}
           setUser={setUser}
+          date={date}
         />
       ) : null}
       <View>
