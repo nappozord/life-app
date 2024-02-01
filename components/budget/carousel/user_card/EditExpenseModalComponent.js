@@ -30,7 +30,7 @@ export default function EditExpenseModalComponent({
   const inputRef = useRef(null);
 
   const description = useRef(item ? item.title.toString() : null);
-  const amount = useRef(item ? item.total.toString() : null);
+  const amount = useRef(item ? parseFloat(item.total).toFixed(2) : null);
 
   const addExpense = () => {
     amount.current === null || amount.current === ""
