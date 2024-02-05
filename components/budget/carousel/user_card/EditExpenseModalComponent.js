@@ -81,11 +81,11 @@ export default function EditExpenseModalComponent({
 
     if (category.income) {
       category.real += parseFloat(item.total);
-      if (!isPreviousMonth(date.year, date.month))
+      if (!isPreviousMonth(date.month, date.year))
         user.balance = parseFloat(user.balance) - parseFloat(item.total);
     } else {
       category.real -= parseFloat(item.total);
-      if (!isPreviousMonth(date.year, date.month))
+      if (!isPreviousMonth(date.month, date.year))
         user.balance = parseFloat(user.balance) + parseFloat(item.total);
     }
 
