@@ -59,6 +59,7 @@ export function getCurrentWeek(date) {
   for (let i = 0; i < 7; i++) {
     const currentDay = new Date(startDate);
     currentDay.setDate(startDate.getDate() + i);
+    currentDay.setHours(23, 59, 0, 0);
     result.push({
       dayName: currentDay.toDateString({ weekday: "short" }).slice(0, 3),
       dayNumber: currentDay.getDate().toString().padStart(2, "0"),
@@ -134,7 +135,7 @@ export function isPreviousMonth(targetMonth, targetYear) {
 }
 
 export function sortDatesDescending(items) {
-  return items.sort(function(a, b) {
+  return items.sort(function (a, b) {
     if (b.year !== a.year) {
       return b.year - a.year;
     }

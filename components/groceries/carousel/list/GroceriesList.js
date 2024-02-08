@@ -64,7 +64,9 @@ export default function GroceriesList({
   const calculateNewList = () => {
     let ingredientList = [];
 
-    week.forEach((day) => {
+    const filteredWeek = week.filter((day) => day.date > new Date());
+
+    filteredWeek.forEach((day) => {
       const meal = meals.find((obj) => obj.date === day.dateString);
       if (meal) {
         getIngredientFromMeal(
