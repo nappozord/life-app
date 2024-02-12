@@ -22,7 +22,7 @@ export default function CalendarModal({
       <Pressable
         onPress={() => setModalVisible(false)}
         className="flex-1"
-        style={{ paddingTop: 255 }}
+        style={{ paddingTop: 310 }}
       >
         <Pressable>
           <View
@@ -38,11 +38,12 @@ export default function CalendarModal({
               markedDates={{
                 [currentDate.toISOString().split("T")[0]]: {
                   selected: true,
-                  selectedColor: themeColors.onPrimary,
+                  selectedColor: themeColors.primary,
+                  selectedTextColor: themeColors.onPrimary,
                 },
               }}
               theme={{
-                calendarBackground: themeColors.primaryContainer,
+                calendarBackground: themeColors.secondaryContainer,
                 dayTextColor: themeColors.onPrimaryContainer,
                 monthTextColor: themeColors.onPrimaryContainer,
                 textDisabledColor: themeColors.outline,
