@@ -165,12 +165,24 @@ export default function IngredientModal({
                       >
                         You have:
                       </Text>
-                      <Text
-                        className=" text-5xl font-semibold "
-                        style={{ color: themeColors.onBackground }}
-                      >
-                        {Math.ceil(item.stock)}
-                      </Text>
+                      <View className="flex-row items-center">
+                        <Text
+                          className=" text-5xl font-semibold "
+                          style={{ color: themeColors.onBackground }}
+                        >
+                          {Math.ceil(item.stock)}
+                        </Text>
+                        <Text
+                          className="text-base mb-1 "
+                          style={{ color: themeColors.onBackground }}
+                        >
+                          {"(" +
+                            (item.quantity === 1
+                              ? (item.stock * item.quantity).toFixed(1)
+                              : Math.round(item.stock * item.quantity)) +
+                            ")"}
+                        </Text>
+                      </View>
                       <Text
                         className="text-xl font-semibold -mt-2 "
                         style={{ color: themeColors.onBackground }}

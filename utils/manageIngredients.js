@@ -112,7 +112,7 @@ export function checkIngredientQuantity() {
 
               weeklyIngredients.forEach((i) => {
                 ingredients.find((obj) => obj.id === i.ingredient.id).stock -=
-                  parseFloat((i.needed / i.ingredient.quantity).toFixed(2));
+                  parseFloat((i.needed / i.ingredient.quantity).toFixed(3));
 
                 if (
                   ingredients.find((obj) => obj.id === i.ingredient.id).stock <

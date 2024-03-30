@@ -28,7 +28,7 @@ export default function IngredientComponent({
   };
 
   const subItem = () => {
-    item.stock > 0 ? (item.stock -= 1) : (item.stock = 0);
+    item.stock >= 1 ? (item.stock -= 1) : (item.stock = 0);
     setIngredients([...ingredients]);
   };
 
