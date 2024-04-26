@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Animated, { SlideInRight } from "react-native-reanimated";
 import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
-import { calculateRecipeCosts } from "~/utils/calculateCosts";
+import { calculateRecipeCosts } from "~/utils/calculateCostsAndCalories";
 import { FlashList } from "@shopify/flash-list";
 import IngredientSelectionComponent from "~/components/groceries/searchbar/IngredientSelectionComponent";
 

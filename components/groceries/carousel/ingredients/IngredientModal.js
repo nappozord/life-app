@@ -20,14 +20,13 @@ export default function IngredientModal({
   setModalVisible,
   ingredients,
   setIngredients,
-  recipes,
-  setRecipes,
 }) {
   const inputRef = useRef(null);
 
   const name = useRef(item ? item.title.toString() : null);
   const cost = useRef(item ? parseFloat(item.cost).toFixed(2) : null);
   const quantity = useRef(item ? item.quantity.toString() : "1");
+  const calories = useRef(item ? item.calories ? parseFloat(item.calories).toFixed(2) : null : null)
 
   function addIngredient() {
     if (cost.current === "" || cost.current === null) cost.current = 0.0;
@@ -37,6 +36,9 @@ export default function IngredientModal({
 
     if (name.current === "" || name.current === null)
       name.current = "New Ingredient";
+
+    if (calories.current === "" || calories.current === null)
+      calories.current = 0;
 
     const ids = ingredients.map((object) => {
       return object.id;
@@ -49,6 +51,7 @@ export default function IngredientModal({
       title: name.current,
       cost: parseFloat(cost.current),
       quantity: parseFloat(quantity.current),
+      calories: parseFloat(calories.current),
       stock: 0,
       duration: 7,
       lastUpdate: new Date().toLocaleDateString("it-IT"),
@@ -73,22 +76,27 @@ export default function IngredientModal({
     if (name.current === "" || name.current === null)
       name.current = "New Ingredient";
 
+    if (calories.current === "" || calories.current === null)
+    calories.current = 0;
+
     const ingredient = ingredients.find((obj) => obj.id === item.id);
 
     ingredient.title = name.current;
     ingredient.cost = parseFloat(cost.current);
     ingredient.quantity = parseFloat(quantity.current);
     ingredient.lastUpdate = new Date().toLocaleDateString("it-IT");
+    ingredient.calories = parseFloat(calories.current);
     if (ingredient.history) {
-      if (
-        ingredient.history.find((i) => i.id === ingredient.history.length - 1)
-          .cost !== parseFloat(cost.current)
-      )
-        ingredient.history.push({
-          id: ingredient.history.length,
-          date: new Date().toLocaleDateString("it-IT"),
-          cost: parseFloat(cost.current),
-        });
+      if(ingredient.history.find((i) => i.id === ingredient.history.length - 1))
+        if (
+          ingredient.history.find((i) => i.id === ingredient.history.length - 1)
+            .cost !== parseFloat(cost.current)
+        )
+          ingredient.history.push({
+            id: ingredient.history.length,
+            date: new Date().toLocaleDateString("it-IT"),
+            cost: parseFloat(cost.current),
+          });
     } else {
       ingredient.history = [
         {
@@ -239,7 +247,7 @@ export default function IngredientModal({
                       name.current = text;
                     }}
                   />
-                  <View className="flex-row justify-between items-center space-x-4 mb-4">
+                  <View className="flex-row justify-between items-center space-x-4 mb-2">
                     <View className="flex-1 space-y-1">
                       <Text
                         className="font-semibold text-lg ml-2"
@@ -282,7 +290,7 @@ export default function IngredientModal({
                         className="font-semibold text-lg ml-2"
                         style={{ color: themeColors.onSecondaryContainer }}
                       >
-                        Qty per pack
+                        Qty (pack)
                       </Text>
                       <View
                         className="flex-row items-center rounded-2xl p-1 overflow-visible"
@@ -317,6 +325,26 @@ export default function IngredientModal({
                       </View>
                     </View>
                   </View>
+                  <Text
+                    className="font-semibold text-lg ml-2"
+                    style={{ color: themeColors.onSecondaryContainer }}
+                  >
+                    Calories (piece)
+                  </Text>
+                  <TextInput
+                    keyboardType="numeric"
+                    className="p-3 rounded-2xl text-base mb-4"
+                    style={{
+                      backgroundColor: themeColors.onSecondaryContainer,
+                      color: themeColors.background,
+                    }}
+                    placeholder="E.g. 100"
+                    selectionColor={themeColors.background}
+                    defaultValue={calories.current}
+                    onChangeText={(text) => {
+                      calories.current = text;
+                    }}
+                  />
                   <View className="flex-row justify-between items-center">
                     <View className="flex-row items-center">
                       <IconButton

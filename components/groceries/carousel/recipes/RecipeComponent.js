@@ -8,7 +8,7 @@ import Animated, {
   SlideOutDown,
   SlideOutLeft,
 } from "react-native-reanimated";
-import { calculateRecipeCosts } from "~/utils/calculateCosts";
+import { calculateRecipeCosts } from "~/utils/calculateCostsAndCalories";
 import RecipeModal from "./RecipeModal";
 
 export default function RecipeComponent({
