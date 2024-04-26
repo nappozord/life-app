@@ -8,14 +8,12 @@ export default function MealListComponent({
   meals,
   setMeals,
   ingredients,
-  setIngredients,
   recipes,
-  setRecipes,
   day,
   type,
   recipe,
 }) {
-  const meal = meals.find((obj) => obj.date === day);
+  const meal = meals.find((obj) => obj.date === day)
 
   function deleteItem(item) {
     if (recipe) {

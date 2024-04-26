@@ -18,9 +18,7 @@ export default function MealPlanModalComponent({
   modalVisible,
   setModalVisible,
   recipes,
-  setRecipes,
   ingredients,
-  setIngredients,
   meals,
   setMeals,
 }) {

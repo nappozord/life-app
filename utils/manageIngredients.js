@@ -125,8 +125,6 @@ export function checkIngredientQuantity() {
                     (obj) => obj.id === i.ingredient.id
                   ).stock = 0;
 
-                console.log(ingredients.find((obj) => obj.id === i.ingredient.id))
-
                 logs.push({
                   text:
                     "REMOVE " +

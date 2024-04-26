@@ -1,7 +1,6 @@
 import { View, Text } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import ReservationCardComponent from "./ReservationCardComponent";
-import { getCurrentWeek } from "~/utils/manageDate";
 import { FlashList } from "@shopify/flash-list";
 import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
@@ -13,10 +12,91 @@ export default function WeeklyListComponent({
   setIngredients,
   recipes,
   setRecipes,
-  date,
   weekListRef,
   initialIndex,
+  defaultWeek,
+  currentWeek,
 }) {
+  function setDefaultMeals(day, defaultMeal) {
+    if (defaultMeal) {
+      meals.push({
+        date: day,
+        breakfast: {
+          ingredients: [],
+          recipes: [],
+        },
+        lunch: {
+          ingredients: [],
+          recipes: [],
+        },
+        dinner: {
+          ingredients: [],
+          recipes: [],
+        },
+        snack: {
+          ingredients: [],
+          recipes: [],
+        },
+      });
+
+      meals.find((obj) => obj.date === day)["breakfast"] = {
+        ...defaultMeal["breakfast"],
+      };
+      meals.find((obj) => obj.date === day)["lunch"] = {
+        ...defaultMeal["lunch"],
+      };
+      meals.find((obj) => obj.date === day)["dinner"] = {
+        ...defaultMeal["dinner"],
+      };
+      meals.find((obj) => obj.date === day)["snack"] = {
+        ...defaultMeal["snack"],
+      };
+      setMeals([...meals]);
+    }
+  }
+
+  useEffect(() => {
+    if (
+      !defaultWeek &&
+      !meals.find((obj) => obj.date === currentWeek[0].dateString) &&
+      !meals.find((obj) => obj.date === currentWeek[1].dateString) &&
+      !meals.find((obj) => obj.date === currentWeek[2].dateString) &&
+      !meals.find((obj) => obj.date === currentWeek[3].dateString) &&
+      !meals.find((obj) => obj.date === currentWeek[4].dateString) &&
+      !meals.find((obj) => obj.date === currentWeek[5].dateString) &&
+      !meals.find((obj) => obj.date === currentWeek[6].dateString)
+    ) {
+      setDefaultMeals(
+        currentWeek[0].dateString,
+        meals.find((obj) => obj.date === "Default_Mon")
+      );
+      setDefaultMeals(
+        currentWeek[1].dateString,
+        meals.find((obj) => obj.date === "Default_Tue")
+      );
+      setDefaultMeals(
+        currentWeek[2].dateString,
+        meals.find((obj) => obj.date === "Default_Wed")
+      );
+      setDefaultMeals(
+        currentWeek[3].dateString,
+        meals.find((obj) => obj.date === "Default_Thu")
+      );
+      setDefaultMeals(
+        currentWeek[4].dateString,
+        meals.find((obj) => obj.date === "Default_Fri")
+      );
+      setDefaultMeals(
+        currentWeek[5].dateString,
+        meals.find((obj) => obj.date === "Default_Sat")
+      );
+      setDefaultMeals(
+        currentWeek[6].dateString,
+        meals.find((obj) => obj.date === "Default_Sun")
+      );
+    }
+  }, [currentWeek]);
+
   return (
     <View className="flex-1">
       <FlashList
@@ -25,7 +105,7 @@ export default function WeeklyListComponent({
         estimatedItemSize={600}
         fadingEdgeLength={50}
         showsVerticalScrollIndicator={false}
-        data={getCurrentWeek(date)}
+        data={currentWeek}
         keyExtractor={(item) => item.date}
         renderItem={({ index, item }) => {
           let meal = meals.find((obj) => obj.date === item.dateString);
@@ -47,7 +127,9 @@ export default function WeeklyListComponent({
                   className="-mt-1"
                   style={{ color: themeColors.onSecondaryContainer }}
                 >
-                  {item.date.toLocaleString("default", { month: "short" })}
+                  {defaultWeek
+                    ? item.date.split("_")[0]
+                    : item.date.toLocaleString("default", { month: "short" })}
                 </Text>
                 {meal && meal.checked ? (
                   <IconButton
@@ -67,6 +149,7 @@ export default function WeeklyListComponent({
                   recipes={recipes}
                   setRecipes={setRecipes}
                   day={item.dateString}
+                  defaultWeek={defaultWeek}
                 />
               </View>
             </View>
