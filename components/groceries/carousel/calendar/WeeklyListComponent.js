@@ -4,7 +4,7 @@ import ReservationCardComponent from "./ReservationCardComponent";
 import { FlashList } from "@shopify/flash-list";
 import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
-import { calculateMealCosts } from "~/utils/calculateCosts";
+import { calculateMealCostsAndCalories } from "~/utils/calculateCostsAndCalories";
 
 export default function WeeklyListComponent({
   meals,
@@ -106,21 +106,39 @@ export default function WeeklyListComponent({
     currentWeek.forEach((mealDate) => {
       const meal = meals.find((obj) => obj.date === mealDate.dateString);
       if (meal) {
-        const tot = (
+        const breakfast = calculateMealCostsAndCalories(meal, "breakfast", ingredients, recipes);
+        const lunch = calculateMealCostsAndCalories(meal, "lunch", ingredients, recipes);
+        const dinner = calculateMealCostsAndCalories(meal, "dinner", ingredients, recipes);
+        const snack = calculateMealCostsAndCalories(meal, "snack", ingredients, recipes)
+
+        const costs = (
           parseFloat(
-            calculateMealCosts(meal, "breakfast", ingredients, recipes)
+            breakfast.costs
           ) +
-          parseFloat(calculateMealCosts(meal, "lunch", ingredients, recipes)) +
-          parseFloat(calculateMealCosts(meal, "dinner", ingredients, recipes)) +
-          parseFloat(calculateMealCosts(meal, "snack", ingredients, recipes))
+          parseFloat(lunch.costs) +
+          parseFloat(dinner.costs) +
+          parseFloat(snack.costs)
         ).toFixed(2);
+
+        const calories = (
+          parseFloat(
+            breakfast.calories
+          ) +
+          parseFloat(lunch.calories) +
+          parseFloat(dinner.calories) +
+          parseFloat(snack.calories)
+        ).toFixed(0);
+
         if (totals.find((obj) => obj.dayNumber === mealDate.dayNumber)) {
-          totals.find((obj) => obj.dayNumber === mealDate.dayNumber).total =
-            tot;
+          totals.find((obj) => obj.dayNumber === mealDate.dayNumber).costs =
+            costs;
+          totals.find((obj) => obj.dayNumber === mealDate.dayNumber).calories =
+            calories
         } else {
           totals.push({
             dayNumber: mealDate.dayNumber,
-            total: tot,
+            costs: costs,
+            calories: calories,
           });
         }
         setTotals([...totals]);
@@ -174,8 +192,29 @@ export default function WeeklyListComponent({
                     {"€" +
                       (totals.find((obj) => obj.dayNumber === item.dayNumber)
                         ? totals.find((obj) => obj.dayNumber === item.dayNumber)
-                            .total
+                            .costs
                         : "0.00")}
+                  </Text>
+                </View>
+                <View
+                  className="px-2 rounded-xl items-center justify-center my-1"
+                  style={{ backgroundColor: themeColors.primary, elevation: 5, maxWidth: 60, minWidth: 55  }}
+                >
+                
+                  <Text
+                    className="text-lg font-semibold"
+                    style={{ color: themeColors.onPrimary }}
+                  >
+                    {(totals.find((obj) => obj.dayNumber === item.dayNumber)
+                      ? totals.find((obj) => obj.dayNumber === item.dayNumber)
+                          .calories
+                      : "0")}
+                  </Text>
+                  <Text
+                    className="text-sm font-semibold -mt-1 mb-1"
+                    style={{ color: themeColors.onPrimary }}
+                  >
+                    {"Kcal"}
                   </Text>
                 </View>
                 {meal && meal.checked ? (

@@ -3,7 +3,7 @@ import { Text, View, TouchableOpacity } from "react-native";
 import { themeColors } from "~/theme";
 import { Divider, IconButton } from "react-native-paper";
 import MealPlanModalComponent from "./MealPlanModalComponent";
-import { calculateMealCosts } from "~/utils/calculateCosts";
+import { calculateMealCosts } from "~/utils/calculateCostsAndCalories";
 import MealListComponent from "./MealListComponent";
 
 export default function ReservationTypeComponent({
