@@ -10,6 +10,7 @@ import Animated, {
 } from "react-native-reanimated";
 import IngredientModal from "./IngredientModal";
 import IngredientPercentageComponent from "./IngredientPercentageComponent";
+import { updateLogs } from "~/api/apiManager";
 
 export default function IngredientComponent({
   meals,
@@ -25,11 +26,23 @@ export default function IngredientComponent({
   const addItem = () => {
     item.stock += 1;
     setIngredients([...ingredients]);
+    updateLogs([{
+      text: 'ADD ' + item.title,
+      description: 'Manual add of item ' + item.title + ' for a total of ' + item.stock + '.',
+      icon: 'plus',
+      auto: false,
+    }])
   };
 
   const subItem = () => {
     item.stock >= 1 ? (item.stock -= 1) : (item.stock = 0);
     setIngredients([...ingredients]);
+    updateLogs([{
+      text: 'REMOVE ' + item.title,
+      description: 'Manual remove of item ' + item.title + ' for a total of ' + item.stock + '.',
+      icon: 'minus',
+      auto: false,
+    }])
   };
 
   return (

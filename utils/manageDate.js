@@ -41,7 +41,7 @@ export function getRemainingDaysInMonth(date) {
   } else return 1;
 }
 
-function timeToString(time) {
+export function timeToString(time) {
   const date = new Date(time);
   return date.toISOString().split("T")[0];
 }
