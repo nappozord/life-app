@@ -10,7 +10,6 @@ export default function ReservationCardComponent({
   recipes,
   setRecipes,
   day,
-  defaultWeek,
 }) {
   const types = [
     {
@@ -43,7 +42,6 @@ export default function ReservationCardComponent({
           setRecipes={setRecipes}
           day={day}
           type={types[0]}
-          defaultWeek={defaultWeek}
         />
       </Animated.View>
       <Animated.View entering={SlideInRight} className="flex-1 mb-1">
@@ -56,7 +54,6 @@ export default function ReservationCardComponent({
           setRecipes={setRecipes}
           day={day}
           type={types[1]}
-          defaultWeek={defaultWeek}
         />
       </Animated.View>
       <Animated.View entering={SlideInRight} className="flex-1 mb-1">
@@ -69,7 +66,6 @@ export default function ReservationCardComponent({
           setRecipes={setRecipes}
           day={day}
           type={types[2]}
-          defaultWeek={defaultWeek}
         />
       </Animated.View>
       <Animated.View entering={SlideInRight} className="flex-1 mb-1">
@@ -82,7 +78,6 @@ export default function ReservationCardComponent({
           setRecipes={setRecipes}
           day={day}
           type={types[3]}
-          defaultWeek={defaultWeek}
         />
       </Animated.View>
     </View>

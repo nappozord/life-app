@@ -15,7 +15,6 @@ export default function ReservationTypeComponent({
   setRecipes,
   day,
   type,
-  defaultWeek,
 }) {
   const [modalVisible, setModalVisible] = useState(false);
 

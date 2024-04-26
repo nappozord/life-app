@@ -2,32 +2,25 @@ import {
   View,
   Text,
   RefreshControl,
-  FlatList,
   TouchableOpacity,
 } from "react-native";
-import React, { useState, useCallback, useEffect, useRef } from "react";
-import { getCurrentWeek } from "~/utils/manageDate";
-import { FlashList, MasonryFlashList } from "@shopify/flash-list";
+import React, { useState, useCallback, useEffect } from "react";
+import { MasonryFlashList } from "@shopify/flash-list";
 import { getIngredientFromMeal } from "~/utils/manageIngredients";
 import { themeColors } from "~/theme";
 import GroceryComponent from "./GroceryComponent";
 import { IconButton } from "react-native-paper";
 import Animated, {
   FadeIn,
-  FadeOut,
-  SlideInDown,
-  SlideInLeft,
   SlideInUp,
   SlideOutUp,
 } from "react-native-reanimated";
 
 export default function GroceriesList({
   meals,
-  setMeals,
   ingredients,
   setIngredients,
   recipes,
-  setRecipes,
   week,
   groceryList,
   setGroceryList,

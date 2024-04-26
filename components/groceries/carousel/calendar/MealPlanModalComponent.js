@@ -86,220 +86,212 @@ export default function MealPlanModalComponent({
   };
 
   return (
-    <View>
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={modalVisible}
-        statusBarTranslucent
-        onRequestClose={() => {
-          setModalVisible(false);
-        }}
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={modalVisible}
+      statusBarTranslucent
+      onRequestClose={() => {
+        setModalVisible(false);
+      }}
+    >
+      <Image
+        className="absolute h-full w-full"
+        source={require("~/assets/splash.png")}
+        //blurRadius={80}
+        style={{ opacity: 0.9 }}
+      />
+      <Pressable
+        onPress={() => setModalVisible(false)}
+        className="flex-1 justify-end"
       >
-        <Image
-          className="absolute h-full w-full"
-          source={require("~/assets/splash.png")}
-          //blurRadius={80}
-          style={{ opacity: 0.9 }}
-        />
-        <Pressable
-          onPress={() => setModalVisible(false)}
-          className="flex-1 justify-end"
-        >
-          <Pressable>
-            <Animated.View
-              entering={SlideInDown.duration(500)}
-              style={{
-                backgroundColor: themeColors.onSecondary,
-                borderTopLeftRadius: 24,
-                borderTopRightRadius: 24,
-              }}
-            >
-              <View className="flex-row justify-between align-center">
-                <View />
-                <View
-                  className="p-5 rounded-full -mt-20 items-center"
-                  style={{
-                    backgroundColor: themeColors.background,
-                    borderColor: themeColors.onSecondary,
-                    borderWidth: 5,
-                  }}
+        <Pressable>
+          <Animated.View
+            entering={SlideInDown.duration(500)}
+            style={{
+              backgroundColor: themeColors.onSecondary,
+              borderTopLeftRadius: 24,
+              borderTopRightRadius: 24,
+            }}
+          >
+            <View className="flex-row justify-between align-center">
+              <View />
+              <View
+                className="p-5 rounded-full -mt-20 items-center"
+                style={{
+                  backgroundColor: themeColors.background,
+                  borderColor: themeColors.onSecondary,
+                  borderWidth: 5,
+                }}
+              >
+                <View className="flex-row">
+                  <IconButton
+                    icon={"plus"}
+                    color={themeColors.onBackground}
+                    size={30}
+                    className="-mr-2"
+                  />
+                  <IconButton
+                    icon={item ? item.icon : ""}
+                    color={themeColors.onBackground}
+                    size={30}
+                    className="-ml-2"
+                  />
+                </View>
+                <Text
+                  className="text-xl font-semibold -mt-4 mb-4 "
+                  style={{ color: themeColors.onBackground }}
                 >
-                  <View className="flex-row">
-                    <IconButton
-                      icon={"plus"}
-                      color={themeColors.onBackground}
-                      size={30}
-                      className="-mr-2"
-                    />
-                    <IconButton
-                      icon={item ? item.icon : ""}
-                      color={themeColors.onBackground}
-                      size={30}
-                      className="-ml-2"
+                  {item ? item.type[0].toUpperCase() + item.type.slice(1) : ""}
+                </Text>
+              </View>
+              <View />
+            </View>
+            <View className="-mt-7">
+              <View className="space-y-1 p-5">
+                <Text
+                  className="font-semibold text-lg ml-2"
+                  style={{ color: themeColors.onSecondaryContainer }}
+                >
+                  Search
+                </Text>
+                <View className="flex-row justify-between items-center">
+                  <View className="flex-1 mr-2">
+                    <SearchComponent
+                      items={[...ingredients, ...recipes]}
+                      setSearch={setSearch}
+                      onlyIngredients={false}
+                      setOnlySelected={setOnlySelected}
                     />
                   </View>
-                  <Text
-                    className="text-xl font-semibold -mt-4 mb-4 "
-                    style={{ color: themeColors.onBackground }}
+                  <TouchableOpacity
+                    className="rounded-2xl p-0 m0"
+                    style={{
+                      backgroundColor: themeColors.secondary,
+                    }}
+                    onPress={() => {
+                      setOnlySelected(!onlySelected);
+                    }}
                   >
-                    {item
-                      ? item.type[0].toUpperCase() + item.type.slice(1)
-                      : ""}
-                  </Text>
+                    <IconButton
+                      size={35}
+                      icon={onlySelected ? "select-inverse" : "select-group"}
+                      color={themeColors.onSecondary}
+                      className="p-0 m-0"
+                    />
+                  </TouchableOpacity>
                 </View>
-                <View />
-              </View>
-              <View className="-mt-7">
-                <View className="space-y-1 p-5">
-                  <Text
-                    className="font-semibold text-lg ml-2"
-                    style={{ color: themeColors.onSecondaryContainer }}
-                  >
-                    Search
-                  </Text>
-                  <View className="flex-row justify-between items-center">
-                    <View className="flex-1 mr-2">
-                      <SearchComponent
-                        items={[...ingredients, ...recipes]}
-                        setSearch={setSearch}
-                        onlyIngredients={false}
-                        setOnlySelected={setOnlySelected}
-                      />
-                    </View>
+                <View className="flex-row py-1">
+                  <View className="flex-1">
                     <TouchableOpacity
-                      className="rounded-2xl p-0 m0"
+                      className="flex-row items-center"
                       style={{
-                        backgroundColor: themeColors.secondary,
+                        backgroundColor:
+                          useRecipes === 1
+                            ? themeColors.primary
+                            : themeColors.secondary,
+                        borderTopLeftRadius: 24,
+                        borderBottomLeftRadius: 24,
                       }}
                       onPress={() => {
-                        setOnlySelected(!onlySelected);
+                        useRecipes === 0 ? setUseRecipes(1) : setUseRecipes(0);
                       }}
                     >
                       <IconButton
-                        size={35}
-                        icon={onlySelected ? "select-inverse" : "select-group"}
-                        color={themeColors.onSecondary}
-                        className="p-0 m-0"
+                        size={24}
+                        icon="apple"
+                        color={
+                          useRecipes === 1
+                            ? themeColors.onPrimary
+                            : themeColors.onSecondary
+                        }
                       />
+                      <Text
+                        className="text-base"
+                        style={{
+                          color:
+                            useRecipes === 1
+                              ? themeColors.onPrimary
+                              : themeColors.onSecondary,
+                        }}
+                      >
+                        Ingredients
+                      </Text>
                     </TouchableOpacity>
                   </View>
-                  <View className="flex-row py-1">
-                    <View className="flex-1">
-                      <TouchableOpacity
-                        className="flex-row items-center"
+                  <View className="flex-1">
+                    <TouchableOpacity
+                      className="flex-row items-center"
+                      style={{
+                        backgroundColor:
+                          useRecipes === 2
+                            ? themeColors.primary
+                            : themeColors.secondary,
+                        borderTopRightRadius: 24,
+                        borderBottomRightRadius: 24,
+                      }}
+                      onPress={() => {
+                        useRecipes === 0 ? setUseRecipes(2) : setUseRecipes(0);
+                      }}
+                    >
+                      <IconButton
+                        size={24}
+                        icon="food"
+                        color={
+                          useRecipes === 2
+                            ? themeColors.onPrimary
+                            : themeColors.onSecondary
+                        }
+                      />
+                      <Text
+                        className="text-base"
                         style={{
-                          backgroundColor:
-                            useRecipes === 1
-                              ? themeColors.primary
-                              : themeColors.secondary,
-                          borderTopLeftRadius: 24,
-                          borderBottomLeftRadius: 24,
-                        }}
-                        onPress={() => {
-                          useRecipes === 0
-                            ? setUseRecipes(1)
-                            : setUseRecipes(0);
-                        }}
-                      >
-                        <IconButton
-                          size={24}
-                          icon="apple"
-                          color={
-                            useRecipes === 1
-                              ? themeColors.onPrimary
-                              : themeColors.onSecondary
-                          }
-                        />
-                        <Text
-                          className="text-base"
-                          style={{
-                            color:
-                              useRecipes === 1
-                                ? themeColors.onPrimary
-                                : themeColors.onSecondary,
-                          }}
-                        >
-                          Ingredients
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                    <View className="flex-1">
-                      <TouchableOpacity
-                        className="flex-row items-center"
-                        style={{
-                          backgroundColor:
-                            useRecipes === 2
-                              ? themeColors.primary
-                              : themeColors.secondary,
-                          borderTopRightRadius: 24,
-                          borderBottomRightRadius: 24,
-                        }}
-                        onPress={() => {
-                          useRecipes === 0
-                            ? setUseRecipes(2)
-                            : setUseRecipes(0);
-                        }}
-                      >
-                        <IconButton
-                          size={24}
-                          icon="food"
-                          color={
+                          color:
                             useRecipes === 2
                               ? themeColors.onPrimary
-                              : themeColors.onSecondary
-                          }
-                        />
-                        <Text
-                          className="text-base"
-                          style={{
-                            color:
-                              useRecipes === 2
-                                ? themeColors.onPrimary
-                                : themeColors.onSecondary,
-                          }}
-                        >
-                          Recipes
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                  <View>
-                    <RecipesIngredientsListComponent
-                      items={search}
-                      ingredients={ingredients}
-                      selected={selected}
-                      setSelected={setSelected}
-                    />
+                              : themeColors.onSecondary,
+                        }}
+                      >
+                        Recipes
+                      </Text>
+                    </TouchableOpacity>
                   </View>
                 </View>
-                <TouchableOpacity
-                  className="py-5 -mt-4"
-                  style={{
-                    backgroundColor: themeColors.primary,
-                    borderTopRightRadius: 24,
-                    borderTopLeftRadius: 24,
-                  }}
-                  onPress={() => {
-                    saveButton();
-                    setModalVisible(false);
-                  }}
-                >
-                  <Text
-                    className="font-bold text-center text-xl"
-                    style={{ color: themeColors.onPrimary }}
-                  >
-                    {"Save " +
-                      (item
-                        ? item.type[0].toUpperCase() + item.type.slice(1)
-                        : "")}
-                  </Text>
-                </TouchableOpacity>
+                <View>
+                  <RecipesIngredientsListComponent
+                    items={search}
+                    ingredients={ingredients}
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                </View>
               </View>
-            </Animated.View>
-          </Pressable>
+              <TouchableOpacity
+                className="py-5 -mt-4"
+                style={{
+                  backgroundColor: themeColors.primary,
+                  borderTopRightRadius: 24,
+                  borderTopLeftRadius: 24,
+                }}
+                onPress={() => {
+                  saveButton();
+                  setModalVisible(false);
+                }}
+              >
+                <Text
+                  className="font-bold text-center text-xl"
+                  style={{ color: themeColors.onPrimary }}
+                >
+                  {"Save " +
+                    (item
+                      ? item.type[0].toUpperCase() + item.type.slice(1)
+                      : "")}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
         </Pressable>
-      </Modal>
-    </View>
+      </Pressable>
+    </Modal>
   );
 }

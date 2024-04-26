@@ -1,9 +1,10 @@
 import { View, Text } from "react-native";
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import ReservationCardComponent from "./ReservationCardComponent";
 import { FlashList } from "@shopify/flash-list";
 import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
+import { calculateMealCosts } from "~/utils/calculateCosts";
 
 export default function WeeklyListComponent({
   meals,
@@ -17,6 +18,8 @@ export default function WeeklyListComponent({
   defaultWeek,
   currentWeek,
 }) {
+  const [totals, setTotals] = useState([]);
+
   function setDefaultMeals(day, defaultMeal) {
     if (defaultMeal) {
       meals.push({
@@ -94,8 +97,36 @@ export default function WeeklyListComponent({
         currentWeek[6].dateString,
         meals.find((obj) => obj.date === "Default_Sun")
       );
+    } else {
     }
   }, [currentWeek]);
+
+  useEffect(() => {
+    setTotals([]);
+    currentWeek.forEach((mealDate) => {
+      const meal = meals.find((obj) => obj.date === mealDate.dateString);
+      if (meal) {
+        const tot = (
+          parseFloat(
+            calculateMealCosts(meal, "breakfast", ingredients, recipes)
+          ) +
+          parseFloat(calculateMealCosts(meal, "lunch", ingredients, recipes)) +
+          parseFloat(calculateMealCosts(meal, "dinner", ingredients, recipes)) +
+          parseFloat(calculateMealCosts(meal, "snack", ingredients, recipes))
+        ).toFixed(2);
+        if (totals.find((obj) => obj.dayNumber === mealDate.dayNumber)) {
+          totals.find((obj) => obj.dayNumber === mealDate.dayNumber).total =
+            tot;
+        } else {
+          totals.push({
+            dayNumber: mealDate.dayNumber,
+            total: tot,
+          });
+        }
+        setTotals([...totals]);
+      }
+    });
+  }, [meals, currentWeek]);
 
   return (
     <View className="flex-1">
@@ -106,6 +137,7 @@ export default function WeeklyListComponent({
         fadingEdgeLength={50}
         showsVerticalScrollIndicator={false}
         data={currentWeek}
+        extraData={totals}
         keyExtractor={(item) => item.date}
         renderItem={({ index, item }) => {
           let meal = meals.find((obj) => obj.date === item.dateString);
@@ -131,6 +163,21 @@ export default function WeeklyListComponent({
                     ? item.date.split("_")[0]
                     : item.date.toLocaleString("default", { month: "short" })}
                 </Text>
+                <View
+                  className="px-2 rounded-xl flex-row items-center my-1"
+                  style={{ backgroundColor: themeColors.primary, elevation: 5 }}
+                >
+                  <Text
+                    className="text-base font-semibold"
+                    style={{ color: themeColors.onPrimary }}
+                  >
+                    {"€" +
+                      (totals.find((obj) => obj.dayNumber === item.dayNumber)
+                        ? totals.find((obj) => obj.dayNumber === item.dayNumber)
+                            .total
+                        : "0.00")}
+                  </Text>
+                </View>
                 {meal && meal.checked ? (
                   <IconButton
                     icon={"check-circle-outline"}
@@ -149,7 +196,6 @@ export default function WeeklyListComponent({
                   recipes={recipes}
                   setRecipes={setRecipes}
                   day={item.dateString}
-                  defaultWeek={defaultWeek}
                 />
               </View>
             </View>
