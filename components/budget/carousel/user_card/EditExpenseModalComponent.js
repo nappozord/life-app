@@ -29,8 +29,11 @@ export default function EditExpenseModalComponent({
 }) {
   const inputRef = useRef(null);
 
+  const currentDate = new Date().toDateString();
+
   const description = useRef(item ? item.title.toString() : null);
-  const amount = useRef(item ? parseFloat(item.total).toFixed(2) : null);
+  const amount = useRef(item ? parseFloat(item.total).toFixed(2) : null); 
+  const expenseDate = useRef(item ? item.date ? item.date : currentDate : currentDate);
 
   const addExpense = () => {
     amount.current === null || amount.current === ""
@@ -65,6 +68,7 @@ export default function EditExpenseModalComponent({
         ? category.expenses[category.expenses.length - 1].id + 1
         : 0,
       occurrence: occurrences,
+      date: expenseDate.current,
     });
 
     setUser({ ...user });
@@ -207,7 +211,9 @@ export default function EditExpenseModalComponent({
                   >
                     Amount
                   </Text>
-                  <View
+                  <View className="flex-row items-center">
+                  <View className="flex-1">
+                    <View
                     className="flex-row items-center rounded-2xl p-1 overflow-visible"
                     style={{
                       backgroundColor: themeColors.onSecondaryContainer,
@@ -236,6 +242,16 @@ export default function EditExpenseModalComponent({
                       />
                     </Pressable>
                   </View>
+                  </View>
+                  <View className="flex-1 items-center">
+                  <Text className="text-lg"
+                    style={{ color: themeColors.onSecondaryContainer }}
+                  >
+                    {expenseDate.current}
+                  </Text>
+                  </View>
+                  </View>
+                  
                 </View>
                 {item ? (
                   <View className="flex-row justify-between items-center">
