@@ -20,18 +20,66 @@ export default function CalendarComponent({
 }) {
   const [date, setDate] = useState(new Date());
   const [modalVisible, setModalVisible] = useState(false);
+  const [defaultWeek, setDefaultWeek] = useState(false);
   const weekListRef = useRef(null);
 
-  const currentWeek = getCurrentWeek(date);
+  const currentWeek = defaultWeek
+    ? [
+      {
+        date: "Default_Mon",
+        dateString: "Default_Mon",
+        dayName: "Mon",
+        dayNumber: "1",
+      },
+      {
+        date: "Default_Tue",
+        dateString: "Default_Tue",
+        dayName: "Tue",
+        dayNumber: "2",
+      },
+      {
+        date: "Default_Wed",
+        dateString: "Default_Wed",
+        dayName: "Wed",
+        dayNumber: "3",
+      },
+      {
+        date: "Default_Thu",
+        dateString: "Default_Thu",
+        dayName: "Thu",
+        dayNumber: "4",
+      },
+      {
+        date: "Default_Fri",
+        dateString: "Default_Fri",
+        dayName: "Fri",
+        dayNumber: "5",
+      },
+      {
+        date: "Default_Sat",
+        dateString: "Default_Sat",
+        dayName: "Sat",
+        dayNumber: "6",
+      },
+      {
+        date: "Default_Sun",
+        dateString: "Default_Sun",
+        dayName: "Sun",
+        dayNumber: "7",
+      },
+    ]
+    : getCurrentWeek(date);
 
   useEffect(() => {
     weekListRef.current.scrollToIndex({
       animated: true,
-      index: currentWeek.find(
-        (day) => day.dateString === date.toISOString().split("T")[0]
-      ).index,
+      index: defaultWeek
+        ? 0
+        : currentWeek.find(
+            (day) => day.dateString === date.toISOString().split("T")[0]
+          ).index,
     });
-  }, [date]);
+  }, [date, defaultWeek]);
 
   return (
     <View className="flex-1">
@@ -41,6 +89,7 @@ export default function CalendarComponent({
           setDate={setDate}
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
+          setDefault={setDefaultWeek}
         />
       ) : null}
       <View className="absolute w-full -mt-10 z-10">
@@ -81,8 +130,9 @@ export default function CalendarComponent({
             exiting={SlideOutDown}
           >
             {currentWeek.map((day) => {
-              const isSelected =
-                day.dateString === date.toISOString().split("T")[0];
+              const isSelected = defaultWeek
+                ? null
+                : day.dateString === date.toISOString().split("T")[0];
 
               return (
                 <TouchableOpacity
@@ -93,7 +143,7 @@ export default function CalendarComponent({
                     width: (width - 40 - 16) / 7,
                   }}
                   onPress={() => {
-                    setDate(new Date(day.date));
+                    defaultWeek ? null : setDate(new Date(day.date));
                   }}
                 >
                   <Text
@@ -122,21 +172,26 @@ export default function CalendarComponent({
           </Animated.View>
         </View>
       </View>
-      <WeeklyListComponent
-        meals={meals}
-        setMeals={setMeals}
-        ingredients={ingredients}
-        setIngredients={setIngredients}
-        recipes={recipes}
-        setRecipes={setRecipes}
-        date={date}
-        weekListRef={weekListRef}
-        initialIndex={
-          currentWeek.find(
-            (day) => day.dateString === date.toISOString().split("T")[0]
-          ).index
-        }
-      />
+      {
+        <WeeklyListComponent
+          meals={meals}
+          setMeals={setMeals}
+          ingredients={ingredients}
+          setIngredients={setIngredients}
+          recipes={recipes}
+          setRecipes={setRecipes}
+          defaultWeek={defaultWeek}
+          weekListRef={weekListRef}
+          initialIndex={
+            defaultWeek
+              ? 0
+              : currentWeek.find(
+                  (day) => day.dateString === date.toISOString().split("T")[0]
+                ).index
+          }
+          currentWeek={currentWeek}
+        />
+      }
     </View>
   );
 }

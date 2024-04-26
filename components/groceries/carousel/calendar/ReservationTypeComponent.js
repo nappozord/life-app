@@ -15,6 +15,7 @@ export default function ReservationTypeComponent({
   setRecipes,
   day,
   type,
+  defaultWeek,
 }) {
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -22,7 +23,7 @@ export default function ReservationTypeComponent({
     ? meals.find((obj) => obj.date === day)[type.type]
     : { ingredients: [], recipes: [] };
 
-  const dailyMeal = meals.find((obj) => obj.date === day);
+  const dailyMeal = meals.find((obj) => obj.date === day)
 
   return (
     <View className="flex-1">
