@@ -1,11 +1,18 @@
 import { View, Text } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import BezierChartComponent from "~/components/year_stats/charts/BezierChartComponent";
-import { ActivityIndicator, IconButton } from "react-native-paper";
+import { ActivityIndicator, IconButton, Tooltip } from "react-native-paper";
 import { themeColors } from "~/theme";
-import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import Animated, {
+  FadeIn,
+  FadeOut,
+  StretchInY,
+  StretchOutY,
+} from "react-native-reanimated";
 
 export default function IncomeSummaryComponent({ loading, yearCategories }) {
+  const [showTip, setShowTip] = useState(true);
+
   return (
     <View className="space-y-2">
       <View style={{ height: 250 }}>
@@ -25,10 +32,28 @@ export default function IncomeSummaryComponent({ loading, yearCategories }) {
             className="text-3xl font-semibold z-10"
             style={{ color: themeColors.onSecondaryContainer }}
           >
-            Income Summary
+            Monthly Cash Flow
           </Text>
-          <IconButton icon={"calendar-check"} color={themeColors.primary} />
+          <IconButton
+            icon={"information-outline"}
+            color={themeColors.primary}
+            onPress={() => setShowTip(!showTip)}
+          />
         </View>
+        {showTip ? (
+          <Animated.View
+            className="mx-5"
+            entering={StretchInY}
+            exiting={StretchOutY}
+          >
+            <Text
+              className="text-xs"
+              style={{ color: themeColors.onSecondaryContainer }}
+            >
+              Illustrates monthly variations between income and expenses.
+            </Text>
+          </Animated.View>
+        ) : null}
       </View>
     </View>
   );

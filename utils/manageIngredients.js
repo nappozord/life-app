@@ -5,6 +5,7 @@ import {
   updateIngredients,
   updateMeals,
   updateRecipes,
+  updateLogs,
 } from "~/api/apiManager";
 
 export function getIngredientFromMeal(
@@ -110,9 +111,11 @@ export function checkIngredientQuantity() {
                 r.find((o) => o.date === meal.date).checked = true;
               });
 
+              logs = [];
+
               weeklyIngredients.forEach((i) => {
                 ingredients.find((obj) => obj.id === i.ingredient.id).stock -=
-                  parseFloat((i.needed / i.ingredient.quantity).toFixed(2));
+                  parseFloat((i.needed / i.ingredient.quantity).toFixed(3));
 
                 if (
                   ingredients.find((obj) => obj.id === i.ingredient.id).stock <
@@ -121,8 +124,27 @@ export function checkIngredientQuantity() {
                   ingredients.find(
                     (obj) => obj.id === i.ingredient.id
                   ).stock = 0;
+
+                console.log(ingredients.find((obj) => obj.id === i.ingredient.id))
+
+                logs.push({
+                  text:
+                    "REMOVE " +
+                    ingredients.find((obj) => obj.id === i.ingredient.id).title,
+                  description:
+                    "Automatic remove of item " +
+                    ingredients.find((obj) => obj.id === i.ingredient.id)
+                      .title +
+                    " for a total of " +
+                    ingredients.find((obj) => obj.id === i.ingredient.id)
+                      .stock +
+                    ".",
+                  icon: "minus",
+                  auto: true,
+                });
               });
 
+              updateLogs(logs);
               updateRecipes([...recipes]);
               updateMeals([...r]);
               updateIngredients([...ingredients]);

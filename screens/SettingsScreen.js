@@ -21,11 +21,13 @@ import { signOut } from "aws-amplify/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import FinalSetupComponent from "~/components/login/FinalSetupComponent";
+import LogsModal from "~/components/logs/LogsModal";
 
 export default function SettingsScreen({ user, setUser }) {
   const dimensions = useWindowDimensions();
 
   const [finalSetup, setFinalSetup] = useState(false);
+  const [logs, setLogs] = useState(false);
   const searchBarHeight = useSharedValue(76);
   const navigation = useNavigation();
 
@@ -137,12 +139,42 @@ export default function SettingsScreen({ user, setUser }) {
                 <TouchableOpacity
                   className="rounded-2xl px-7"
                   style={{ backgroundColor: themeColors.primaryContainer }}
-                  onPress={() => setFinalSetup(true)}
+                  onPress={() => setFinalSetup(!finalSetup)}
                 >
                   <IconButton
                     size={24}
                     color={themeColors.onPrimaryContainer}
                     icon="account-edit-outline"
+                  />
+                </TouchableOpacity>
+              </View>
+              <View
+                className="flex-row items-center justify-between p-3 rounded-2xl"
+                style={{ backgroundColor: themeColors.secondaryContainer }}
+              >
+                <View>
+                  <Text
+                    className="text-lg"
+                    style={{ color: themeColors.onBackground }}
+                  >
+                    Logs
+                  </Text>
+                  <Text
+                    className="text-xs"
+                    style={{ color: themeColors.onBackground }}
+                  >
+                    Check your data logs
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  className="rounded-2xl px-7"
+                  style={{ backgroundColor: themeColors.primaryContainer }}
+                  onPress={() => setLogs(!logs)}
+                >
+                  <IconButton
+                    size={24}
+                    color={themeColors.onPrimaryContainer}
+                    icon="post-outline"
                   />
                 </TouchableOpacity>
               </View>
@@ -214,6 +246,8 @@ export default function SettingsScreen({ user, setUser }) {
               setFinalSetup={setFinalSetup}
               setUser={setUser}
             />
+          ) : logs ? (
+            <LogsModal setLogs={setLogs} />
           ) : null}
         </View>
       ) : (

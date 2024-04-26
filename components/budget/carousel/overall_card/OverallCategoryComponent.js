@@ -8,13 +8,13 @@ import { getRemainingDaysInMonth } from "~/utils/manageDate";
 import { calculateMonthlyInOut } from "~/utils/calculateMoneyFlow";
 
 export default function OverallCategoryComponent({ date, item, categories }) {
-  const [total, setTotal] = useState(() => getOverall())
+  const [total, setTotal] = useState(() => getOverall());
 
   useEffect(() => {
     getOverall();
   }, [categories]);
 
-  function getOverall(){
+  function getOverall() {
     calculateMonthlyInOut(categories).then((inOut) => {
       setTotal(inOut);
     });
@@ -22,100 +22,121 @@ export default function OverallCategoryComponent({ date, item, categories }) {
 
   return (
     <Pressable>
-      {total ? <><View className="flex-row justify-center -mt-12">
-        <DonutChartComponent
-          item={{
-            id: item.id,
-            title: item.title,
-            real: total.real.out,
-            forecast: total.real.in,
-          }}
-        />
-      </View>
-      <View className="px-5 mt-2 space-y-2">
-        <View className="flex-row items-center space-x-1 -mb-2">
-          <Text
-            className="text-3xl font-semibold z-10"
-            style={{ color: themeColors.onSecondaryContainer }}
-          >
-            {item.title}
-          </Text>
-          <IconButton icon={item.icon} color={themeColors.primary} />
-        </View>
-        <View className="flex-row">
-          <View className="space-y-1">
-            <Text
-              className="text-base"
-              style={{ color: themeColors.onSecondaryContainer }}
-            >
-              Total income:
-            </Text>
-            <View className="flex-row justify-between items-center">
-              <BarChartComponent
-                forecast={total.forecast.in}
-                real={total.real.in}
-              />
-              <View
-                className="p-1 px-3 rounded-full ml-3"
-                style={{ backgroundColor: themeColors.primary }}
+      {total ? (
+        <>
+          <View className="flex-row justify-center -mt-12">
+            <DonutChartComponent
+              item={{
+                id: item.id,
+                title: item.title,
+                real: total.real.out,
+                forecast: total.real.in,
+              }}
+            />
+          </View>
+          <View className="px-5 mt-2 space-y-2">
+            <View className="flex-row items-center space-x-1 -mb-2">
+              <Text
+                className="text-3xl font-semibold z-10"
+                style={{ color: themeColors.onSecondaryContainer }}
               >
+                {item.title}
+              </Text>
+              <IconButton icon={item.icon} color={themeColors.primary} />
+            </View>
+            <View className="flex-row">
+              <View className="space-y-1">
+              <View className="flex-row items-center space-x-1">
+                  <Text
+                    className="text-base"
+                    style={{ color: themeColors.onSecondaryContainer }}
+                  >
+                    Total income
+                  </Text>
+                  <Text
+                    className="text-xs font-semibold mt-0.5"
+                    style={{ color: themeColors.primary }}
+                  >
+                    {"(bdgt. €" + Math.ceil(total.forecast.in) + ")"}
+                  </Text>
+                </View>
+                <View className="flex-row justify-between items-center">
+                  <BarChartComponent
+                    forecast={total.forecast.in}
+                    real={total.real.in}
+                  />
+                  <View
+                    className="p-1 px-3 rounded-full ml-3"
+                    style={{ backgroundColor: themeColors.primary }}
+                  >
+                    <Text
+                      className="text-base font-semibold"
+                      style={{ color: themeColors.onPrimary }}
+                    >
+                      {"€" + Math.ceil(total.real.in)}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+            <View className="flex-row mb-2">
+              <View className="space-y-1">
+                <View className="flex-row items-center space-x-1">
+                  <Text
+                    className="text-base"
+                    style={{ color: themeColors.onSecondaryContainer }}
+                  >
+                    Total expenses
+                  </Text>
+                  <Text
+                    className="text-xs font-semibold mt-0.5"
+                    style={{ color: themeColors.primary }}
+                  >
+                    {"(bdgt. €" + Math.ceil(total.forecast.out) + ")"}
+                  </Text>
+                </View>
+                <View className="flex-row justify-between items-center">
+                  <BarChartComponent
+                    forecast={total.forecast.out}
+                    real={total.real.out}
+                  />
+                  <View
+                    className="p-1 px-3 rounded-2xl ml-3"
+                    style={{ backgroundColor: themeColors.primary }}
+                  >
+                    <Text
+                      className="text-base font-semibold"
+                      style={{ color: themeColors.onPrimary }}
+                    >
+                      {"€" + Math.ceil(total.real.out)}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+            <View className="flex-row space-y-1 justify-between">
+              <View className="flex-row space-x-1">
+                <Text
+                  className="text-base"
+                  style={{ color: themeColors.onSecondaryContainer }}
+                >
+                  Daily budget
+                </Text>
                 <Text
                   className="text-base font-semibold"
-                  style={{ color: themeColors.onPrimary }}
+                  style={{ color: themeColors.primary }}
                 >
-                  {"€" + Math.ceil(total.real.in)}
+                  €
+                  {(
+                    -(total.real.out - total.real.in) /
+                    getRemainingDaysInMonth(date)
+                  ).toFixed(2)}
                 </Text>
               </View>
             </View>
           </View>
-        </View>
-        <View className="flex-row mb-2">
-          <View className="space-y-1">
-            <Text
-              className="text-base"
-              style={{ color: themeColors.onSecondaryContainer }}
-            >
-              Total expenses:
-            </Text>
-            <View className="flex-row justify-between items-center">
-              <BarChartComponent
-                forecast={total.forecast.out}
-                real={total.real.out}
-              />
-              <View
-                className="p-1 px-3 rounded-full ml-3"
-                style={{ backgroundColor: themeColors.primary }}
-              >
-                <Text
-                  className="text-base font-semibold"
-                  style={{ color: themeColors.onPrimary }}
-                >
-                  {"€" + Math.ceil(total.real.out)}
-                </Text>
-              </View>
-            </View>
-          </View>
-        </View>
-        <View className="flex-row space-y-1 justify-between">
-          <View className="flex-row space-x-1">
-            <Text
-              className="text-base"
-              style={{ color: themeColors.onSecondaryContainer }}
-            >
-              Daily budget
-            </Text>
-            <Text
-              className="text-base font-semibold"
-              style={{ color: themeColors.primary }}
-            >
-              €
-              {(
-                -(total.real.out - total.real.in) / getRemainingDaysInMonth(date)
-              ).toFixed(2)}
-            </Text>
-          </View>
-        </View>
-      </View></> : null}
+        </>
+      ) : null}
     </Pressable>
   );
 }

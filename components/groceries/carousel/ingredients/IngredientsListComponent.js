@@ -38,8 +38,8 @@ export default function IngredientsListComponent({
           setRecipes={setRecipes}
         />
       ) : null}
-      <View className="absolute w-full -mt-10 z-10">
-        <View className="flex-row justify-center">
+      <View className="absolute w-full -mt-10">
+        <View className="absolute w-full flex-row justify-center z-10">
           <TouchableOpacity
             className="rounded-full"
             style={{
@@ -57,6 +57,26 @@ export default function IngredientsListComponent({
             />
           </TouchableOpacity>
         </View>
+        {/*<View className="mr-7 mt-1 z-auto">
+          <View className="absolute w-full flex-row justify-end">
+            <TouchableOpacity
+              className="rounded-t-full"
+              style={{
+                backgroundColor: themeColors.primary,
+                borderColor: themeColors.onSecondary,
+                borderWidth: 8,
+              }}
+            >
+              <IconButton
+                icon="wrench"
+                size={25}
+                color={themeColors.onPrimary}
+                className="pb-3 mx-1.5 mt-2"
+                onPress={() => setModalVisible(!modalVisible)}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>*/}
       </View>
       <View
         className="flex-row items-center justify-between py-3 px-3"
@@ -140,6 +160,7 @@ export default function IngredientsListComponent({
       </View>
       <View className="mx-3 flex-1">
         <FlashList
+          key={"ingredients_" + sort}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
@@ -158,7 +179,7 @@ export default function IngredientsListComponent({
               ? ingredients.sort((a, b) =>
                   a.title > b.title ? 1 : b.title > a.title ? -1 : 0
                 )
-              : ingredients.sort((a, b) => b.quantity - a.quantity)
+              : ingredients.sort((a, b) => b.stock - a.stock)
           }
           renderItem={({ index, item }) => {
             return (

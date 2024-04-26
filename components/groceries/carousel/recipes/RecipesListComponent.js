@@ -147,6 +147,7 @@ export default function RecipesListComponent({
       </View>
       <View className="mx-4 flex-1">
         <FlashList
+          key={"recipes_" + sort}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
