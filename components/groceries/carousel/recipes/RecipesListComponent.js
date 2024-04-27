@@ -12,6 +12,7 @@ import RecipeComponent from "./RecipeComponent";
 import RecipeModal from "./RecipeModal";
 import { FlashList } from "@shopify/flash-list";
 import Animated, { SlideInRight } from "react-native-reanimated";
+import { getRecipes } from "~/api/apiManager";
 
 export default function RecipesListComponent({
   meals,
@@ -30,7 +31,9 @@ export default function RecipesListComponent({
     setTimeout(() => {
       setRefreshing(false);
     }, 500);
-    setRecipes([...recipes]);
+    getRecipes().then(r => {
+      setRecipes([...r]);
+    })
   }, []);
 
   return (

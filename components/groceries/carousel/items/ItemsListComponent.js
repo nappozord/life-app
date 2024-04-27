@@ -5,6 +5,7 @@ import { themeColors } from "~/theme";
 import ItemComponent from "./ItemComponent";
 import ItemModal from "./ItemModal";
 import { FlashList } from "@shopify/flash-list";
+import { getItems } from "~/api/apiManager";
 
 export default function ItemsListComponent({
   items,
@@ -19,7 +20,9 @@ export default function ItemsListComponent({
     setTimeout(() => {
       setRefreshing(false);
     }, 500);
-    setItems([...items]);
+    getItems().then(r => {
+      setItems([...r])
+    });
   }, []);
 
   return (
