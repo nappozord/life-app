@@ -14,49 +14,41 @@ import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
 import Animated, { SlideInDown } from "react-native-reanimated";
 
-export default function IngredientModal({
+export default function ItemModal({
   item,
   modalVisible,
   setModalVisible,
-  ingredients,
-  setIngredients,
+  items,
+  setItems,
 }) {
   const inputRef = useRef(null);
 
   const name = useRef(item ? item.title.toString() : null);
   const cost = useRef(item ? parseFloat(item.cost).toFixed(2) : null);
-  const quantity = useRef(item ? item.quantity.toString() : "1");
-  const calories = useRef(
-    item ? (item.calories ? parseFloat(item.calories).toFixed(2) : null) : null
-  );
+  const duration = useRef(item ? item.duration.toString() : "1");
 
-  function addIngredient() {
+  function addItem() {
     if (cost.current === "" || cost.current === null) cost.current = 0.0;
 
-    if (quantity.current === "" || quantity.current === null)
-      quantity.current = 1;
+    if (duration.current === "" || duration.current === null)
+      duration.current = 1;
 
-    if (name.current === "" || name.current === null)
-      name.current = "New Ingredient";
+    if (name.current === "" || name.current === null) name.current = "New Item";
 
-    if (calories.current === "" || calories.current === null)
-      calories.current = 0;
-
-    const ids = ingredients.map((object) => {
+    const ids = items.map((object) => {
       return object.id;
     });
 
-    const max = ids.length > 0 ? Math.max(...ids) : 0;
+    const max = ids.length > 0 ? Math.max(...ids) : 10000;
 
-    ingredients.push({
+    items.push({
       id: max + 1,
       title: name.current,
       cost: parseFloat(cost.current),
-      quantity: parseFloat(quantity.current),
-      calories: parseFloat(calories.current),
+      duration: parseFloat(duration.current),
       stock: 0,
-      duration: 7,
       lastUpdate: new Date().toLocaleDateString("it-IT"),
+      buyingDate: [],
       history: [
         {
           id: 0,
@@ -66,43 +58,38 @@ export default function IngredientModal({
       ],
     });
 
-    setIngredients([...ingredients]);
+    setItems([...items]);
   }
 
-  function updateIngredient() {
+  function updateItem() {
     if (cost.current === "" || cost.current === null) cost.current = 0.0;
 
-    if (quantity.current === "" || quantity.current === null)
-      quantity.current = 1;
+    if (duration.current === "" || duration.current === null)
+      duration.current = 1;
 
-    if (name.current === "" || name.current === null)
-      name.current = "New Ingredient";
+    if (name.current === "" || name.current === null) name.current = "New Item";
 
-    if (calories.current === "" || calories.current === null)
-      calories.current = 0;
+    const it = items.find((obj) => obj.id === item.id);
 
-    const ingredient = ingredients.find((obj) => obj.id === item.id);
-
-    ingredient.title = name.current;
-    ingredient.cost = parseFloat(cost.current);
-    ingredient.quantity = parseFloat(quantity.current);
-    ingredient.lastUpdate = new Date().toLocaleDateString("it-IT");
-    ingredient.calories = parseFloat(calories.current);
-    if (ingredient.history) {
+    it.title = name.current;
+    it.cost = parseFloat(cost.current);
+    it.duration = parseFloat(duration.current);
+    it.lastUpdate = new Date().toLocaleDateString("it-IT");
+    if (it.history) {
       if (
-        ingredient.history.find((i) => i.id === ingredient.history.length - 1)
+        it.history.find((i) => i.id === it.history.length - 1)
       )
         if (
-          ingredient.history.find((i) => i.id === ingredient.history.length - 1)
+          it.history.find((i) => i.id === it.history.length - 1)
             .cost !== parseFloat(cost.current)
         )
-          ingredient.history.push({
-            id: ingredient.history.length,
+          it.history.push({
+            id: it.history.length,
             date: new Date().toLocaleDateString("it-IT"),
             cost: parseFloat(cost.current),
           });
     } else {
-      ingredient.history = [
+      i.history = [
         {
           id: 0,
           date: new Date().toLocaleDateString("it-IT"),
@@ -111,12 +98,12 @@ export default function IngredientModal({
       ];
     }
 
-    setIngredients([...ingredients]);
+    setItems([...items]);
   }
 
-  function deleteIngredient() {
-    ingredients = ingredients.filter((obj) => obj.id !== item.id);
-    setIngredients([...ingredients]);
+  function deleteItem() {
+    items = items.filter((obj) => obj.id !== item.id);
+    setItems([...items]);
   }
 
   return (
@@ -184,16 +171,6 @@ export default function IngredientModal({
                         >
                           {Math.ceil(item.stock)}
                         </Text>
-                        <Text
-                          className="text-base mb-1 "
-                          style={{ color: themeColors.onBackground }}
-                        >
-                          {"(" +
-                            (item.quantity === 1
-                              ? (item.stock * item.quantity).toFixed(1)
-                              : Math.round(item.stock * item.quantity)) +
-                            ")"}
-                        </Text>
                       </View>
                       <Text
                         className="text-xl font-semibold -mt-2 "
@@ -212,7 +189,7 @@ export default function IngredientModal({
                           className="-mr-2"
                         />
                         <IconButton
-                          icon={"apple"}
+                          icon={"coffee-maker"}
                           color={themeColors.onBackground}
                           size={30}
                           className="-ml-2"
@@ -222,7 +199,7 @@ export default function IngredientModal({
                         className="text-xl font-semibold -mt-4 mb-4"
                         style={{ color: themeColors.onBackground }}
                       >
-                        Ingredient
+                        General Item
                       </Text>
                     </>
                   )}
@@ -244,7 +221,7 @@ export default function IngredientModal({
                       backgroundColor: themeColors.onSecondaryContainer,
                       color: themeColors.background,
                     }}
-                    placeholder="E.g. Banana!"
+                    placeholder="E.g. Dish Soap!"
                     selectionColor={themeColors.background}
                     defaultValue={name.current}
                     onChangeText={(text) => {
@@ -294,7 +271,7 @@ export default function IngredientModal({
                         className="font-semibold text-lg ml-2"
                         style={{ color: themeColors.onSecondaryContainer }}
                       >
-                        Qty (pack)
+                        Duration (weeks)
                       </Text>
                       <View
                         className="flex-row items-center rounded-2xl p-1 overflow-visible"
@@ -309,11 +286,11 @@ export default function IngredientModal({
                           className="px-2 flex-1  text-base"
                           style={{ color: themeColors.background }}
                           selectionColor={themeColors.background}
-                          defaultValue={quantity.current}
+                          defaultValue={duration.current}
                           onChangeText={(text) => {
                             if (text === "" || text === null)
-                              quantity.current = 1;
-                            else quantity.current = text.split(" ").join("");
+                              duration.current = 1;
+                            else duration.current = text.split(" ").join("");
                           }}
                         />
                         <Pressable
@@ -322,33 +299,13 @@ export default function IngredientModal({
                         >
                           <IconButton
                             size={20}
-                            icon="package-variant"
+                            icon="clock-outline"
                             color={themeColors.onSecondaryContainer}
                           />
                         </Pressable>
                       </View>
                     </View>
                   </View>
-                  <Text
-                    className="font-semibold text-lg ml-2"
-                    style={{ color: themeColors.onSecondaryContainer }}
-                  >
-                    Calories (piece)
-                  </Text>
-                  <TextInput
-                    keyboardType="numeric"
-                    className="p-3 rounded-2xl text-base mb-4"
-                    style={{
-                      backgroundColor: themeColors.onSecondaryContainer,
-                      color: themeColors.background,
-                    }}
-                    placeholder="E.g. 100"
-                    selectionColor={themeColors.background}
-                    defaultValue={calories.current}
-                    onChangeText={(text) => {
-                      calories.current = text;
-                    }}
-                  />
                   {item ? (
                     <View className="flex-row justify-between items-center">
                       <View className="flex-row items-center">
@@ -368,6 +325,7 @@ export default function IngredientModal({
                               : new Date().toLocaleDateString("it-IT"))}
                         </Text>
                       </View>
+
                       <TouchableOpacity className="flex-row items-center">
                         <Text
                           className="text-sm font-semibold"
@@ -397,7 +355,7 @@ export default function IngredientModal({
                           borderTopLeftRadius: 24,
                         }}
                         onPress={() => {
-                          updateIngredient();
+                          updateItem();
                           setModalVisible(false);
                         }}
                       >
@@ -419,7 +377,7 @@ export default function IngredientModal({
                           borderTopRightRadius: 24,
                         }}
                         onPress={() => {
-                          deleteIngredient();
+                          deleteItem();
                           setModalVisible(false);
                         }}
                       >
@@ -441,7 +399,7 @@ export default function IngredientModal({
                       borderTopLeftRadius: 24,
                     }}
                     onPress={() => {
-                      addIngredient();
+                      addItem();
                       setModalVisible(false);
                     }}
                   >
@@ -449,7 +407,7 @@ export default function IngredientModal({
                       className="font-bold text-center text-xl"
                       style={{ color: themeColors.onPrimary }}
                     >
-                      Add Ingredient
+                      Add General Item
                     </Text>
                   </TouchableOpacity>
                 )}

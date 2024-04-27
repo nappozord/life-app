@@ -158,7 +158,8 @@ export default function MealPlanModalComponent({
                 <View className="flex-row justify-between items-center">
                   <View className="flex-1 mr-2">
                     <SearchComponent
-                      items={[...ingredients, ...recipes]}
+                      items={[]}
+                      ingredients={[...ingredients, ...recipes]}
                       setSearch={setSearch}
                       onlyIngredients={false}
                       setOnlySelected={setOnlySelected}

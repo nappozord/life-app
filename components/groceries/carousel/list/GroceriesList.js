@@ -1,9 +1,4 @@
-import {
-  View,
-  Text,
-  RefreshControl,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, RefreshControl, TouchableOpacity } from "react-native";
 import React, { useState, useCallback, useEffect } from "react";
 import { MasonryFlashList } from "@shopify/flash-list";
 import { getIngredientFromMeal } from "~/utils/manageIngredients";
@@ -24,6 +19,8 @@ export default function GroceriesList({
   week,
   groceryList,
   setGroceryList,
+  items,
+  setItems,
 }) {
   const [refreshing, setRefreshing] = useState(false);
   const [ingredientList, setIngredientList] = useState([]);
@@ -35,20 +32,22 @@ export default function GroceriesList({
       setRefreshing(false);
     }, 500);
     setIngredientList(calculateNewList);
-  }, [meals, ingredients, recipes, week, groceryList]);
+  }, [meals, ingredients, recipes, week, groceryList, items]);
 
   useEffect(() => {
     setIngredientList([]);
     setIngredientList(calculateNewList);
-  }, [meals, ingredients, recipes, week, groceryList]);
+  }, [meals, ingredients, recipes, week, groceryList, items]);
 
   useEffect(() => {
     let count = 0;
 
     ingredientList.forEach((item) => {
-      count +=
-        parseFloat(item.ingredient.cost) *
-        Math.ceil(item.needed / parseFloat(item.ingredient.quantity));
+      if (item.ingredient) {
+        count +=
+          parseFloat(item.ingredient.cost) *
+          Math.ceil(item.needed / (item.ingredient.quantity ? parseFloat(item.ingredient.quantity) : 1));
+      }
     });
 
     setTotalCost(count);
@@ -117,13 +116,14 @@ export default function GroceriesList({
   }
 
   function setAdded(ingredientList) {
+    total = [...ingredients, ...items];
     groceryList.added.forEach((obj) => {
       if (ingredientList.find((i) => i.ingredient.id === obj.id)) {
         ingredientList.find((i) => i.ingredient.id === obj.id).needed =
           obj.quantity;
       } else {
         ingredientList.push({
-          ingredient: ingredients.find((i) => i.id === obj.id),
+          ingredient: total.find((i) => i.id === obj.id),
           needed: obj.quantity,
           onCart: 0,
         });
@@ -152,13 +152,14 @@ export default function GroceriesList({
   }
 
   function setChecked(ingredientList) {
+    total = [...ingredients, ...items];
     groceryList.checked.forEach((obj) => {
       if (ingredientList.find((i) => i.ingredient.id === obj.id)) {
         ingredientList.find((i) => i.ingredient.id === obj.id).onCart =
           obj.quantity;
       } else {
         ingredientList.push({
-          ingredient: ingredients.find((i) => i.id === obj.id),
+          ingredient: total.find((i) => i.id === obj.id),
           needed: obj.quantity,
           onCart: obj.quantity,
         });
@@ -210,7 +211,7 @@ export default function GroceriesList({
                   { length: ingredientList.length % 2 === 0 ? 2 : 1 },
                   (_, i) => {
                     return {
-                      ingredient: { id: -i - 1, title: "Add Ingredient" },
+                      ingredient: { id: -i - 1, title: "Add to List" },
                     };
                   }
                 ),
@@ -226,6 +227,8 @@ export default function GroceriesList({
                     setGroceryList={setGroceryList}
                     ingredients={ingredients}
                     setIngredients={setIngredients}
+                    items={items}
+                    setItems={setItems}
                   />
                 );
               }}

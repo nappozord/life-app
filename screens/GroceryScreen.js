@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { View, Image } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import {
-  getUser,
-  updateUser,
+  getItems,
+  updateItems,
   getMeals,
   updateMeals,
   getIngredients,
@@ -24,6 +24,7 @@ import GroceriesCarouselComponent from "~/components/groceries/carousel/Grocerie
 export default function GroceryScreen({ user, setUser }) {
   const [meals, setMeals] = useState();
   const [ingredients, setIngredients] = useState();
+  const [items, setItems] = useState();
   const [recipes, setRecipes] = useState();
   const [activeChip, setActiveChip] = useState(0);
   const chipListRef = useRef(null);
@@ -45,6 +46,10 @@ export default function GroceryScreen({ user, setUser }) {
       index: 3,
       title: "Ingredients",
     },
+    {
+      index: 4,
+      title: "General",
+    },
   ];
 
   const searchBarHeight = useSharedValue(76);
@@ -52,6 +57,10 @@ export default function GroceryScreen({ user, setUser }) {
   useEffect(() => {
     !meals ? getMeals().then((r) => setMeals(r)) : updateMeals(meals);
   }, [meals]);
+
+  useEffect(() => {
+    !items ? getItems().then((r) => setItems(r)) : updateItems(items);
+  }, [items]);
 
   useEffect(() => {
     !ingredients
@@ -109,6 +118,8 @@ export default function GroceryScreen({ user, setUser }) {
                     user={user}
                     setUser={setUser}
                     chipListRef={chipListRef}
+                    items={items}
+                    setItems={setItems}
                   />
                 </View>
               </Animated.View>

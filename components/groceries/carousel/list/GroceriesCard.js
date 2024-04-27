@@ -15,6 +15,8 @@ export default function GroceriesCard({
   setIngredients,
   recipes,
   setRecipes,
+  items,
+  setItems,
 }) {
   const [week, setWeek] = useState(getCurrentWeek(new Date()));
   const [groceryList, setGroceryList] = useState(null);
@@ -180,6 +182,8 @@ export default function GroceriesCard({
           groceryList={groceryList}
           setGroceryList={setGroceryList}
           week={week}
+          items={items}
+          setItems={setItems}
         />
       ) : null}
     </View>

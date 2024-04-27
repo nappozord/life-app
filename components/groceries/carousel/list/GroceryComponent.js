@@ -16,6 +16,8 @@ export default function GroceryComponent({
   setGroceryList,
   ingredients,
   setIngredients,
+  items,
+  setItems,
 }) {
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -77,9 +79,14 @@ export default function GroceryComponent({
 
       setGroceryList({ ...groceryList });
 
-      ingredients.find((i) => i.id === item.ingredient.id).stock += i;
-
-      setIngredients([...ingredients]);
+      if(item.ingredient.quantity){
+        ingredients.find((i) => i.id === item.ingredient.id).stock += i;
+        setIngredients([...ingredients]);
+      } else {
+        items.find((i) => i.id === item.ingredient.id).stock += i;
+        items.find((i) => i.id === item.ingredient.id).buyingDate.push(new Date().toISOString())
+        setItems([...items]);
+      }
     }
   }
 
@@ -88,12 +95,13 @@ export default function GroceryComponent({
       <>
         {modalVisible ? (
           <AddIngredientModal
-            item={ingredientList}
+            ingredientList={ingredientList}
             modalVisible={modalVisible}
             setModalVisible={setModalVisible}
             ingredients={ingredients}
             groceryList={groceryList}
             setGroceryList={setGroceryList}
+            itemList={items}
           />
         ) : null}
         <Animated.View entering={FadeIn} className="flex-1 mt-8 mb-2 px-1">
@@ -172,7 +180,7 @@ export default function GroceryComponent({
                 style={{ color: "transparent" }}
                 numberOfLines={1}
               >
-                {"/" + Math.ceil(item.needed / item.ingredient.quantity)}
+                {"/" + Math.ceil(item.needed / (item.ingredient.quantity ? item.ingredient.quantity : 1))}
               </Text>
             </View>
           </View>
@@ -218,7 +226,7 @@ export default function GroceryComponent({
                 style={{ color: themeColors.onBackground }}
                 numberOfLines={1}
               >
-                {"/" + Math.ceil(item.needed / item.ingredient.quantity)}
+                {"/" + Math.ceil(item.needed / (item.ingredient.quantity ? item.ingredient.quantity : 1))}
               </Text>
             </View>
           </View>
@@ -229,7 +237,7 @@ export default function GroceryComponent({
         className="-mt-4 rounded-2xl p-2"
         style={{
           backgroundColor:
-            item.onCart === Math.ceil(item.needed / item.ingredient.quantity)
+            item.onCart === Math.ceil(item.needed / (item.ingredient.quantity ? item.ingredient.quantity : 1))
               ? themeColors.success
               : themeColors.secondaryContainer,
         }}

@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { themeColors } from "~/theme";
 import { Divider, IconButton } from "react-native-paper";
 import Animated, {
@@ -8,23 +8,21 @@ import Animated, {
   SlideOutDown,
   SlideOutLeft,
 } from "react-native-reanimated";
-import IngredientModal from "./IngredientModal";
-import IngredientPercentageComponent from "./IngredientPercentageComponent";
+import ItemModal from "./ItemModal";
+import ItemPercentageComponent from "./ItemPercentageComponent";
 import { updateLogs } from "~/api/apiManager";
 
-export default function IngredientComponent({
-  meals,
-  ingredients,
-  setIngredients,
-  recipes,
-  setRecipes,
+export default function ItemComponent({
+  items,
+  setItems,
   item,
 }) {
   const [modalVisible, setModalVisible] = useState(false);
 
   const addItem = () => {
     item.stock += 1;
-    setIngredients([...ingredients]);
+    item.buyingDate.push(new Date().toISOString());
+    setItems([...items]);
     updateLogs([{
       text: 'ADD ' + item.title,
       description: 'Manual add of item ' + item.title + ' for a total of ' + item.stock + '.',
@@ -35,7 +33,16 @@ export default function IngredientComponent({
 
   const subItem = () => {
     item.stock >= 1 ? (item.stock -= 1) : (item.stock = 0);
-    setIngredients([...ingredients]);
+
+    // Parse ISO string dates into Date objects
+    item.buyingDate = item.buyingDate.sort(function(a,b){
+      return Date.parse(a) > Date.parse(b);
+    });
+
+    // Remove the oldest date from the array
+    item.buyingDate.splice(0, 1);
+
+    setItems([...items]);
     updateLogs([{
       text: 'REMOVE ' + item.title,
       description: 'Manual remove of item ' + item.title + ' for a total of ' + item.stock + '.',
@@ -44,17 +51,26 @@ export default function IngredientComponent({
     }])
   };
 
+  useEffect(() => {
+    item.buyingDate.forEach(i => {
+      let currentDate = new Date();
+
+      currentDate.setDate(currentDate.getDate() - (item.duration * 7));
+
+      if(Date.parse(currentDate) > Date.parse(i))
+        subItem();
+    })
+  }, [])
+
   return (
     <>
       {modalVisible ? (
-        <IngredientModal
+        <ItemModal
           item={item}
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
-          ingredients={ingredients}
-          setIngredients={setIngredients}
-          recipes={recipes}
-          setRecipes={setRecipes}
+          items={items}
+          setItems={setItems}
         />
       ) : null}
       <Animated.View exiting={SlideOutLeft} entering={SlideInRight}>
@@ -109,7 +125,7 @@ export default function IngredientComponent({
                       className=" text-xs font-semibold"
                       style={{ color: themeColors.onSecondary }}
                     >
-                      {"x" + item.quantity}
+                      {"Weeks: " + item.duration}
                     </Text>
                   </View>
                 </View>
@@ -133,10 +149,8 @@ export default function IngredientComponent({
             </View>
           </View>
           <View className="mt-1 -mb-1 -mx-1">
-            <IngredientPercentageComponent
+            <ItemPercentageComponent
               item={item}
-              meals={meals}
-              recipes={recipes}
             />
           </View>
         </TouchableOpacity>

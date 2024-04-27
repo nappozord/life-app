@@ -13,30 +13,31 @@ import Animated, { SlideInDown } from "react-native-reanimated";
 import IngredientSearchComponent from "~/components/groceries/searchbar/IngredientSearchComponent";
 
 export default function AddIngredientModal({
-  item,
+  ingredientList,
   modalVisible,
   setModalVisible,
   ingredients,
   setIngredients,
   groceryList,
   setGroceryList,
+  itemList,
 }) {
-  const [selected, setSelected] = useState(getIngredients);
+  const [selected, setSelected] = useState(getItemList);
 
-  function getIngredients() {
+  function getItemList() {
     let sel = [];
 
-    item.forEach((item) => {
+    ingredientList.forEach((ingr) => {
       sel.push({
-        id: item.ingredient.id,
-        quantity: Math.ceil(item.needed),
+        id: ingr.ingredient.id,
+        quantity: Math.ceil(ingr.needed),
       });
     });
 
     return sel;
   }
 
-  const updateIngredientList = () => {
+  const updateItemList = () => {
     selected.forEach((s) => {
       groceryList.added.push(s);
 
@@ -47,7 +48,7 @@ export default function AddIngredientModal({
       }
     });
 
-    item.forEach((i) => {
+    ingredientList.forEach((i) => {
       if (!selected.find((s) => i.ingredient.id === s.id)) {
         groceryList.excluded.push({ id: i.ingredient.id, quantity: i.needed });
 
@@ -127,6 +128,7 @@ export default function AddIngredientModal({
             <View className="-mt-7 pt-10">
               <IngredientSearchComponent
                 ingredients={ingredients}
+                items={itemList}
                 selected={selected}
                 setSelected={setSelected}
               />
@@ -141,7 +143,7 @@ export default function AddIngredientModal({
                     borderTopRightRadius: 24,
                   }}
                   onPress={() => {
-                    updateIngredientList();
+                    updateItemList();
                     setModalVisible(false);
                   }}
                 >

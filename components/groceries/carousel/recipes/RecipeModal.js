@@ -38,7 +38,7 @@ export default function RecipeModal({
       return object.id;
     });
 
-    const max = Math.max(...ids);
+    const max = ids.length > 0 ? Math.max(...ids) : 0;
 
     recipes.push({
       id: max + 1,
@@ -229,7 +229,7 @@ export default function RecipeModal({
                 ingredients={ingredients}
                 selected={selected}
                 setSelected={setSelected}
-                item={item}
+                items={[]}
               />
               {item ? (
                 <View className="flex-row justify-between items-center">

@@ -5,6 +5,7 @@ import Animated, { FadeIn } from "react-native-reanimated";
 import { themeColors } from "~/theme";
 import CalendarComponent from "~/components/groceries/carousel/calendar/CalendarComponent";
 import IngredientsListComponent from "./ingredients/IngredientsListComponent";
+import ItemsListComponent from "./items/ItemsListComponent";
 import RecipesListComponent from "./recipes/RecipesListComponent";
 import GroceriesCard from "./list/GroceriesCard";
 
@@ -19,6 +20,8 @@ export default function BudgetCarouselComponent({
   activeChip,
   setActiveChip,
   chipListRef,
+  items,
+  setItems,
 }) {
   const dimensions = useWindowDimensions();
   const carouselRef = useRef(null);
@@ -68,6 +71,8 @@ export default function BudgetCarouselComponent({
                   setIngredients={setIngredients}
                   recipes={recipes}
                   setRecipes={setRecipes}
+                  items={items}
+                  setItems={setItems}
                 />
               ) : item.index === 2 ? (
                 <RecipesListComponent
@@ -86,6 +91,11 @@ export default function BudgetCarouselComponent({
                   setIngredients={setIngredients}
                   recipes={recipes}
                   setRecipes={setRecipes}
+                />
+              ) : item.index === 4 ? (
+                <ItemsListComponent
+                  items={items}
+                  setItems={setItems}
                 />
               ) : null}
             </View>
