@@ -79,10 +79,10 @@ export default function WelcomeScreen() {
         restoreBackup("January, 2024");
         restoreBackup("December, 2023");
         AsyncStorage.clear();
-        AsyncStorage.removeItem("groceries");
+        AsyncStorage.removeItem("logs");
         AsyncStorage.removeItem("defaultCategories");
         AsyncStorage.removeItem("categories");*/
-        AsyncStorage.removeItem("logs");
+        AsyncStorage.removeItem("groceries");
       }
 
       getCurrentUser()

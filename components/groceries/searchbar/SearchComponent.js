@@ -6,15 +6,21 @@ import { IconButton } from "react-native-paper";
 
 export default function SearchComponent({
   items,
+  ingredients,
   setSearch,
   onlyIngredients,
   setOnlySelected,
   placeholderText,
 }) {
   function searchItems(text) {
-    const subset = items.filter((obj) =>
-      obj.title.toLowerCase().includes(text.toLowerCase())
-    );
+    const subset = [
+      ...items.filter((obj) =>
+        obj.title.toLowerCase().includes(text.toLowerCase())
+      ),
+      ...ingredients.filter((obj) =>
+        obj.title.toLowerCase().includes(text.toLowerCase())
+      ),
+    ];
     setSearch(subset);
   }
 

@@ -15,7 +15,7 @@ export default function IngredientSelectionComponent({
   selected,
   setSelected,
 }) {
-  const icon = "apple";
+  const icon = item.quantity ? "apple" : "coffee-maker";
 
   const duration = 500;
 
@@ -112,7 +112,7 @@ export default function IngredientSelectionComponent({
               item={selected.find((obj) => obj.id === item.id)}
               selected={selected}
               setSelected={setSelected}
-              total={item.quantity}
+              total={item.quantity ? item.quantity : ""}
             />
           </Animated.View>
         ) : null}

@@ -7,11 +7,11 @@ import IngredientSelectionListComponent from "./IngredientSelectionListComponent
 
 export default function IngredientSearchComponent({
   ingredients,
-  item,
   selected,
   setSelected,
+  items,
 }) {
-  const [search, setSearch] = useState([...ingredients]);
+  const [search, setSearch] = useState([...ingredients, ...items]);
   const [onlySelected, setOnlySelected] = useState(false);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export default function IngredientSearchComponent({
 
       setSearch(ingredientsToShow);
     } else {
-      setSearch([...ingredients]);
+      setSearch([...ingredients, ...items]);
     }
   }, [onlySelected]);
 
@@ -39,7 +39,8 @@ export default function IngredientSearchComponent({
       <View className="flex-row justify-between items-center">
         <View className="flex-1 mr-2">
           <SearchComponent
-            items={[...ingredients]}
+            items={[...items]}
+            ingredients={[...ingredients]}
             setSearch={setSearch}
             onlyIngredients={true}
             setOnlySelected={setOnlySelected}
@@ -63,7 +64,8 @@ export default function IngredientSearchComponent({
       <View>
         <IngredientSelectionListComponent
           style={{ height: 450 }}
-          items={search}
+          search={search}
+          items={items}
           ingredients={ingredients}
           selected={selected}
           setSelected={setSelected}
