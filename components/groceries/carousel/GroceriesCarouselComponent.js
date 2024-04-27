@@ -108,7 +108,7 @@ export default function BudgetCarouselComponent({
         itemWidth={dimensions.width}
         slideStyle={{ display: "flex", alignItems: "center" }}
         initialNumToRender={1}
-        windowSize={4}
+        windowSize={5}
         onSnapToItem={(index) => {
           setActiveChip(index);
           chipListRef.current.scrollToIndex({

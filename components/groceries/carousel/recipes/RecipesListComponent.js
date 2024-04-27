@@ -1,18 +1,12 @@
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  RefreshControl,
-  FlatList,
-} from "react-native";
-import React, { useEffect, useState } from "react";
+import { View, TouchableOpacity, Text, RefreshControl } from "react-native";
+import React, { useState } from "react";
 import { IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
 import RecipeComponent from "./RecipeComponent";
 import RecipeModal from "./RecipeModal";
 import { FlashList } from "@shopify/flash-list";
-import Animated, { SlideInRight } from "react-native-reanimated";
 import { getRecipes } from "~/api/apiManager";
+import SearchComponent from "~/components/groceries/searchbar/SearchComponent";
 
 export default function RecipesListComponent({
   meals,
@@ -25,15 +19,16 @@ export default function RecipesListComponent({
   const [sort, setSort] = useState("alphabetical");
   const [modalVisible, setModalVisible] = useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
+  const [search, setSearch] = useState(recipes);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
     }, 500);
-    getRecipes().then(r => {
+    getRecipes().then((r) => {
       setRecipes([...r]);
-    })
+    });
   }, []);
 
   return (
@@ -69,7 +64,7 @@ export default function RecipesListComponent({
         </View>
       </View>
       <View
-        className="flex-row items-center justify-between py-3 px-4"
+        className="py-3 px-4"
         style={{
           backgroundColor: themeColors.onSecondary,
           elevation: 5,
@@ -77,75 +72,90 @@ export default function RecipesListComponent({
           borderTopRightRadius: 24,
         }}
       >
-        <View className="flex-row items-center space-x-2">
-          <View>
-            <View className="flex-row items-center">
-              <Text
-                className="text-xl font-semibold "
-                style={{ color: themeColors.onBackground }}
-              >
-                Recipes
-              </Text>
-              <IconButton
-                className="p-0 m-0"
-                icon="food"
-                size={24}
-                color={themeColors.onBackground}
-              />
-            </View>
-            <View className="flex-row items-center">
-              <IconButton
-                className="p-0 m-0 -ml-1"
-                icon="sort"
-                size={15}
-                color={themeColors.secondary}
-              />
-              <Text
-                className="text-sm"
-                style={{ color: themeColors.secondary }}
-              >
-                {sort === "alphabetical" ? "A-Z order" : "Usage order"}
-              </Text>
+        <View className="flex-row items-center justify-between">
+          <View className="flex-row items-center space-x-2">
+            <View>
+              <View className="flex-row items-center">
+                <Text
+                  className="text-xl font-semibold "
+                  style={{ color: themeColors.onBackground }}
+                >
+                  Recipes
+                </Text>
+                <IconButton
+                  className="p-0 m-0"
+                  icon="food"
+                  size={24}
+                  color={themeColors.onBackground}
+                />
+              </View>
+              <View className="flex-row items-center">
+                <IconButton
+                  className="p-0 m-0 -ml-1"
+                  icon="sort"
+                  size={15}
+                  color={themeColors.secondary}
+                />
+                <Text
+                  className="text-sm"
+                  style={{ color: themeColors.secondary }}
+                >
+                  {sort === "alphabetical" ? "A-Z order" : "Usage order"}
+                </Text>
+              </View>
             </View>
           </View>
+          <View className="flex-row items-center space-x-0">
+            <TouchableOpacity
+              className="rounded-full"
+              style={{
+                backgroundColor:
+                  sort === "alphabetical"
+                    ? themeColors.primary
+                    : themeColors.onPrimaryContainer,
+                borderTopRightRadius: 0,
+                borderBottomRightRadius: 0,
+              }}
+              onPress={() => {
+                setSort("alphabetical");
+              }}
+            >
+              <IconButton
+                size={sort === "alphabetical" ? 25 : 24}
+                icon={"sort-alphabetical-variant"}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="rounded-full"
+              style={{
+                backgroundColor:
+                  sort === "use"
+                    ? themeColors.primary
+                    : themeColors.onPrimaryContainer,
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
+                borderLeftWidth: 1,
+              }}
+              onPress={() => {
+                setSort("use");
+              }}
+            >
+              <IconButton
+                size={sort === "use" ? 25 : 24}
+                icon={"sort-variant"}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
-        <View className="flex-row items-center space-x-0">
-          <TouchableOpacity
-            className="rounded-full"
-            style={{
-              backgroundColor:
-                sort === "alphabetical"
-                  ? themeColors.primary
-                  : themeColors.onPrimaryContainer,
-              borderTopRightRadius: 0,
-              borderBottomRightRadius: 0,
-            }}
-            onPress={() => {
-              setSort("alphabetical");
-            }}
-          >
-            <IconButton
-              size={sort === "alphabetical" ? 25 : 24}
-              icon={"sort-alphabetical-variant"}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            className="rounded-full"
-            style={{
-              backgroundColor:
-                sort === "use"
-                  ? themeColors.primary
-                  : themeColors.onPrimaryContainer,
-              borderTopLeftRadius: 0,
-              borderBottomLeftRadius: 0,
-              borderLeftWidth: 1,
-            }}
-            onPress={() => {
-              setSort("use");
-            }}
-          >
-            <IconButton size={sort === "use" ? 25 : 24} icon={"sort-variant"} />
-          </TouchableOpacity>
+        <View className="mt-2">
+          <SearchComponent
+            items={[]}
+            ingredients={recipes}
+            setSearch={setSearch}
+            onlyIngredients={false}
+            setOnlySelected={() => {}}
+            placeholderText={'Search Ingredients'}
+          />
         </View>
       </View>
       <View className="mx-4 flex-1">
@@ -166,10 +176,10 @@ export default function RecipesListComponent({
           showsVerticalScrollIndicator={false}
           data={
             sort === "alphabetical"
-              ? recipes.sort((a, b) =>
+              ? search.sort((a, b) =>
                   a.title > b.title ? 1 : b.title > a.title ? -1 : 0
                 )
-              : recipes.sort((a, b) => b.used - a.used)
+              : search.sort((a, b) => b.used - a.used)
           }
           renderItem={({ index, item }) => {
             return (
