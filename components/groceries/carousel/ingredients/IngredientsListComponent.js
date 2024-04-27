@@ -5,6 +5,7 @@ import { themeColors } from "~/theme";
 import IngredientComponent from "./IngredientComponent";
 import IngredientModal from "./IngredientModal";
 import { FlashList } from "@shopify/flash-list";
+import { getIngredients } from "~/api/apiManager";
 
 export default function IngredientsListComponent({
   meals,
@@ -23,7 +24,9 @@ export default function IngredientsListComponent({
     setTimeout(() => {
       setRefreshing(false);
     }, 500);
-    setIngredients([...ingredients]);
+    getIngredients().then(r => {
+      setIngredients([...r]);
+    })
   }, []);
 
   return (

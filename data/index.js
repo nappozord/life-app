@@ -625,13 +625,6 @@ export const mealsDefault = [
 ];
 
 export const itemsDefault = [
-  {
-    id: 0,
-    title: "Panni Gialli",
-    cost: 5.50,
-    stock: 0,
-    duration: 0,
-  },
 ];
 
 export const ingredientsDefault = [
