@@ -6,22 +6,21 @@ import ItemComponent from "./ItemComponent";
 import ItemModal from "./ItemModal";
 import { FlashList } from "@shopify/flash-list";
 import { getItems } from "~/api/apiManager";
+import SearchComponent from "~/components/groceries/searchbar/SearchComponent";
 
-export default function ItemsListComponent({
-  items,
-  setItems,
-}) {
+export default function ItemsListComponent({ items, setItems }) {
   const [sort, setSort] = useState("alphabetical");
   const [modalVisible, setModalVisible] = useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
+  const [search, setSearch] = useState(items);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
     }, 500);
-    getItems().then(r => {
-      setItems([...r])
+    getItems().then((r) => {
+      setItems([...r]);
     });
   }, []);
 
@@ -56,7 +55,7 @@ export default function ItemsListComponent({
         </View>
       </View>
       <View
-        className="flex-row items-center justify-between py-3 px-3"
+        className="py-3 px-3"
         style={{
           backgroundColor: themeColors.onSecondary,
           elevation: 5,
@@ -64,75 +63,90 @@ export default function ItemsListComponent({
           borderTopRightRadius: 24,
         }}
       >
-        <View className="flex-row items-center space-x-2">
-          <View>
-            <View className="flex-row items-center">
-              <Text
-                className="text-xl font-semibold"
-                style={{ color: themeColors.onBackground }}
-              >
-                General
-              </Text>
-              <IconButton
-                className="p-0 m-0"
-                icon="coffee-maker"
-                size={24}
-                color={themeColors.onBackground}
-              />
-            </View>
-            <View className="flex-row items-center">
-              <IconButton
-                className="p-0 m-0 -ml-1"
-                icon="sort"
-                size={15}
-                color={themeColors.secondary}
-              />
-              <Text
-                className="text-sm"
-                style={{ color: themeColors.secondary }}
-              >
-                {sort === "alphabetical" ? "A-Z order" : "Usage order"}
-              </Text>
+        <View className="flex-row items-center justify-between">
+          <View className="flex-row items-center space-x-2">
+            <View>
+              <View className="flex-row items-center">
+                <Text
+                  className="text-xl font-semibold"
+                  style={{ color: themeColors.onBackground }}
+                >
+                  General
+                </Text>
+                <IconButton
+                  className="p-0 m-0"
+                  icon="coffee-maker"
+                  size={24}
+                  color={themeColors.onBackground}
+                />
+              </View>
+              <View className="flex-row items-center">
+                <IconButton
+                  className="p-0 m-0 -ml-1"
+                  icon="sort"
+                  size={15}
+                  color={themeColors.secondary}
+                />
+                <Text
+                  className="text-sm"
+                  style={{ color: themeColors.secondary }}
+                >
+                  {sort === "alphabetical" ? "A-Z order" : "Usage order"}
+                </Text>
+              </View>
             </View>
           </View>
+          <View className="flex-row items-center space-x-0">
+            <TouchableOpacity
+              className="rounded-full"
+              style={{
+                backgroundColor:
+                  sort === "alphabetical"
+                    ? themeColors.primary
+                    : themeColors.onPrimaryContainer,
+                borderTopRightRadius: 0,
+                borderBottomRightRadius: 0,
+              }}
+              onPress={() => {
+                setSort("alphabetical");
+              }}
+            >
+              <IconButton
+                size={sort === "alphabetical" ? 25 : 24}
+                icon={"sort-alphabetical-variant"}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="rounded-full"
+              style={{
+                backgroundColor:
+                  sort === "use"
+                    ? themeColors.primary
+                    : themeColors.onPrimaryContainer,
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
+                borderLeftWidth: 1,
+              }}
+              onPress={() => {
+                setSort("use");
+              }}
+            >
+              <IconButton
+                size={sort === "use" ? 25 : 24}
+                icon={"sort-variant"}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
-        <View className="flex-row items-center space-x-0">
-          <TouchableOpacity
-            className="rounded-full"
-            style={{
-              backgroundColor:
-                sort === "alphabetical"
-                  ? themeColors.primary
-                  : themeColors.onPrimaryContainer,
-              borderTopRightRadius: 0,
-              borderBottomRightRadius: 0,
-            }}
-            onPress={() => {
-              setSort("alphabetical");
-            }}
-          >
-            <IconButton
-              size={sort === "alphabetical" ? 25 : 24}
-              icon={"sort-alphabetical-variant"}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            className="rounded-full"
-            style={{
-              backgroundColor:
-                sort === "use"
-                  ? themeColors.primary
-                  : themeColors.onPrimaryContainer,
-              borderTopLeftRadius: 0,
-              borderBottomLeftRadius: 0,
-              borderLeftWidth: 1,
-            }}
-            onPress={() => {
-              setSort("use");
-            }}
-          >
-            <IconButton size={sort === "use" ? 25 : 24} icon={"sort-variant"} />
-          </TouchableOpacity>
+        <View className="mt-2">
+          <SearchComponent
+            items={[]}
+            ingredients={items}
+            setSearch={setSearch}
+            onlyIngredients={false}
+            setOnlySelected={() => {}}
+            placeholderText={"Search Ingredients"}
+          />
         </View>
       </View>
       <View className="mx-3 flex-1">
@@ -153,10 +167,10 @@ export default function ItemsListComponent({
           showsVerticalScrollIndicator={false}
           data={
             sort === "alphabetical"
-              ? items.sort((a, b) =>
+              ? search.sort((a, b) =>
                   a.title > b.title ? 1 : b.title > a.title ? -1 : 0
                 )
-              : items.sort((a, b) => b.stock - a.stock)
+              : search.sort((a, b) => b.stock - a.stock)
           }
           renderItem={({ index, item }) => {
             return (
@@ -166,11 +180,7 @@ export default function ItemsListComponent({
                   (index === items.length - 1 ? "mb-2 " : "")
                 }
               >
-                <ItemComponent
-                  item={item}
-                  items={items}
-                  setItems={setItems}
-                />
+                <ItemComponent item={item} items={items} setItems={setItems} />
               </View>
             );
           }}
