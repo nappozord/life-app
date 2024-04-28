@@ -53,7 +53,7 @@ export default function ItmeComponent({
           date={date}
         />
       ) : null}
-      <View className="flex-row items-center -ml-2">
+      <View className="flex-row items-center -ml-2" style={{ maxWidth: "70%" }}>
         <IconButton
           className="-my-2 -mx-1 p-0"
           icon={item.bought ? "close-circle-outline" : "check-circle-outline"}
@@ -67,6 +67,8 @@ export default function ItmeComponent({
         />
         <Text
           className="text-lg font-semibold z-10 px-1"
+          numberOfLines={2}
+          ellipsizeMode="tail"
           style={{
             color: item.bought
               ? themeColors.onSuccess
