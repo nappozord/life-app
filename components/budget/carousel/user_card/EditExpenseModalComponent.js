@@ -32,8 +32,10 @@ export default function EditExpenseModalComponent({
   const currentDate = new Date().toDateString();
 
   const description = useRef(item ? item.title.toString() : null);
-  const amount = useRef(item ? parseFloat(item.total).toFixed(2) : null); 
-  const expenseDate = useRef(item ? item.date ? item.date : currentDate : currentDate);
+  const amount = useRef(item ? parseFloat(item.total).toFixed(2) : null);
+  const expenseDate = useRef(
+    item ? (item.date ? item.date : currentDate) : currentDate
+  );
 
   const addExpense = () => {
     amount.current === null || amount.current === ""
@@ -212,46 +214,46 @@ export default function EditExpenseModalComponent({
                     Amount
                   </Text>
                   <View className="flex-row items-center">
-                  <View className="flex-1">
-                    <View
-                    className="flex-row items-center rounded-2xl p-1 overflow-visible"
-                    style={{
-                      backgroundColor: themeColors.onSecondaryContainer,
-                      height: 50,
-                    }}
-                  >
-                    <TextInput
-                      keyboardType="numeric"
-                      placeholder="E.g. €12.34"
-                      className="px-2 flex-1 text-base"
-                      style={{ color: themeColors.background }}
-                      selectionColor={themeColors.background}
-                      defaultValue={amount.current}
-                      onChangeText={(text) => {
-                        amount.current = text.split(" ").join("");
-                      }}
-                    />
-                    <Pressable
-                      className="rounded-2xl pr-0.5"
-                      style={{ backgroundColor: themeColors.background }}
-                    >
-                      <IconButton
-                        size={20}
-                        icon="currency-eur"
-                        color={themeColors.onBackground}
-                      />
-                    </Pressable>
+                    <View className="flex-1">
+                      <View
+                        className="flex-row items-center rounded-2xl p-1 overflow-visible"
+                        style={{
+                          backgroundColor: themeColors.onSecondaryContainer,
+                          height: 50,
+                        }}
+                      >
+                        <TextInput
+                          keyboardType="numeric"
+                          placeholder="E.g. €12.34"
+                          className="px-2 flex-1 text-base"
+                          style={{ color: themeColors.background }}
+                          selectionColor={themeColors.background}
+                          defaultValue={amount.current}
+                          onChangeText={(text) => {
+                            amount.current = text.split(" ").join("");
+                          }}
+                        />
+                        <Pressable
+                          className="rounded-2xl pr-0.5"
+                          style={{ backgroundColor: themeColors.background }}
+                        >
+                          <IconButton
+                            size={20}
+                            icon="currency-eur"
+                            color={themeColors.onBackground}
+                          />
+                        </Pressable>
+                      </View>
+                    </View>
+                    <View className="flex-1 items-center">
+                      <Text
+                        className="text-lg"
+                        style={{ color: themeColors.onSecondaryContainer }}
+                      >
+                        {expenseDate.current}
+                      </Text>
+                    </View>
                   </View>
-                  </View>
-                  <View className="flex-1 items-center">
-                  <Text className="text-lg"
-                    style={{ color: themeColors.onSecondaryContainer }}
-                  >
-                    {expenseDate.current}
-                  </Text>
-                  </View>
-                  </View>
-                  
                 </View>
                 {item ? (
                   <View className="flex-row justify-between items-center">

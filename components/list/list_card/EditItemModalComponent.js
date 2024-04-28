@@ -3,98 +3,95 @@ import {
   Text,
   TextInput,
   Image,
-  Platform,
   Modal,
   Pressable,
+  Platform,
   TouchableOpacity,
   KeyboardAvoidingView,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { themeColors } from "~/theme";
-import { Checkbox, IconButton } from "react-native-paper";
+import { IconButton } from "react-native-paper";
 import Animated, { SlideInDown } from "react-native-reanimated";
-import {
-  addDefaultCategory,
-  deleteDefaultCategory,
-  updateDeafultCategory,
-} from "~/api/apiManager";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { isPreviousMonth } from "~/utils/manageDate";
 
-export default function EditCategoryModalComponent({
+export default function EditItemModalComponent({
   item,
-  categories,
-  setCategories,
   modalVisible,
   setModalVisible,
-  isList,
+  itemIcon,
+  itemCategory,
+  categories,
+  setCategories,
+  user,
+  setUser,
+  date,
 }) {
-  const description = useRef(item ? item.title.toString() : null);
-  const [icon, setIcon] = useState(
-    item ? item.icon.toString() : "card-outline"
-  );
   const inputRef = useRef(null);
 
-  const [checked, setChecked] = useState(false);
+  const currentDate = new Date().toDateString();
 
-  const addCategory = () => {
-    if (!isList) {
-      AsyncStorage.getItem("defaultCategories").then((r) => {
-        const result = JSON.parse(r);
-        const index = result[result.length - 1].id + 1;
+  const description = useRef(item ? item.title.toString() : null);
+  const amount = useRef(item ? parseFloat(item.total).toFixed(2) : null);
+  const url = useRef(item ? item.url.toString() : null);
 
-        const category = {
-          id: index > categories.length ? index : categories.length,
-          title: description.current,
-          real: 0,
-          forecast: 0,
-          icon: icon,
-          expenses: [],
-          income: false,
-          index: categories.length,
-        };
+  const addExpense = () => {
+    amount.current === null || amount.current === ""
+      ? (amount.current = 0)
+      : null;
+    description.current === null || description.current === ""
+      ? (description.current = "New Item")
+      : null;
+    url.current === null || url.current === "" ? (url.current = "") : null;
 
-        categories.push(category);
+    const category = categories.find((obj) => itemCategory === obj.title);
 
-        if (checked) {
-          addDefaultCategory(category);
-        }
+    category.real += parseFloat(amount.current);
 
-        setCategories([...categories]);
-      });
-    } else {
-      const category = {
-        id: categories.length,
-        title: description.current,
-        real: 0,
-        realBought: 0,
-        icon: icon,
-        expenses: [],
-        income: false,
-        index: categories.length,
-      };
+    let occurrences = 1;
 
-      categories.push(category);
+    category.expenses.forEach((obj) => {
+      if (obj.title === description.current) occurrences += 1;
+    });
 
-      setCategories([...categories]);
-    }
-  };
-
-  const deleteCategory = () => {
-    categories = categories.filter((obj) => obj.id !== item.id);
-
-    if (checked) {
-      deleteDefaultCategory(item);
-    }
+    category.expenses.push({
+      title: description.current,
+      total: parseFloat(amount.current),
+      id: category.expenses[category.expenses.length - 1]
+        ? category.expenses[category.expenses.length - 1].id + 1
+        : 0,
+      occurrence: occurrences,
+      url: url.current,
+      bought: false,
+    });
 
     setCategories([...categories]);
   };
 
-  const updateCategory = () => {
-    categories.find((obj) => obj.id === item.id).title = description.current;
-    categories.find((obj) => obj.id === item.id).icon = icon;
+  const updateExpense = () => {
+    deleteExpense();
+    addExpense();
+  };
 
-    if(!isList)
-      updateDeafultCategory(categories.find((obj) => obj.id === item.id));
+  const deleteExpense = () => {
+    const category = categories.find((obj) => itemCategory === obj.title);
+
+    category.real -= parseFloat(item.total);
+
+    if (item.bought) category.realBought -= parseFloat(item.total);
+
+    const filteredArray = category.expenses.filter((obj) => obj.id !== item.id);
+
+    let occurrences = 1;
+
+    filteredArray.forEach((obj) => {
+      if (obj.title === item.title) {
+        obj.occurrence = occurrences;
+        occurrences += 1;
+      }
+    });
+
+    category.expenses = filteredArray;
 
     setCategories([...categories]);
   };
@@ -157,7 +154,7 @@ export default function EditCategoryModalComponent({
                       className="-mr-2"
                     />
                     <IconButton
-                      icon="animation-outline"
+                      icon={itemIcon}
                       color={themeColors.onBackground}
                       size={30}
                       className="-ml-2"
@@ -167,7 +164,7 @@ export default function EditCategoryModalComponent({
                     className="text-xl font-semibold -mt-4 mb-4"
                     style={{ color: themeColors.onBackground }}
                   >
-                    {isList ? "List" : "Category"}
+                    {itemCategory}
                   </Text>
                 </View>
                 <View />
@@ -187,7 +184,7 @@ export default function EditCategoryModalComponent({
                       backgroundColor: themeColors.onSecondaryContainer,
                       color: themeColors.background,
                     }}
-                    placeholder={"E.g. New Awesome " + (isList ? "List" : "Category") + "!"}
+                    placeholder="E.g. Guitar!"
                     selectionColor={themeColors.background}
                     defaultValue={description.current}
                     onChangeText={(text) => {
@@ -198,62 +195,79 @@ export default function EditCategoryModalComponent({
                     className="font-semibold text-lg ml-2"
                     style={{ color: themeColors.onSecondaryContainer }}
                   >
-                    Icon
+                    Price
                   </Text>
-                  <View
-                    className="flex-row items-center rounded-2xl p-1 mb-4"
-                    style={{
-                      backgroundColor: themeColors.onSecondaryContainer,
-                      height: 50,
-                    }}
-                  >
-                    <TextInput
-                      placeholder="E.g. basket"
-                      className="px-2 flex-1 text-base"
-                      style={{ color: themeColors.background }}
-                      selectionColor={themeColors.background}
-                      defaultValue={icon}
-                      onChangeText={(text) => {
-                        setIcon(text.split(" ").join("-").toLowerCase());
-                      }}
-                    />
-                    <Pressable
-                      className="rounded-2xl"
-                      style={{ backgroundColor: themeColors.background }}
-                    >
-                      <IconButton
-                        size={20}
-                        icon={icon}
-                        color={themeColors.onBackground}
-                      />
-                    </Pressable>
-                  </View>
-                  {isList ? null : (
-                    <View className="flex-row justify-between items-center">
-                      <View className="flex-1">
-                        <Text
-                          className="text-lg font-semibold ml-2 "
-                          style={{ color: themeColors.onSecondaryContainer }}
-                        >
-                          Set as monthly default
-                        </Text>
-                      </View>
+                  <View className="flex-row items-center mb-2">
+                    <View className="flex-1">
                       <View
-                        className="mr-2 rounded-3xl"
+                        className="flex-row items-center rounded-2xl p-1 overflow-visible"
                         style={{
                           backgroundColor: themeColors.onSecondaryContainer,
+                          height: 50,
                         }}
                       >
-                        <Checkbox
-                          color={themeColors.secondaryContainer}
-                          status={checked ? "checked" : "unchecked"}
-                          onPress={() => {
-                            setChecked(!checked);
+                        <TextInput
+                          keyboardType="numeric"
+                          placeholder="E.g. €12.34"
+                          className="px-2 flex-1 text-base"
+                          style={{ color: themeColors.background }}
+                          selectionColor={themeColors.background}
+                          defaultValue={amount.current}
+                          onChangeText={(text) => {
+                            amount.current = text.split(" ").join("");
                           }}
                         />
+                        <Pressable
+                          className="rounded-2xl pr-0.5"
+                          style={{ backgroundColor: themeColors.background }}
+                        >
+                          <IconButton
+                            size={20}
+                            icon="currency-eur"
+                            color={themeColors.onBackground}
+                          />
+                        </Pressable>
                       </View>
                     </View>
-                  )}
+                  </View>
+                  <Text
+                    className="font-semibold text-lg ml-2"
+                    style={{ color: themeColors.onSecondaryContainer }}
+                  >
+                    URL
+                  </Text>
+                  <View className="flex-row items-center">
+                    <View className="flex-1">
+                      <View
+                        className="flex-row items-center rounded-2xl p-1 overflow-visible"
+                        style={{
+                          backgroundColor: themeColors.onSecondaryContainer,
+                          height: 50,
+                        }}
+                      >
+                        <TextInput
+                          placeholder="https:\\..."
+                          className="px-2 flex-1 text-base"
+                          style={{ color: themeColors.background }}
+                          selectionColor={themeColors.background}
+                          defaultValue={url.current}
+                          onChangeText={(text) => {
+                            url.current = text.split(" ").join("");
+                          }}
+                        />
+                        <Pressable
+                          className="rounded-2xl pr-0.5"
+                          style={{ backgroundColor: themeColors.background }}
+                        >
+                          <IconButton
+                            size={20}
+                            icon="link"
+                            color={themeColors.onBackground}
+                          />
+                        </Pressable>
+                      </View>
+                    </View>
+                  </View>
                 </View>
                 {item ? (
                   <View className="flex-row justify-between items-center">
@@ -267,7 +281,7 @@ export default function EditCategoryModalComponent({
                           borderTopLeftRadius: 24,
                         }}
                         onPress={() => {
-                          updateCategory();
+                          updateExpense();
                           setModalVisible(false);
                         }}
                       >
@@ -289,7 +303,7 @@ export default function EditCategoryModalComponent({
                           borderTopRightRadius: 24,
                         }}
                         onPress={() => {
-                          deleteCategory();
+                          deleteExpense();
                           setModalVisible(false);
                         }}
                       >
@@ -311,7 +325,7 @@ export default function EditCategoryModalComponent({
                       borderTopLeftRadius: 24,
                     }}
                     onPress={() => {
-                      addCategory();
+                      addExpense();
                       setModalVisible(false);
                     }}
                   >
@@ -319,7 +333,7 @@ export default function EditCategoryModalComponent({
                       className="font-bold text-center text-xl"
                       style={{ color: themeColors.onPrimary }}
                     >
-                      Add Category
+                      Add Item
                     </Text>
                   </TouchableOpacity>
                 )}

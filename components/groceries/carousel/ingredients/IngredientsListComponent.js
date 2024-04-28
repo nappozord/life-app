@@ -1,5 +1,5 @@
 import { View, TouchableOpacity, Text, RefreshControl } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
 import IngredientComponent from "./IngredientComponent";
@@ -30,6 +30,10 @@ export default function IngredientsListComponent({
       setIngredients([...r]);
     });
   }, []);
+
+  useEffect(() => {
+    setSearch([...search]);
+  }, [ingredients])
 
   return (
     <View className="flex-1">

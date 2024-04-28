@@ -1,5 +1,5 @@
 import { View, TouchableOpacity, Text, RefreshControl } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
 import RecipeComponent from "./RecipeComponent";
@@ -30,6 +30,10 @@ export default function RecipesListComponent({
       setRecipes([...r]);
     });
   }, []);
+
+  useEffect(() => {
+    setSearch([...search]);
+  }, [recipes, ingredients])
 
   return (
     <View className="flex-1">
@@ -154,7 +158,7 @@ export default function RecipesListComponent({
             setSearch={setSearch}
             onlyIngredients={false}
             setOnlySelected={() => {}}
-            placeholderText={'Search Ingredients'}
+            placeholderText={'Search Recipes'}
           />
         </View>
       </View>

@@ -11,6 +11,8 @@ import Animated, {
 import { themeColors } from "~/theme";
 import UserCategoryComponent from "./user_card/UserCategoryComponent";
 import OverallCategoryComponent from "./overall_card/OverallCategoryComponent";
+import OverallListCategoryComponent from "~/components/list/overall_card/OverallListCategoryComponent";
+import ListCategoryComponent from "~/components/list/list_card/ListCategoryComponent";
 
 const HEIGHT = 400;
 const OUTER_HEIGHT = 150;
@@ -28,6 +30,7 @@ export default function CategoryCardComponent({
   setFinishedAnimation,
   user,
   setUser,
+  isList,
 }) {
   const dimensions = useWindowDimensions();
   const [loading, setLoading] = useState(false);
@@ -117,14 +120,32 @@ export default function CategoryCardComponent({
           ]}
         >
           {item.id === 0 ? (
-            <OverallCategoryComponent
+            !isList ? <OverallCategoryComponent
               date={date}
               item={item}
               categories={categories}
               setCategories={setCategories}
+            /> : <OverallListCategoryComponent
+            date={date}
+              item={item}
+              categories={categories}
+              setCategories={setCategories}
+              user={user}
             />
           ) : (
-            <UserCategoryComponent
+            !isList ? <UserCategoryComponent
+              item={item}
+              date={date}
+              loading={loading}
+              categories={categories}
+              setCategories={setCategories}
+              cardPressed={cardPressed}
+              setCardPressed={setCardPressed}
+              finishedAnimation={finishedAnimation}
+              setFinishedAnimation={setFinishedAnimation}
+              user={user}
+              setUser={setUser}
+            /> : <ListCategoryComponent
               item={item}
               date={date}
               loading={loading}

@@ -8,6 +8,7 @@ export default function ChipCategoryListComponent({
   activeCategory,
   setActiveCategory,
   categoryListRef,
+  isList,
 }) {
   return (
     <View>
@@ -36,6 +37,7 @@ export default function ChipCategoryListComponent({
               categoryListRef={categoryListRef}
               categories={categories}
               setCategories={setCategories}
+              isList={isList}
             />
           );
         }}

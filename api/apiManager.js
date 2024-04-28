@@ -5,6 +5,7 @@ import {
   ingredientsDefault,
   recipesDefault,
   itemsDefault,
+  listsDefault,
 } from "~/data";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getMonthNumber, sortDatesDescending } from "~/utils/manageDate";
@@ -234,6 +235,15 @@ export async function getMeals() {
 
 export async function updateMeals(meals) {
   await AsyncStorage.setItem("meals", JSON.stringify(meals));
+}
+
+export async function getListCategories() {
+  let jsonValue = await AsyncStorage.getItem("lists");
+  return jsonValue ? JSON.parse(jsonValue) : listsDefault;
+}
+
+export async function updateListCategories(lists) {
+  await AsyncStorage.setItem("lists", JSON.stringify(lists));
 }
 
 export async function getIngredients() {

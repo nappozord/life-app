@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
 import EditExpenseModalComponent from "./EditExpenseModalComponent";
+import EditItemModalComponent from "~/components/list/list_card/EditItemModalComponent";
 
 export default function EditExpenseButtonComponent({
   categories,
@@ -12,12 +13,26 @@ export default function EditExpenseButtonComponent({
   user,
   setUser,
   date,
+  isList,
 }) {
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
     <>
-      {modalVisible ? (
+      {modalVisible ? 
+      isList ? (
+        <EditItemModalComponent
+          categories={categories}
+          setCategories={setCategories}
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          itemIcon={icon}
+          itemCategory={category}
+          user={user}
+          setUser={setUser}
+          date={date}
+        />
+      ) : (
         <EditExpenseModalComponent
           categories={categories}
           setCategories={setCategories}

@@ -15,6 +15,7 @@ export default function BudgetCarouselComponent({
   setCardPressed,
   user,
   setUser,
+  isList,
 }) {
   const dimensions = useWindowDimensions();
   const carouselRef = useRef(null);
@@ -44,6 +45,7 @@ export default function BudgetCarouselComponent({
             setCardPressed={setCardPressed}
             finishedAnimation={finishedAnimation}
             setFinishedAnimation={setFinishedAnimation}
+            isList={isList}
           />
         )}
         firstItem={activeCategory}

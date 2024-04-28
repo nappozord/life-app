@@ -7,6 +7,7 @@ import SettingsScreen from "~/screens/SettingsScreen";
 import CustomBottomTabComponent from "./CustomBottomTabComponent";
 import { getUser, updateUser } from "~/api/apiManager";
 import YearStatsScreen from "~/screens/YearStatsScreen";
+import ListScreen from "~/screens/ListScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -23,6 +24,8 @@ export default function BottomTabNavigatorComponent() {
 
   const Grocery = () => <GroceryScreen user={user} setUser={setUser} />;
 
+  const List = () => <ListScreen user={user} setUser={setUser} />;
+
   const Settings = () => <SettingsScreen user={user} setUser={setUser} />;
 
   return (
@@ -37,6 +40,7 @@ export default function BottomTabNavigatorComponent() {
       <Tab.Screen name="chart-donut" children={Budget} />
       <Tab.Screen name="chart-line" children={Year} />
       <Tab.Screen name="cart" children={Grocery} />
+      <Tab.Screen name="format-list-bulleted" children={List} />
       <Tab.Screen name="cog-outline" children={Settings} />
     </Tab.Navigator>
   );
