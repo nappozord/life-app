@@ -37,9 +37,11 @@ export default function ExpenseComponent({
           date={date}
         />
       ) : null}
-      <View>
+      <View style={{ maxWidth: "80%" }}>
         <Text
           className="text-lg font-semibold z-10"
+          numberOfLines={2}
+          ellipsizeMode="tail"
           style={{ color: themeColors.onSecondaryContainer }}
         >
           {item.title +
