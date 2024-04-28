@@ -11,6 +11,7 @@ export default function ChipCategoryComponent({
   categoryListRef,
   categories,
   setCategories,
+  isList,
 }) {
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -21,6 +22,7 @@ export default function ChipCategoryComponent({
         setCategories={setCategories}
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
+        isList={isList}
       />
       <TouchableOpacity
         onPress={() => {

@@ -68,7 +68,7 @@ export default function HeaderComponent({ user, setUser }) {
           className="font-semibold text-xl pl-1"
           style={{ color: themeColors.onBackground }}
         >
-          {"Hi " + user.username}
+          {"Hi, " + user.username}
         </Text>
       </View>
       <View>

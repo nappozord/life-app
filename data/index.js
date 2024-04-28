@@ -487,6 +487,15 @@ export const defaultUser = {
   preferences: [],
 };
 
+export const listsDefault = [
+  {
+    id: 0,
+    title: "Overall",
+    icon: "chart-bar",
+    index: 0,
+  },
+]
+
 export const mealsDefault = [
   {
     date: "2024-01-08",

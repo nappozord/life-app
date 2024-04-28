@@ -73,7 +73,7 @@ export default function WelcomeScreen() {
         }).then(() => navigation.push("Home"));
         AsyncStorage.getAllKeys().then((r) => console.log(r));
       }
-  
+
       if (reset) {
         /*updateUser(defaultUser);
         restoreBackup("January, 2024");
@@ -82,31 +82,31 @@ export default function WelcomeScreen() {
         AsyncStorage.removeItem("logs");
         AsyncStorage.removeItem("defaultCategories");
         AsyncStorage.removeItem("categories");*/
-        AsyncStorage.removeItem("groceries");
+        AsyncStorage.removeItem("lists");
       }
 
       getCurrentUser()
-      .then((r) => {
-        if (r && r.userId) {
-          getUser().then((u) => {
-            if (u && u.userId === r.userId) {
-              navigation.push("Home");
-            } else {
-              setLoading(false);
-              user.current = {
-                userId: r.userId,
-              };
-              setFinalSetup(true);
-            }
-          });
-        } else {
+        .then((r) => {
+          if (r && r.userId) {
+            getUser().then((u) => {
+              if (u && u.userId === r.userId) {
+                navigation.push("Home");
+              } else {
+                setLoading(false);
+                user.current = {
+                  userId: r.userId,
+                };
+                setFinalSetup(true);
+              }
+            });
+          } else {
+            setLoading(false);
+          }
+        })
+        .catch(() => {
           setLoading(false);
-        }
-      })
-      .catch(() => {
-        setLoading(false);
-      });
-    }, 700)
+        });
+    }, 700);
   }, []);
 
   return (
