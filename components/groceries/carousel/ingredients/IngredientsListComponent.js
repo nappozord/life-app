@@ -7,6 +7,7 @@ import IngredientModal from "./IngredientModal";
 import { FlashList } from "@shopify/flash-list";
 import { getIngredients } from "~/api/apiManager";
 import SearchComponent from "~/components/groceries/searchbar/SearchComponent";
+import { sortByName, sortByStock } from "~/utils/sortItems";
 
 export default function IngredientsListComponent({
   meals,
@@ -33,7 +34,7 @@ export default function IngredientsListComponent({
 
   useEffect(() => {
     setSearch([...search]);
-  }, [ingredients])
+  }, [ingredients]);
 
   return (
     <View className="flex-1">
@@ -158,7 +159,7 @@ export default function IngredientsListComponent({
             setSearch={setSearch}
             onlyIngredients={false}
             setOnlySelected={() => {}}
-            placeholderText={'Search Ingredients'}
+            placeholderText={"Search Ingredients"}
           />
         </View>
       </View>
@@ -179,11 +180,7 @@ export default function IngredientsListComponent({
           removeClippedSubviews={false}
           showsVerticalScrollIndicator={false}
           data={
-            sort === "alphabetical"
-              ? search.sort((a, b) =>
-                  a.title > b.title ? 1 : b.title > a.title ? -1 : 0
-                )
-              : search.sort((a, b) => b.stock - a.stock)
+            sort === "alphabetical" ? sortByName(search) : sortByStock(search)
           }
           renderItem={({ index, item }) => {
             return (

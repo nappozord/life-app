@@ -6,6 +6,7 @@ import { IconButton } from "react-native-paper";
 import { calculateRecipeCosts } from "~/utils/calculateCostsAndCalories";
 import { FlashList } from "@shopify/flash-list";
 import IngredientSelectionComponent from "~/components/groceries/searchbar/IngredientSelectionComponent";
+import { sortByName } from "~/utils/sortItems";
 
 export default function RecipesIngredientsListComponent({
   style,
@@ -18,7 +19,7 @@ export default function RecipesIngredientsListComponent({
     selected.ingredients
   );
 
-  items.sort((a, b) => (a.title > b.title ? 1 : b.title > a.title ? -1 : 0));
+  items = sortByName(items);
 
   useEffect(() => {
     selected.ingredients = selectedIngredients;
