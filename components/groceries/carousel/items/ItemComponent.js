@@ -11,56 +11,64 @@ import Animated, {
 import ItemModal from "./ItemModal";
 import ItemPercentageComponent from "./ItemPercentageComponent";
 import { updateLogs } from "~/api/apiManager";
+import { sortByDate } from "~/utils/sortItems";
 
-export default function ItemComponent({
-  items,
-  setItems,
-  item,
-}) {
+export default function ItemComponent({ items, setItems, item }) {
   const [modalVisible, setModalVisible] = useState(false);
 
   const addItem = () => {
     item.stock += 1;
     item.buyingDate.push(new Date().toISOString());
     setItems([...items]);
-    updateLogs([{
-      text: 'ADD ' + item.title,
-      description: 'Manual add of item ' + item.title + ' for a total of ' + item.stock + '.',
-      icon: 'plus',
-      auto: false,
-    }])
+    updateLogs([
+      {
+        text: "ADD " + item.title,
+        description:
+          "Manual add of item " +
+          item.title +
+          " for a total of " +
+          item.stock +
+          ".",
+        icon: "plus",
+        auto: false,
+      },
+    ]);
   };
 
   const subItem = () => {
     item.stock >= 1 ? (item.stock -= 1) : (item.stock = 0);
 
     // Parse ISO string dates into Date objects
-    item.buyingDate = item.buyingDate.sort(function(a,b){
-      return Date.parse(a) > Date.parse(b);
-    });
+    item.buyingDate = sortByDate(item.buyingDate);
 
     // Remove the oldest date from the array
     item.buyingDate.splice(0, 1);
 
     setItems([...items]);
-    updateLogs([{
-      text: 'REMOVE ' + item.title,
-      description: 'Manual remove of item ' + item.title + ' for a total of ' + item.stock + '.',
-      icon: 'minus',
-      auto: false,
-    }])
+    updateLogs([
+      {
+        text: "REMOVE " + item.title,
+        description:
+          "Manual remove of item " +
+          item.title +
+          " for a total of " +
+          item.stock +
+          ".",
+        icon: "minus",
+        auto: false,
+      },
+    ]);
   };
 
   useEffect(() => {
-    item.buyingDate.forEach(i => {
+    item.buyingDate.forEach((i) => {
       let currentDate = new Date();
 
-      currentDate.setDate(currentDate.getDate() - (item.duration * 7));
+      currentDate.setDate(currentDate.getDate() - item.duration * 7);
 
-      if(Date.parse(currentDate) > Date.parse(i))
-        subItem();
-    })
-  }, [])
+      if (Date.parse(currentDate) > Date.parse(i)) subItem();
+    });
+  }, []);
 
   return (
     <>
@@ -149,9 +157,7 @@ export default function ItemComponent({
             </View>
           </View>
           <View className="mt-1 -mb-1 -mx-1">
-            <ItemPercentageComponent
-              item={item}
-            />
+            <ItemPercentageComponent item={item} />
           </View>
         </TouchableOpacity>
       </Animated.View>

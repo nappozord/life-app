@@ -2,7 +2,7 @@ import { View } from "react-native";
 import React from "react";
 import IngredientSelectionComponent from "./IngredientSelectionComponent";
 import { FlashList } from "@shopify/flash-list";
-import { Divider } from "react-native-paper";
+import { sortByName } from "~/utils/sortItems";
 
 export default function IngredientSelectionListComponent({
   search,
@@ -23,12 +23,7 @@ export default function IngredientSelectionListComponent({
         keyExtractor={(item) => item.title + item.id}
         showsVerticalScrollIndicator={false}
         fadingEdgeLength={100}
-        data={[
-          ...search.sort((a, b) =>
-            a.title > b.title ? 1 : b.title > a.title ? -1 : 0
-          ),
-          { id: -1 },
-        ]}
+        data={[...sortByName(search), { id: -1 }]}
         renderItem={({ item }) => {
           return (
             <IngredientSelectionComponent

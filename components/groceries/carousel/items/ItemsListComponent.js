@@ -7,6 +7,7 @@ import ItemModal from "./ItemModal";
 import { FlashList } from "@shopify/flash-list";
 import { getItems } from "~/api/apiManager";
 import SearchComponent from "~/components/groceries/searchbar/SearchComponent";
+import { sortByName, sortByStock } from "~/utils/sortItems";
 
 export default function ItemsListComponent({ items, setItems }) {
   const [sort, setSort] = useState("alphabetical");
@@ -26,7 +27,7 @@ export default function ItemsListComponent({ items, setItems }) {
 
   useEffect(() => {
     setSearch([...search]);
-  }, [items])
+  }, [items]);
 
   return (
     <View className="flex-1">
@@ -170,11 +171,7 @@ export default function ItemsListComponent({ items, setItems }) {
           removeClippedSubviews={false}
           showsVerticalScrollIndicator={false}
           data={
-            sort === "alphabetical"
-              ? search.sort((a, b) =>
-                  a.title > b.title ? 1 : b.title > a.title ? -1 : 0
-                )
-              : search.sort((a, b) => b.stock - a.stock)
+            sort === "alphabetical" ? sortByName(search) : sortByStock(search)
           }
           renderItem={({ index, item }) => {
             return (

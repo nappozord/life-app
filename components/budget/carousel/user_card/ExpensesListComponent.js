@@ -4,7 +4,8 @@ import { IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
 import ExpenseComponent from "./ExpenseComponent";
 import EditExpenseButtonComponent from "./EditExpenseButtonComponent";
-import ItemComponent from "../../../list/list_card/ItemComponent";
+import ItemComponent from "~/components/list/list_card/ItemComponent";
+import { sortByBought, sortByName } from "~/utils/sortItems";
 
 export default function UserCategoryExpensesComponent({
   item,
@@ -18,21 +19,8 @@ export default function UserCategoryExpensesComponent({
   const icon = item.icon;
   const category = item.title;
 
-  if(isList){
-    item.expenses.sort((a, b) => {
-      // If a is bought and b is not, a should come after b
-      if (a.bought && !b.bought) {
-        return 1;
-      }
-      // If b is bought and a is not, a should come before b
-      else if (!a.bought && b.bought) {
-        return -1;
-      }
-      // If both have the same value of 'bought', no change in order
-      else {
-        return 0;
-      }
-    });
+  if (isList) {
+    item.expenses = sortByBought(item.expenses);
   }
 
   return (
@@ -58,13 +46,13 @@ export default function UserCategoryExpensesComponent({
           isList={isList}
         />
       </View>
-      <View style={{ height: 336 }}>
+      <View style={{ height: isList ? 324 : 336 }}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           className="mt-3"
           fadingEdgeLength={30}
         >
-          {item.expenses.map((item) => {
+          {sortByBought(sortByName(item.expenses)).map((item) => {
             return !isList ? (
               <ExpenseComponent
                 key={item.id + "_" + item.title}

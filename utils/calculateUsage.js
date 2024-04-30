@@ -1,4 +1,5 @@
 import { getNextDays } from "./manageDate";
+import { sortByDate } from "./sortItems";
 
 function countIngredients(ingredient, meal) {
   let count = 0;
@@ -85,24 +86,19 @@ export function calculateIngredientUsage(
   return percentage;
 }
 
-export function calculateItemUsage(
-  item,
-  date,
-){
-  const durationDays = item.duration * 7; 
+export function calculateItemUsage(item, date) {
+  const durationDays = item.duration * 7;
 
-  let totalDays = (item.buyingDate.length) * durationDays;
+  let totalDays = item.buyingDate.length * durationDays;
 
-  item.buyingDate = item.buyingDate.sort(function(a,b){
-    return Date.parse(a) > Date.parse(b);
-  });
+  item.buyingDate = sortByDate(item.buyingDate);
 
-  const differenceDays = (Date.parse(date) - Date.parse(item.buyingDate[0])) / (1000 * 60 * 60 * 24);
+  const differenceDays =
+    (Date.parse(date) - Date.parse(item.buyingDate[0])) / (1000 * 60 * 60 * 24);
 
   totalDays -= differenceDays;
 
-  if(totalDays < 0 || !totalDays)
-    totalDays = 0;
+  if (totalDays < 0 || !totalDays) totalDays = 0;
 
-  return (totalDays/durationDays);
+  return totalDays / durationDays;
 }
