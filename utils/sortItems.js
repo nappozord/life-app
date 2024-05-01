@@ -15,9 +15,7 @@ export function sortByUsage(item) {
 }
 
 export function sortByDate(item) {
-  return item.sort(function (a, b) {
-    return Date.parse(a) > Date.parse(b);
-  });
+  return item.sort((a, b) => Date.parse(a) > Date.parse(b));
 }
 
 export function sortByBought(item) {
@@ -31,6 +29,23 @@ export function sortByBought(item) {
       return -1;
     }
     // If both have the same value of 'bought', no change in order
+    else {
+      return 0;
+    }
+  });
+}
+
+export function sortByChecked(item) {
+  return item.sort((a, b) => {
+    // If a.checked is true and b.checked is false, a should come before b
+    if (a.checked && !b.checked) {
+      return 1;
+    }
+    // If a.checked is false and b.checked is true, a should come after b
+    else if (!a.checked && b.checked) {
+      return -1;
+    }
+    // Otherwise, maintain the original order
     else {
       return 0;
     }
