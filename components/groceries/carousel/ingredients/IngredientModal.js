@@ -20,6 +20,10 @@ export default function IngredientModal({
   setModalVisible,
   ingredients,
   setIngredients,
+  search,
+  setSearch,
+  recipes,
+  setRecipes,
 }) {
   const inputRef = useRef(null);
 
@@ -65,6 +69,8 @@ export default function IngredientModal({
         },
       ],
     });
+
+    if (search.length === ingredients.length - 1) setSearch([...ingredients]);
 
     setIngredients([...ingredients]);
   }
@@ -116,7 +122,18 @@ export default function IngredientModal({
 
   function deleteIngredient() {
     ingredients = ingredients.filter((obj) => obj.id !== item.id);
+    search = search.filter((obj) => obj.id !== item.id);
+    setSearch([...search]);
     setIngredients([...ingredients]);
+    deleteIngredientFromRecipes();
+  }
+
+  function deleteIngredientFromRecipes() {
+    recipes.forEach(r => {
+      r.ingredients = r.ingredients.filter(obj => obj.id !== item.id);
+    })
+
+    setRecipes([...recipes]);
   }
 
   return (

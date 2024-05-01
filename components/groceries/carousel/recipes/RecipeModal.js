@@ -21,6 +21,8 @@ export default function RecipeModal({
   setIngredients,
   recipes,
   setRecipes,
+  search,
+  setSearch,
 }) {
   const inputRef = useRef(null);
 
@@ -48,6 +50,8 @@ export default function RecipeModal({
       ingredients: [...selected],
     });
 
+    if (search.length === recipes.length - 1) setSearch([...recipes]);
+
     setRecipes([...recipes]);
   }
 
@@ -68,6 +72,8 @@ export default function RecipeModal({
 
   function deleteRecipe() {
     recipes = recipes.filter((obj) => obj.id !== item.id);
+    search = search.filter((obj) => obj.id !== item.id);
+    setSearch([...search]);
     setRecipes([...recipes]);
   }
 

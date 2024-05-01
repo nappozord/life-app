@@ -171,7 +171,7 @@ export default function GroceriesList({
       if (ingredientList.find((i) => i.ingredient.id === obj.id)) {
         ingredientList.find((i) => i.ingredient.id === obj.id).needed =
           obj.quantity;
-      } else {
+      } else if (total.find((i) => i.id === obj.id)) {
         ingredientList.push({
           ingredient: total.find((i) => i.id === obj.id),
           needed: obj.quantity,
@@ -229,10 +229,10 @@ export default function GroceriesList({
           i.needed / (i.ingredient.quantity ? i.ingredient.quantity : 1) -
             i.ingredient.stock
         ) - parseFloat(i.reallyNeeded / i.ingredient.quantity)
-      ).toFixed(2);
+      ).toFixed(4);
       const stock = (futureIngredients.find(
         (obj) => obj.id === i.ingredient.id
-      ).stock += parseFloat(total)).toFixed(2);
+      ).stock += parseFloat(total)).toFixed(4);
       futureIngredients.find((obj) => obj.id === i.ingredient.id).stock =
         parseFloat(stock);
     });

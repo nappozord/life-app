@@ -44,6 +44,8 @@ export default function IngredientsListComponent({
           setModalVisible={setModalVisible}
           ingredients={ingredients}
           setIngredients={setIngredients}
+          search={search}
+          setSearch={setSearch}
           recipes={recipes}
           setRecipes={setRecipes}
         />
@@ -198,6 +200,8 @@ export default function IngredientsListComponent({
                   setIngredients={setIngredients}
                   recipes={recipes}
                   setRecipes={setRecipes}
+                  search={search}
+                  setSearch={setSearch}
                 />
               </View>
             );

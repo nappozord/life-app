@@ -7,13 +7,17 @@ export function calculateRecipeCostsAndCalories(recipe, ingredients) {
   recipe.ingredients.forEach((item) => {
     const ingredient = ingredients.filter((obj) => obj.id === item.id);
 
-    total.costs +=
-      (parseFloat(ingredient[0].cost) / parseFloat(ingredient[0].quantity)) *
-      (parseFloat(item.quantity) > 0 ? parseFloat(item.quantity) : 0.01);
+    if (ingredient[0]) {
+      total.costs +=
+        (parseFloat(ingredient[0].cost) / parseFloat(ingredient[0].quantity)) *
+        (parseFloat(item.quantity) > 0 ? parseFloat(item.quantity) : 0.01);
 
-    total.calories +=
-      (parseFloat(ingredient[0].calories) ? parseFloat(ingredient[0].calories) : 0) *
-      (parseFloat(item.quantity) > 0 ? parseFloat(item.quantity) : 0.01);
+      total.calories +=
+        (parseFloat(ingredient[0].calories)
+          ? parseFloat(ingredient[0].calories)
+          : 0) *
+        (parseFloat(item.quantity) > 0 ? parseFloat(item.quantity) : 0.01);
+    }
   });
   return {
     costs: total.costs.toFixed(2),
@@ -37,17 +41,13 @@ export function calculateMealCostsAndCalories(
       const ing = ingredients.find((i) => i.id === ingredient.id);
       if (ing) {
         total.costs +=
-          (parseFloat(ingredients.find((i) => i.id === ingredient.id).cost) /
-            parseFloat(
-              ingredients.find((i) => i.id === ingredient.id).quantity
-            )) *
+          (parseFloat(ing.cost) / parseFloat(ing.quantity)) *
           (parseFloat(ingredient.quantity) > 0
             ? parseFloat(ingredient.quantity)
             : 0.01);
 
         total.calories +=
-          (parseFloat(ingredients.find((i) => i.id === ingredient.id).calories) ? 
-          parseFloat(ingredients.find((i) => i.id === ingredient.id).calories) : 0) *
+          (parseFloat(ing.calories) ? parseFloat(ing.calories) : 0) *
           (parseFloat(ingredient.quantity) > 0
             ? parseFloat(ingredient.quantity)
             : 0.01);
@@ -55,10 +55,9 @@ export function calculateMealCostsAndCalories(
     });
 
     meal[type].recipes.forEach((recipe) => {
-      const tot = calculateRecipeCostsAndCalories(
-        recipes.find((r) => r.id === recipe),
-        ingredients
-      );
+      let tot = { costs: 0, calories: 0 };
+      const r = recipes.find((r) => r.id === recipe);
+      if (r) tot = calculateRecipeCostsAndCalories(r, ingredients);
 
       total.costs += parseFloat(tot.costs);
 
@@ -85,5 +84,6 @@ export function calculateRecipeCalories(recipe, ingredients) {
 }
 
 export function calculateMealCalories(meal, type, ingredients, recipes) {
-  return calculateMealCostsAndCalories(meal, type, ingredients, recipes).calories;
+  return calculateMealCostsAndCalories(meal, type, ingredients, recipes)
+    .calories;
 }

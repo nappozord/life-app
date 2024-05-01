@@ -37,6 +37,8 @@ export default function ItemsListComponent({ items, setItems }) {
           setModalVisible={setModalVisible}
           items={items}
           setItems={setItems}
+          search={search}
+          setSearch={setSearch}
         />
       ) : null}
       <View className="absolute w-full -mt-10">
@@ -181,7 +183,13 @@ export default function ItemsListComponent({ items, setItems }) {
                   (index === items.length - 1 ? "mb-2 " : "")
                 }
               >
-                <ItemComponent item={item} items={items} setItems={setItems} />
+                <ItemComponent
+                  item={item}
+                  items={items}
+                  setItems={setItems}
+                  search={search}
+                  setSearch={setSearch}
+                />
               </View>
             );
           }}

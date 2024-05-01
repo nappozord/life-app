@@ -20,19 +20,20 @@ export default function IngredientSelectionListComponent({
     >
       <FlashList
         estimatedItemSize={50}
-        keyExtractor={(item) => item.title + item.id}
+        keyExtractor={(item) => item ? item.title + item.id : "_"}
         showsVerticalScrollIndicator={false}
         fadingEdgeLength={100}
         data={[...sortByName(search), { id: -1 }]}
         renderItem={({ item }) => {
           return (
+            item ? 
             <IngredientSelectionComponent
               item={item}
               selected={selected}
               setSelected={setSelected}
               ingredients={ingredients}
               items={items}
-            />
+            /> : null
           );
         }}
       />
