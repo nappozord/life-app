@@ -10,6 +10,8 @@ import Animated, {
   SlideInUp,
   SlideOutUp,
 } from "react-native-reanimated";
+import { getPreviousWeeks } from "~/utils/manageDate";
+import { sortByChecked } from "~/utils/sortItems";
 
 export default function GroceriesList({
   meals,
@@ -21,6 +23,7 @@ export default function GroceriesList({
   setGroceryList,
   items,
   setItems,
+  totalGroceryList,
 }) {
   const [refreshing, setRefreshing] = useState(false);
   const [ingredientList, setIngredientList] = useState([]);
@@ -46,7 +49,12 @@ export default function GroceriesList({
       if (item.ingredient) {
         count +=
           parseFloat(item.ingredient.cost) *
-          Math.ceil(item.needed / (item.ingredient.quantity ? parseFloat(item.ingredient.quantity) : 1));
+          Math.ceil(
+            item.needed /
+              (item.ingredient.quantity
+                ? parseFloat(item.ingredient.quantity)
+                : 1)
+          );
       }
     });
 
@@ -54,9 +62,37 @@ export default function GroceriesList({
   }, [ingredientList]);
 
   const calculateNewList = () => {
+    const weeks = getPreviousWeeks(week[0].dateString);
+
+    let futureIngredients = JSON.parse(JSON.stringify(ingredients));
+
+    let weeklyList = [];
+
+    for (let w = 0; w < weeks.length; w++) {
+      if (w != weeks.length - 1)
+        futureIngredients = setPreviousWeekIngredients(
+          [...calculateWeeklyList(weeks[w], futureIngredients)],
+          futureIngredients,
+          w
+        );
+      else {
+        weeklyList = calculateWeeklyList(weeks[w], futureIngredients);
+      }
+    }
+
+    weeklyList = weeklyList.filter(
+      (obj) =>
+        obj.needed > obj.ingredient.stock * obj.ingredient.quantity ||
+        obj.checked
+    );
+
+    return sortByChecked(weeklyList);
+  };
+
+  const calculateWeeklyList = (thisWeek, futureIngredients) => {
     let ingredientList = [];
 
-    const filteredWeek = week.filter((day) => day.date > new Date());
+    const filteredWeek = thisWeek.filter((day) => day.date > new Date());
 
     filteredWeek.forEach((day) => {
       const meal = meals.find((obj) => obj.date === day.dateString);
@@ -64,39 +100,37 @@ export default function GroceriesList({
         getIngredientFromMeal(
           meal,
           "breakfast",
-          ingredients,
+          futureIngredients,
           recipes,
           ingredientList
         );
         getIngredientFromMeal(
           meal,
           "snack",
-          ingredients,
+          futureIngredients,
           recipes,
           ingredientList
         );
         getIngredientFromMeal(
           meal,
           "lunch",
-          ingredients,
+          futureIngredients,
           recipes,
           ingredientList
         );
         getIngredientFromMeal(
           meal,
           "dinner",
-          ingredients,
+          futureIngredients,
           recipes,
           ingredientList
         );
       }
     });
 
-    ingredientList = ingredientList.filter(
-      (obj) => obj.needed > obj.ingredient.stock * obj.ingredient.quantity
-    );
+    ingredientList.forEach((i) => (i.reallyNeeded = i.needed));
 
-    ingredientList = mergeLists(ingredientList);
+    ingredientList = mergeLists(ingredientList, thisWeek);
 
     return ingredientList.sort((a, b) =>
       a.ingredient.title > b.ingredient.title
@@ -107,17 +141,33 @@ export default function GroceriesList({
     );
   };
 
-  function mergeLists(ingredientList) {
-    ingredientList = setAdded(ingredientList);
-    ingredientList = setExcluded(ingredientList);
-    ingredientList = setChecked(ingredientList);
+  function mergeLists(ingredientList, thisWeek) {
+    let gList = {
+      date: thisWeek[0].dateString,
+      checked: [],
+      added: [],
+      excluded: [],
+    };
+
+    if (
+      totalGroceryList &&
+      totalGroceryList.find((obj) => obj.date === thisWeek[0].dateString)
+    ) {
+      gList = totalGroceryList.find(
+        (obj) => obj.date === thisWeek[0].dateString
+      );
+    }
+
+    ingredientList = setAdded(ingredientList, gList);
+    ingredientList = setExcluded(ingredientList, gList);
+    ingredientList = setChecked(ingredientList, gList);
 
     return ingredientList;
   }
 
-  function setAdded(ingredientList) {
+  function setAdded(ingredientList, gList) {
     total = [...ingredients, ...items];
-    groceryList.added.forEach((obj) => {
+    gList.added.forEach((obj) => {
       if (ingredientList.find((i) => i.ingredient.id === obj.id)) {
         ingredientList.find((i) => i.ingredient.id === obj.id).needed =
           obj.quantity;
@@ -133,8 +183,8 @@ export default function GroceriesList({
     return ingredientList;
   }
 
-  function setExcluded(ingredientList) {
-    groceryList.excluded.forEach((obj) => {
+  function setExcluded(ingredientList, gList) {
+    gList.excluded.forEach((obj) => {
       if (ingredientList.find((i) => i.ingredient.id === obj.id)) {
         ingredientList.find((i) => i.ingredient.id === obj.id).needed -=
           obj.quantity;
@@ -151,22 +201,43 @@ export default function GroceriesList({
     return ingredientList;
   }
 
-  function setChecked(ingredientList) {
+  function setChecked(ingredientList, gList) {
     total = [...ingredients, ...items];
-    groceryList.checked.forEach((obj) => {
+    gList.checked.forEach((obj) => {
       if (ingredientList.find((i) => i.ingredient.id === obj.id)) {
         ingredientList.find((i) => i.ingredient.id === obj.id).onCart =
           obj.quantity;
+        ingredientList.find((i) => i.ingredient.id === obj.id).checked = true;
       } else {
+        const ing = total.find((i) => i.id === obj.id);
         ingredientList.push({
-          ingredient: total.find((i) => i.id === obj.id),
+          ingredient: ing,
           needed: obj.quantity,
           onCart: obj.quantity,
+          checked: true,
         });
       }
     });
 
     return ingredientList;
+  }
+
+  function setPreviousWeekIngredients(list, futureIngredients, w) {
+    list.forEach((i) => {
+      const total = (
+        Math.ceil(
+          i.needed / (i.ingredient.quantity ? i.ingredient.quantity : 1) -
+            i.ingredient.stock
+        ) - parseFloat(i.reallyNeeded / i.ingredient.quantity)
+      ).toFixed(2);
+      const stock = (futureIngredients.find(
+        (obj) => obj.id === i.ingredient.id
+      ).stock += parseFloat(total)).toFixed(2);
+      futureIngredients.find((obj) => obj.id === i.ingredient.id).stock =
+        parseFloat(stock);
+    });
+
+    return futureIngredients;
   }
 
   return (

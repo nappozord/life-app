@@ -2,10 +2,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
-import Animated, {
-  FadeIn,
-  SlideInUp,
-} from "react-native-reanimated";
+import Animated, { FadeIn, SlideInUp } from "react-native-reanimated";
 import AddIngredientModal from "./AddIngredientModal";
 
 export default function GroceryComponent({
@@ -20,6 +17,14 @@ export default function GroceryComponent({
   setItems,
 }) {
   const [modalVisible, setModalVisible] = useState(false);
+
+  const toBuy = item.checked
+    ? item.onCart
+    : Math.ceil(
+        item.needed /
+          (item.ingredient.quantity ? item.ingredient.quantity : 1) -
+          item.ingredient.stock
+      );
 
   function deleteFromGroceryList() {
     ingredientList = ingredientList.filter(
@@ -79,12 +84,14 @@ export default function GroceryComponent({
 
       setGroceryList({ ...groceryList });
 
-      if(item.ingredient.quantity){
+      if (item.ingredient.quantity) {
         ingredients.find((i) => i.id === item.ingredient.id).stock += i;
         setIngredients([...ingredients]);
       } else {
         items.find((i) => i.id === item.ingredient.id).stock += i;
-        items.find((i) => i.id === item.ingredient.id).buyingDate.push(new Date().toISOString())
+        items
+          .find((i) => i.id === item.ingredient.id)
+          .buyingDate.push(new Date().toISOString());
         setItems([...items]);
       }
     }
@@ -155,7 +162,7 @@ export default function GroceryComponent({
       <View className="flex-row justify-between align-center rounded-full z-10">
         <View />
         <View className="flex-row -mt-7 space-x-2 items-center">
-        <View
+          <View
             className="px-2 py-0 rounded-full onverflow-hidden"
             style={{
               backgroundColor: "transparent",
@@ -180,7 +187,7 @@ export default function GroceryComponent({
                 style={{ color: "transparent" }}
                 numberOfLines={1}
               >
-                {"/" + Math.ceil(item.needed / (item.ingredient.quantity ? item.ingredient.quantity : 1))}
+                {"/" + toBuy}
               </Text>
             </View>
           </View>
@@ -226,7 +233,7 @@ export default function GroceryComponent({
                 style={{ color: themeColors.onBackground }}
                 numberOfLines={1}
               >
-                {"/" + Math.ceil(item.needed / (item.ingredient.quantity ? item.ingredient.quantity : 1))}
+                {"/" + toBuy}
               </Text>
             </View>
           </View>
@@ -237,7 +244,7 @@ export default function GroceryComponent({
         className="-mt-4 rounded-2xl p-2"
         style={{
           backgroundColor:
-            item.onCart === Math.ceil(item.needed / (item.ingredient.quantity ? item.ingredient.quantity : 1))
+            item.onCart >= toBuy
               ? themeColors.success
               : themeColors.secondaryContainer,
         }}

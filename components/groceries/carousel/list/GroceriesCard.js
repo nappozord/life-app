@@ -20,6 +20,7 @@ export default function GroceriesCard({
 }) {
   const [week, setWeek] = useState(getCurrentWeek(new Date()));
   const [groceryList, setGroceryList] = useState(null);
+  const [totalGroceryList, setTotalGroceryList] = useState([]);
 
   function offsetDate(offset) {
     const currentDate = new Date(week[0].date);
@@ -41,15 +42,19 @@ export default function GroceriesCard({
   useEffect(() => {
     setGroceryList(null);
     getGroceryList().then((r) => {
+      if (r) {
+        setTotalGroceryList([...r]);
+      }
       if (r && r.find((obj) => obj.date === week[0].dateString)) {
         setGroceryList(r.find((obj) => obj.date === week[0].dateString));
       } else {
-        setGroceryList({
+        const item = {
           date: week[0].dateString,
           checked: [],
           added: [],
           excluded: [],
-        });
+        };
+        setGroceryList(item);
       }
     });
   }, [week]);
@@ -184,6 +189,7 @@ export default function GroceriesCard({
           week={week}
           items={items}
           setItems={setItems}
+          totalGroceryList={totalGroceryList}
         />
       ) : null}
     </View>

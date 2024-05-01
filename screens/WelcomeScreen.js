@@ -62,7 +62,7 @@ export default function WelcomeScreen() {
   const reset = false;
 
   useEffect(() => {
-    checkIngredientQuantity();
+    checkIngredientQuantity(new Date());
 
     setTimeout(() => {
       if (dev) {

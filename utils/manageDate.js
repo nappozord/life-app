@@ -1,3 +1,5 @@
+import { sortByDate } from "./sortItems";
+
 export const months = [
   { index: 1, fullName: "January", shortName: "JAN" },
   { index: 2, fullName: "February", shortName: "FEB" },
@@ -141,4 +143,39 @@ export function sortDatesDescending(items) {
     }
     return b.month - a.month;
   });
+}
+
+export function getPreviousWeeks(date) {
+  const weeks = [];
+  const currentDate = new Date();
+
+  if (currentDate < new Date(date)) {
+    const mondays = getMondaysBetween(new Date(date));
+    for (const m in mondays) {
+      weeks.push(getCurrentWeek(new Date(mondays[m])));
+    }
+  } else {
+    weeks.push(getCurrentWeek(new Date(date)));
+  }
+
+  return weeks;
+}
+
+function getMondaysBetween(startDate) {
+  const currentDate = new Date();
+  const mondays = [];
+
+  // Set the start date to the next Monday if it's not already a Monday
+  startDate.setDate(startDate.getDate() + ((1 - startDate.getDay() + 7) % 7));
+
+  // Loop through each week between the start date and the current date
+  while (startDate > currentDate) {
+    const copyDate = new Date(startDate);
+    mondays.push(copyDate);
+    startDate.setDate(startDate.getDate() - 7); // Move to the previous Monday
+  }
+
+  mondays.push(currentDate);
+
+  return mondays.reverse();
 }
