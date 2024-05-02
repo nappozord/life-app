@@ -14,6 +14,7 @@ import { updateLogs } from "~/api/apiManager";
 
 export default function IngredientComponent({
   meals,
+  setMeals,
   ingredients,
   setIngredients,
   recipes,
@@ -59,6 +60,8 @@ export default function IngredientComponent({
           setRecipes={setRecipes}
           search={search}
           setSearch={setSearch}
+          meals={meals}
+          setMeals={setMeals}
         />
       ) : null}
       <Animated.View exiting={SlideOutLeft} entering={SlideInRight}>

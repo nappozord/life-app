@@ -24,6 +24,8 @@ export default function IngredientModal({
   setSearch,
   recipes,
   setRecipes,
+  meals,
+  setMeals,
 }) {
   const inputRef = useRef(null);
 
@@ -126,14 +128,26 @@ export default function IngredientModal({
     setSearch([...search]);
     setIngredients([...ingredients]);
     deleteIngredientFromRecipes();
+    deleteIngredientFromMeals();
   }
 
   function deleteIngredientFromRecipes() {
-    recipes.forEach(r => {
-      r.ingredients = r.ingredients.filter(obj => obj.id !== item.id);
-    })
+    recipes.forEach((r) => {
+      r.ingredients = r.ingredients.filter((obj) => obj.id !== item.id);
+    });
 
     setRecipes([...recipes]);
+  }
+
+  function deleteIngredientFromMeals() {
+    meals.forEach((m) => {
+      m["breakfast"].ingredients.filter((obj) => obj.id !== item.id);
+      m["lunch"].ingredients.filter((obj) => obj.id !== item.id);
+      m["dinner"].ingredients.filter((obj) => obj.id !== item.id);
+      m["snack"].ingredients.filter((obj) => obj.id !== item.id);
+    });
+
+    setMeals([...meals]);
   }
 
   return (

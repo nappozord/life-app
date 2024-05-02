@@ -48,6 +48,8 @@ export default function RecipesListComponent({
           setRecipes={setRecipes}
           search={search}
           setSearch={setSearch}
+          meals={meals}
+          setMeals={setMeals}
         />
       ) : null}
       <View className="absolute w-full -mt-10 z-10">

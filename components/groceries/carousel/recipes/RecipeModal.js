@@ -23,6 +23,8 @@ export default function RecipeModal({
   setRecipes,
   search,
   setSearch,
+  meals,
+  setMeals,
 }) {
   const inputRef = useRef(null);
 
@@ -75,6 +77,18 @@ export default function RecipeModal({
     search = search.filter((obj) => obj.id !== item.id);
     setSearch([...search]);
     setRecipes([...recipes]);
+    deleteRecipeFromMeals();
+  }
+
+  function deleteRecipeFromMeals() {
+    meals.forEach((m) => {
+      m["breakfast"].recipes.filter((obj) => obj !== item.id);
+      m["lunch"].recipes.filter((obj) => obj !== item.id);
+      m["dinner"].recipes.filter((obj) => obj !== item.id);
+      m["snack"].recipes.filter((obj) => obj !== item.id);
+    });
+
+    setMeals([...meals]);
   }
 
   return (
