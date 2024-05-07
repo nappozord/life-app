@@ -35,8 +35,23 @@ export default function GroceriesCard({
       (groceryList.added.length > 0 ||
         groceryList.checked.length > 0 ||
         groceryList.excluded.length > 0)
-    )
+    ) {
       updateGroceryList(groceryList);
+      if (
+        totalGroceryList &&
+        totalGroceryList.find((obj) => obj.date === week[0].dateString)
+      ) {
+        totalGroceryList.find((obj) => obj.date === week[0].dateString).added =
+          groceryList.added;
+        totalGroceryList.find(
+          (obj) => obj.date === week[0].dateString
+        ).excluded = groceryList.excluded;
+        totalGroceryList.find(
+          (obj) => obj.date === week[0].dateString
+        ).checked = groceryList.checked;
+        setTotalGroceryList([...totalGroceryList]);
+      }
+    }
   }, [groceryList]);
 
   useEffect(() => {

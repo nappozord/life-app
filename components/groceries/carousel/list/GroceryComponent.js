@@ -86,9 +86,13 @@ export default function GroceryComponent({
 
       if (item.ingredient.quantity) {
         ingredients.find((i) => i.id === item.ingredient.id).stock += i;
+        if (ingredients.find((i) => i.id === item.ingredient.id).stock < 0)
+          ingredients.find((i) => i.id === item.ingredient.id).stock = 0;
         setIngredients([...ingredients]);
       } else {
         items.find((i) => i.id === item.ingredient.id).stock += i;
+        if (items.find((i) => i.id === item.ingredient.id).stock < 0)
+          items.find((i) => i.id === item.ingredient.id).stock = 0;
         items
           .find((i) => i.id === item.ingredient.id)
           .buyingDate.push(new Date().toISOString());
