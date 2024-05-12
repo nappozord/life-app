@@ -66,6 +66,8 @@ export default function GroceriesList({
 
     let futureIngredients = JSON.parse(JSON.stringify(ingredients));
 
+    futureIngredients.push([...JSON.parse(JSON.stringify(items))]);
+
     let weeklyList = [];
 
     for (let w = 0; w < weeks.length; w++) {
@@ -80,11 +82,17 @@ export default function GroceriesList({
       }
     }
 
-    weeklyList = weeklyList.filter(
-      (obj) =>
+    //console.log(groceryList.added);
+
+    weeklyList = weeklyList.filter((obj) => {
+      if (groceryList.added.find((a) => a.id === obj.ingredient.id))
+        //console.log(obj.ingredient.title);
+        return true;
+      return (
         obj.needed > obj.ingredient.stock * obj.ingredient.quantity ||
         obj.checked
-    );
+      );
+    });
 
     return sortByChecked(weeklyList);
   };
@@ -128,9 +136,9 @@ export default function GroceriesList({
       }
     });
 
-    ingredientList.forEach((i) => (i.reallyNeeded = i.needed));
-
     ingredientList = mergeLists(ingredientList, thisWeek);
+
+    ingredientList.forEach((i) => (i.reallyNeeded = i.needed));
 
     return ingredientList.sort((a, b) =>
       a.ingredient.title > b.ingredient.title
@@ -230,9 +238,12 @@ export default function GroceriesList({
             i.ingredient.stock
         ) - parseFloat(i.reallyNeeded / i.ingredient.quantity)
       ).toFixed(4);
-      const stock = (futureIngredients.find(
-        (obj) => obj.id === i.ingredient.id
-      ).stock += parseFloat(total)).toFixed(4);
+
+      const stock = (
+        futureIngredients.find((obj) => obj.id === i.ingredient.id).stock +
+        parseFloat(total)
+      ).toFixed(4);
+
       futureIngredients.find((obj) => obj.id === i.ingredient.id).stock =
         parseFloat(stock);
     });
