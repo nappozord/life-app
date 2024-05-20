@@ -19,6 +19,8 @@ export default function RecipeComponent({
   recipes,
   setRecipes,
   item,
+  search,
+  setSearch,
 }) {
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -33,6 +35,10 @@ export default function RecipeComponent({
           setIngredients={setIngredients}
           recipes={recipes}
           setRecipes={setRecipes}
+          search={search}
+          setSearch={setSearch}
+          meals={meals}
+          setMeals={setMeals}
         />
       ) : null}
       <Animated.View entering={SlideInRight} exiting={SlideOutLeft}>

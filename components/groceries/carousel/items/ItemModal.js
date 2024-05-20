@@ -20,6 +20,8 @@ export default function ItemModal({
   setModalVisible,
   items,
   setItems,
+  search,
+  setSearch,
 }) {
   const inputRef = useRef(null);
 
@@ -58,6 +60,8 @@ export default function ItemModal({
       ],
     });
 
+    if (search.length === items.length - 1) setSearch([...items]);
+
     setItems([...items]);
   }
 
@@ -76,12 +80,10 @@ export default function ItemModal({
     it.duration = parseFloat(duration.current);
     it.lastUpdate = new Date().toLocaleDateString("it-IT");
     if (it.history) {
-      if (
-        it.history.find((i) => i.id === it.history.length - 1)
-      )
+      if (it.history.find((i) => i.id === it.history.length - 1))
         if (
-          it.history.find((i) => i.id === it.history.length - 1)
-            .cost !== parseFloat(cost.current)
+          it.history.find((i) => i.id === it.history.length - 1).cost !==
+          parseFloat(cost.current)
         )
           it.history.push({
             id: it.history.length,
@@ -103,6 +105,8 @@ export default function ItemModal({
 
   function deleteItem() {
     items = items.filter((obj) => obj.id !== item.id);
+    search = search.filter((obj) => obj.id !== item.id);
+    setSearch([...search]);
     setItems([...items]);
   }
 

@@ -64,52 +64,62 @@ function calculateIngredientCheck(
     );
     const weeklyIngredients = [];
     filteredMeals.forEach((meal) => {
-      getIngredientFromMeal(
-        meal,
-        "breakfast",
-        ingredients,
-        recipes,
-        weeklyIngredients
-      );
-      getIngredientFromMeal(
-        meal,
-        "snack",
-        ingredients,
-        recipes,
-        weeklyIngredients
-      );
-      getIngredientFromMeal(
-        meal,
-        "lunch",
-        ingredients,
-        recipes,
-        weeklyIngredients
-      );
-      getIngredientFromMeal(
-        meal,
-        "dinner",
-        ingredients,
-        recipes,
-        weeklyIngredients
-      );
+      if (meal) {
+        getIngredientFromMeal(
+          meal,
+          "breakfast",
+          ingredients,
+          recipes,
+          weeklyIngredients
+        );
+        getIngredientFromMeal(
+          meal,
+          "snack",
+          ingredients,
+          recipes,
+          weeklyIngredients
+        );
+        getIngredientFromMeal(
+          meal,
+          "lunch",
+          ingredients,
+          recipes,
+          weeklyIngredients
+        );
+        getIngredientFromMeal(
+          meal,
+          "dinner",
+          ingredients,
+          recipes,
+          weeklyIngredients
+        );
 
-      meal.breakfast.recipes.forEach((r) => {
-        recipes.find((obj) => obj.id === r).used += 1;
-      });
+        meal.breakfast.recipes.forEach((r) => {
+          recipes.find((obj) => obj.id === r)
+            ? (recipes.find((obj) => obj.id === r).used += 1)
+            : null;
+        });
 
-      meal.snack.recipes.forEach((r) => {
-        recipes.find((obj) => obj.id === r).used += 1;
-      });
+        meal.snack.recipes.forEach((r) => {
+          recipes.find((obj) => obj.id === r)
+            ? (recipes.find((obj) => obj.id === r).used += 1)
+            : null;
+        });
 
-      meal.dinner.recipes.forEach((r) => {
-        recipes.find((obj) => obj.id === r).used += 1;
-      });
+        meal.dinner.recipes.forEach((r) => {
+          recipes.find((obj) => obj.id === r)
+            ? (recipes.find((obj) => obj.id === r).used += 1)
+            : null;
+        });
 
-      meal.lunch.recipes.forEach((r) => {
-        recipes.find((obj) => obj.id === r).used += 1;
-      });
+        meal.lunch.recipes.forEach((r) => {
+          recipes.find((obj) => obj.id === r)
+            ? (recipes.find((obj) => obj.id === r).used += 1)
+            : null;
+        });
 
-      meals.find((o) => o.date === meal.date).checked = true;
+        meals.find((o) => o.date === meal.date).checked = true;
+      }
     });
 
     logs = [];

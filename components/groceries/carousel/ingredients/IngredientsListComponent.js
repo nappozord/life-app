@@ -44,8 +44,12 @@ export default function IngredientsListComponent({
           setModalVisible={setModalVisible}
           ingredients={ingredients}
           setIngredients={setIngredients}
+          search={search}
+          setSearch={setSearch}
           recipes={recipes}
           setRecipes={setRecipes}
+          meals={meals}
+          setMeals={setMeals}
         />
       ) : null}
       <View className="absolute w-full -mt-10">
@@ -198,6 +202,8 @@ export default function IngredientsListComponent({
                   setIngredients={setIngredients}
                   recipes={recipes}
                   setRecipes={setRecipes}
+                  search={search}
+                  setSearch={setSearch}
                 />
               </View>
             );

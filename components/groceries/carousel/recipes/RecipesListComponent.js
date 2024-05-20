@@ -46,6 +46,10 @@ export default function RecipesListComponent({
           setIngredients={setIngredients}
           recipes={recipes}
           setRecipes={setRecipes}
+          search={search}
+          setSearch={setSearch}
+          meals={meals}
+          setMeals={setMeals}
         />
       ) : null}
       <View className="absolute w-full -mt-10 z-10">
@@ -198,6 +202,8 @@ export default function RecipesListComponent({
                   setIngredients={setIngredients}
                   recipes={recipes}
                   setRecipes={setRecipes}
+                  search={search}
+                  setSearch={setSearch}
                 />
               </View>
             );

@@ -13,7 +13,7 @@ export default function MealListComponent({
   type,
   recipe,
 }) {
-  const meal = meals.find((obj) => obj.date === day)
+  const meal = meals.find((obj) => obj.date === day);
 
   function deleteItem(item) {
     if (recipe) {
@@ -33,7 +33,7 @@ export default function MealListComponent({
     <View className="flex-1 overflow-hidden">
       <FlatList
         keyExtractor={(item) =>
-          day + "_" + type + "_" + (item.id ? item.id : item)
+          day + "_" + type + "_" + item ? (item.id ? item.id : item) : "_"
         }
         showsVerticalScrollIndicator={false}
         data={meal[type][recipe ? "recipes" : "ingredients"]}
@@ -42,7 +42,7 @@ export default function MealListComponent({
             ? recipes.find((obj) => obj.id === id.item)
             : ingredients.find((obj) => obj.id === id.item.id);
 
-          return (
+          return item ? (
             <Animated.View
               className="flex-1"
               entering={SlideInRight}
@@ -90,7 +90,7 @@ export default function MealListComponent({
                 </View>
               </TouchableOpacity>
             </Animated.View>
-          );
+          ) : null;
         }}
       />
     </View>

@@ -13,7 +13,13 @@ import ItemPercentageComponent from "./ItemPercentageComponent";
 import { updateLogs } from "~/api/apiManager";
 import { sortByDate } from "~/utils/sortItems";
 
-export default function ItemComponent({ items, setItems, item }) {
+export default function ItemComponent({
+  items,
+  setItems,
+  item,
+  search,
+  setSearch,
+}) {
   const [modalVisible, setModalVisible] = useState(false);
 
   const addItem = () => {
@@ -79,6 +85,8 @@ export default function ItemComponent({ items, setItems, item }) {
           setModalVisible={setModalVisible}
           items={items}
           setItems={setItems}
+          search={search}
+          setSearch={setSearch}
         />
       ) : null}
       <Animated.View exiting={SlideOutLeft} entering={SlideInRight}>

@@ -38,6 +38,8 @@ export default function AddIngredientModal({
   }
 
   const updateItemList = () => {
+    groceryList.added = [];
+
     selected.forEach((s) => {
       groceryList.added.push(s);
 
