@@ -18,6 +18,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useNavigation } from "@react-navigation/native";
 import { themeColors } from "~/theme";
+import { useSelector, useDispatch } from "react-redux";
 
 import LoginComponent from "~/components/login/LoginComponent";
 import SignUpComponent from "~/components/login/SignUpComponent";
@@ -25,12 +26,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { getCurrentUser } from "@aws-amplify/auth";
 import ConfirmCodeComponent from "~/components/login/ConfirmCodeComponent";
-import { getUser } from "~/api/apiManager";
+import { updateUser } from "~/app/userSlice";
 import FinalSetupComponent from "~/components/login/FinalSetupComponent";
 import PassRecoveryComponent from "~/components/login/PassRecoveryComponent";
 
 import { restoreBackup } from "~/api/apiManager";
-import { updateUser } from "~/api/apiManager";
 import { ActivityIndicator } from "react-native-paper";
 import { checkIngredientQuantity } from "~/utils/manageIngredients";
 
@@ -44,7 +44,6 @@ export default function WelcomeScreen() {
   const [confirmCode, setConfirmCode] = useState(false);
   const [finalSetup, setFinalSetup] = useState(false);
   const [passRecovery, setPassRecovery] = useState(false);
-  const user = useRef({});
   const email = useRef("");
   const pageTitle = login
     ? "Login"
@@ -61,16 +60,22 @@ export default function WelcomeScreen() {
   const dev = false;
   const reset = false;
 
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user);
+
   useEffect(() => {
     checkIngredientQuantity(new Date());
 
     setTimeout(() => {
       if (dev) {
-        updateUser({
-          userId: "abc",
-          username: "Nappozord",
-          balance: 2000,
-        }).then(() => navigation.push("Home"));
+        dispatch(
+          updateUser({
+            userId: "abc",
+            username: "Nappozord",
+            balance: 2000,
+          })
+        );
+        navigation.push("Home");
         AsyncStorage.getAllKeys().then((r) => console.log(r));
       }
 
@@ -88,17 +93,13 @@ export default function WelcomeScreen() {
       getCurrentUser()
         .then((r) => {
           if (r && r.userId) {
-            getUser().then((u) => {
-              if (u && u.userId === r.userId) {
-                navigation.push("Home");
-              } else {
-                setLoading(false);
-                user.current = {
-                  userId: r.userId,
-                };
-                setFinalSetup(true);
-              }
-            });
+            if (user && user.userId === r.userId) {
+              navigation.push("Home");
+            } else {
+              setLoading(false);
+              dispatch(updateUser({ ...user, userId: r.userId }));
+              setFinalSetup(true);
+            }
           } else {
             setLoading(false);
           }
@@ -115,7 +116,6 @@ export default function WelcomeScreen() {
       <Image
         className="absolute h-full w-full"
         source={require("~/assets/splash.png")}
-        //blurRadius={80}
       />
       {loading ? (
         <View className="flex-1 justify-center items-center">
@@ -129,7 +129,6 @@ export default function WelcomeScreen() {
           <Image
             className="absolute h-52 w-52"
             source={require("~/assets/adaptive-icon.png")}
-            //blurRadius={80}
           />
         </View>
       ) : (
@@ -228,7 +227,6 @@ export default function WelcomeScreen() {
           ) : null}
           {finalSetup ? (
             <FinalSetupComponent
-              user={user}
               setFinalSetup={setFinalSetup}
               setLogin={setLogin}
             />

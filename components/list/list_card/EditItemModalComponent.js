@@ -23,9 +23,6 @@ export default function EditItemModalComponent({
   itemCategory,
   categories,
   setCategories,
-  user,
-  setUser,
-  date,
 }) {
   const inputRef = useRef(null);
 

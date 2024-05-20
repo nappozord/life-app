@@ -28,8 +28,6 @@ export default function CategoryCardComponent({
   setCardPressed,
   finishedAnimation,
   setFinishedAnimation,
-  user,
-  setUser,
   isList,
 }) {
   const dimensions = useWindowDimensions();
@@ -130,7 +128,6 @@ export default function CategoryCardComponent({
               item={item}
               categories={categories}
               setCategories={setCategories}
-              user={user}
             />
           ) : (
             !isList ? <UserCategoryComponent
@@ -143,8 +140,6 @@ export default function CategoryCardComponent({
               setCardPressed={setCardPressed}
               finishedAnimation={finishedAnimation}
               setFinishedAnimation={setFinishedAnimation}
-              user={user}
-              setUser={setUser}
             /> : <ListCategoryComponent
               item={item}
               date={date}
@@ -155,8 +150,6 @@ export default function CategoryCardComponent({
               setCardPressed={setCardPressed}
               finishedAnimation={finishedAnimation}
               setFinishedAnimation={setFinishedAnimation}
-              user={user}
-              setUser={setUser}
             />
           )}
         </Animated.View>

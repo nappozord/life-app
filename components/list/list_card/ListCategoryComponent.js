@@ -17,8 +17,6 @@ export default function ListCategoryComponent({
   setCardPressed,
   finishedAnimation,
   setFinishedAnimation,
-  user,
-  setUser,
   date,
 }) {
   const [modalCategoryVisible, setModalCategoryVisible] = useState(false);
@@ -111,8 +109,6 @@ export default function ListCategoryComponent({
             categories={categories}
             setCategories={setCategories}
             item={item}
-            user={user}
-            setUser={setUser}
             date={date}
           />
         </Animated.View>
@@ -125,8 +121,6 @@ export default function ListCategoryComponent({
             item={item}
             categories={categories}
             setCategories={setCategories}
-            user={user}
-            setUser={setUser}
             date={date}
             isList={true}
           />

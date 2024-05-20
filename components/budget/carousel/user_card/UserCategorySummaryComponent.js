@@ -9,8 +9,6 @@ export default function UserCategorySummaryComponent({
   item,
   categories,
   setCategories,
-  user,
-  setUser,
   date,
 }) {
   const percentage = calculatePercentage([item.real], item.forecast);
@@ -72,8 +70,6 @@ export default function UserCategorySummaryComponent({
           category={item.title}
           categories={categories}
           setCategories={setCategories}
-          user={user}
-          setUser={setUser}
           date={date}
         />
       </View>

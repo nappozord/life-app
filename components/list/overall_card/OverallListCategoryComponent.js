@@ -4,16 +4,15 @@ import { themeColors } from "~/theme";
 import DonutChartComponent from "~/components/budget/charts/DonutChartComponent";
 import { IconButton } from "react-native-paper";
 import BarChartComponent from "~/components/budget/charts/BarChartComponent";
-import { getRemainingDaysInMonth } from "~/utils/manageDate";
 import { calculateTotalLists } from "~/utils/calculateMoneyFlow";
+import { useSelector } from "react-redux";
 
 export default function OverallListCategoryComponent({
-  date,
   item,
   categories,
-  user,
 }) {
   const [total, setTotal] = useState(() => getOverall());
+  const user = useSelector((state) => state.user.user);
 
   useEffect(() => {
     getOverall();

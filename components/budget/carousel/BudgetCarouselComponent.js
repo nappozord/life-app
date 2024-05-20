@@ -13,8 +13,6 @@ export default function BudgetCarouselComponent({
   categoryListRef,
   cardPressed,
   setCardPressed,
-  user,
-  setUser,
   isList,
 }) {
   const dimensions = useWindowDimensions();
@@ -36,8 +34,6 @@ export default function BudgetCarouselComponent({
             key={"carousel_" + item.id}
             date={date}
             item={item}
-            user={user}
-            setUser={setUser}
             categories={categories}
             setCategories={setCategories}
             activeCategory={activeCategory}

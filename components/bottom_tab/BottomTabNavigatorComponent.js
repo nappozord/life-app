@@ -12,21 +12,16 @@ import ListScreen from "~/screens/ListScreen";
 const Tab = createBottomTabNavigator();
 
 export default function BottomTabNavigatorComponent() {
-  const [user, setUser] = useState({});
 
-  useEffect(() => {
-    !user.userId ? getUser().then((r) => setUser(r)) : updateUser(user);
-  }, [user]);
+  const Budget = () => <BudgetScreen />;
 
-  const Budget = () => <BudgetScreen user={user} setUser={setUser} />;
+  const Year = () => <YearStatsScreen />;
 
-  const Year = () => <YearStatsScreen user={user} setUser={setUser} />;
+  const Grocery = () => <GroceryScreen />;
 
-  const Grocery = () => <GroceryScreen user={user} setUser={setUser} />;
+  const List = () => <ListScreen />;
 
-  const List = () => <ListScreen user={user} setUser={setUser} />;
-
-  const Settings = () => <SettingsScreen user={user} setUser={setUser} />;
+  const Settings = () => <SettingsScreen />;
 
   return (
     <Tab.Navigator

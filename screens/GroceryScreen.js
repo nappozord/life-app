@@ -17,11 +17,15 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
 } from "react-native-reanimated";
+import { useSelector } from "react-redux";
+
 import ChipListComponent from "~/components/groceries/chip/ChipListComponent";
 import HeaderComponent from "~/components/header/HeaderComponent";
 import GroceriesCarouselComponent from "~/components/groceries/carousel/GroceriesCarouselComponent";
 
-export default function GroceryScreen({ user, setUser }) {
+export default function GroceryScreen() {
+  const user = useSelector((state) => state.user.user);
+
   const [meals, setMeals] = useState();
   const [ingredients, setIngredients] = useState();
   const [items, setItems] = useState();
@@ -88,7 +92,7 @@ export default function GroceryScreen({ user, setUser }) {
         <>
           <View className="mt-16 flex-1">
             <Animated.View style={searchBarAnimatedStyle} className="mx-5">
-              <HeaderComponent user={user} setUser={setUser} />
+              <HeaderComponent />
             </Animated.View>
             <View className="mb-4 -mt-1">
               <ChipListComponent
@@ -115,8 +119,6 @@ export default function GroceryScreen({ user, setUser }) {
                     setRecipes={setRecipes}
                     activeChip={activeChip}
                     setActiveChip={setActiveChip}
-                    user={user}
-                    setUser={setUser}
                     chipListRef={chipListRef}
                     items={items}
                     setItems={setItems}

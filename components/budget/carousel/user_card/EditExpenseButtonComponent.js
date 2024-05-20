@@ -10,8 +10,6 @@ export default function EditExpenseButtonComponent({
   setCategories,
   icon,
   category,
-  user,
-  setUser,
   date,
   isList,
 }) {
@@ -28,8 +26,6 @@ export default function EditExpenseButtonComponent({
           setModalVisible={setModalVisible}
           itemIcon={icon}
           itemCategory={category}
-          user={user}
-          setUser={setUser}
           date={date}
         />
       ) : (
@@ -40,8 +36,6 @@ export default function EditExpenseButtonComponent({
           setModalVisible={setModalVisible}
           itemIcon={icon}
           itemCategory={category}
-          user={user}
-          setUser={setUser}
           date={date}
         />
       ) : null}

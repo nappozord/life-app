@@ -9,8 +9,6 @@ export default function ExpenseComponent({
   itemCategory,
   categories,
   setCategories,
-  user,
-  setUser,
   date,
 }) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -32,8 +30,6 @@ export default function ExpenseComponent({
           itemCategory={itemCategory}
           categories={categories}
           setCategories={setCategories}
-          user={user}
-          setUser={setUser}
           date={date}
         />
       ) : null}

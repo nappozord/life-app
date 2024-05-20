@@ -19,8 +19,11 @@ import {
 import HeaderComponent from "~/components/header/HeaderComponent";
 import { useNavigation } from "@react-navigation/native";
 import { signOut } from "aws-amplify/auth";
+import { useSelector } from "react-redux";
 
-export default function BudgetScreen({ user, setUser }) {
+export default function BudgetScreen() {
+  const user = useSelector((state) => state.user.user);
+
   const navigation = useNavigation();
   const [date, setDate] = useState(() => formatDate(new Date()));
   const [categories, setCategories] = useState([]);
@@ -98,7 +101,7 @@ export default function BudgetScreen({ user, setUser }) {
             {cardPressed ? (
               <View></View>
             ) : (
-              <HeaderComponent user={user} setUser={setUser} />
+              <HeaderComponent />
             )}
           </Animated.View>
           <View className="mb-3 -mt-4">
@@ -128,8 +131,6 @@ export default function BudgetScreen({ user, setUser }) {
               categoryListRef={categoryListRef}
               cardPressed={cardPressed}
               setCardPressed={setCardPressed}
-              user={user}
-              setUser={setUser}
             />
           </Animated.View>
         </View>

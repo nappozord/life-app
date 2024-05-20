@@ -4,22 +4,19 @@ import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
 import { calculatePercentage } from "~/utils/calculatePercentage";
 import EditExpenseButtonComponent from "~/components/budget/carousel/user_card/EditExpenseButtonComponent";
+import { useSelector } from "react-redux";
 
 export default function ListCategorySummaryComponent({
   item,
   categories,
   setCategories,
-  user,
-  setUser,
   date,
 }) {
+  const user = useSelector((state) => state.user.user);
+
   const totalToBuy = item.real ? item.real - item.realBought : 0;
-
   const percentage = calculatePercentage([totalToBuy], user.balance);
-
   const itemBought = item.expenses.filter((obj) => obj.bought);
-
-  const itemToBuy = item.expenses.filter((obj) => !obj.bought);
 
   return (
     <View className="px-5 mt-2 space-y-3">
@@ -107,8 +104,6 @@ export default function ListCategorySummaryComponent({
           category={item.title}
           categories={categories}
           setCategories={setCategories}
-          user={user}
-          setUser={setUser}
           date={date}
           isList={true}
         />

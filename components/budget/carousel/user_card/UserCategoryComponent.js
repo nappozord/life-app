@@ -18,8 +18,6 @@ export default function UserCategoryComponent({
   setCardPressed,
   finishedAnimation,
   setFinishedAnimation,
-  user,
-  setUser,
   date,
 }) {
   const [modalForecastVisible, setModalForecastVisible] = useState(false);
@@ -117,8 +115,6 @@ export default function UserCategoryComponent({
             categories={categories}
             setCategories={setCategories}
             item={item}
-            user={user}
-            setUser={setUser}
             date={date}
           />
         </Animated.View>
@@ -131,8 +127,6 @@ export default function UserCategoryComponent({
             item={item}
             categories={categories}
             setCategories={setCategories}
-            user={user}
-            setUser={setUser}
             date={date}
           />
         </Animated.View>

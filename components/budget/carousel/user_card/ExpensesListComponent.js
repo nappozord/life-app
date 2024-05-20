@@ -11,8 +11,6 @@ export default function UserCategoryExpensesComponent({
   item,
   categories,
   setCategories,
-  user,
-  setUser,
   date,
   isList,
 }) {
@@ -41,8 +39,6 @@ export default function UserCategoryExpensesComponent({
           category={item.title}
           categories={categories}
           setCategories={setCategories}
-          user={user}
-          setUser={setUser}
           isList={isList}
         />
       </View>
@@ -61,8 +57,6 @@ export default function UserCategoryExpensesComponent({
                 item={item}
                 itemIcon={icon}
                 itemCategory={category}
-                user={user}
-                setUser={setUser}
                 date={date}
               />
             ) : (
@@ -73,8 +67,6 @@ export default function UserCategoryExpensesComponent({
                 item={item}
                 itemIcon={icon}
                 itemCategory={category}
-                user={user}
-                setUser={setUser}
                 date={date}
               />
             );

@@ -14,6 +14,9 @@ import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
 import Animated, { SlideInDown } from "react-native-reanimated";
 import { isPreviousMonth } from "~/utils/manageDate";
+import { useDispatch, useSelector } from "react-redux";
+
+import { updateUser } from "~/app/userSlice";
 
 export default function EditExpenseModalComponent({
   item,
@@ -23,13 +26,13 @@ export default function EditExpenseModalComponent({
   itemCategory,
   categories,
   setCategories,
-  user,
-  setUser,
   date,
 }) {
   const inputRef = useRef(null);
-
   const currentDate = new Date().toDateString();
+
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user);
 
   const description = useRef(item ? item.title.toString() : null);
   const amount = useRef(item ? parseFloat(item.total).toFixed(2) : null);
@@ -50,11 +53,21 @@ export default function EditExpenseModalComponent({
     if (category.income) {
       category.real -= parseFloat(amount.current);
       if (!isPreviousMonth(date.month, date.year))
-        user.balance = parseFloat(user.balance) + parseFloat(amount.current);
+        dispatch(
+          updateUser({
+            ...user,
+            balance: parseFloat(user.balance) + parseFloat(amount.current),
+          })
+        );
     } else {
       category.real += parseFloat(amount.current);
       if (!isPreviousMonth(date.month, date.year))
-        user.balance = parseFloat(user.balance) - parseFloat(amount.current);
+        dispatch(
+          updateUser({
+            ...user,
+            balance: parseFloat(user.balance) - parseFloat(amount.current),
+          })
+        );
     }
 
     let occurrences = 1;
@@ -73,7 +86,6 @@ export default function EditExpenseModalComponent({
       date: expenseDate.current,
     });
 
-    setUser({ ...user });
     setCategories([...categories]);
   };
 
@@ -88,11 +100,21 @@ export default function EditExpenseModalComponent({
     if (category.income) {
       category.real += parseFloat(item.total);
       if (!isPreviousMonth(date.month, date.year))
-        user.balance = parseFloat(user.balance) - parseFloat(item.total);
+        dispatch(
+          updateUser({
+            ...user,
+            balance: parseFloat(user.balance) - parseFloat(item.total),
+          })
+        );
     } else {
       category.real -= parseFloat(item.total);
       if (!isPreviousMonth(date.month, date.year))
-        user.balance = parseFloat(user.balance) + parseFloat(item.total);
+        dispatch(
+          updateUser({
+            ...user,
+            balance: parseFloat(user.balance) + parseFloat(item.total),
+          })
+        );
     }
 
     const filteredArray = category.expenses.filter((obj) => obj.id !== item.id);
@@ -108,7 +130,6 @@ export default function EditExpenseModalComponent({
 
     category.expenses = filteredArray;
 
-    setUser({ ...user });
     setCategories([...categories]);
   };
 
