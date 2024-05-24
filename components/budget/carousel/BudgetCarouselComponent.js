@@ -3,20 +3,19 @@ import Carousel from "react-native-snap-carousel";
 import CategoryCardComponent from "./CategoryCardComponent";
 import { useWindowDimensions } from "react-native";
 import Animated from "react-native-reanimated";
+import { useDispatch, useSelector } from "react-redux";
+import { updateActiveCategory } from "~/app/categoriesSlice";
 
-export default function BudgetCarouselComponent({
-  date,
-  categories,
-  setCategories,
-  activeCategory,
-  setActiveCategory,
-  categoryListRef,
-  cardPressed,
-  setCardPressed,
-  isList,
-}) {
+export default function BudgetCarouselComponent({ categoryListRef, isList }) {
+  const { categories, activeCategory } = useSelector(
+    (state) => state.categories
+  );
+
+  const dispatch = useDispatch();
+
   const dimensions = useWindowDimensions();
   const carouselRef = useRef(null);
+
   if (carouselRef.current) carouselRef.current.snapToItem(activeCategory);
 
   const [finishedAnimation, setFinishedAnimation] = useState(false);
@@ -32,13 +31,7 @@ export default function BudgetCarouselComponent({
         renderItem={({ item }) => (
           <CategoryCardComponent
             key={"carousel_" + item.id}
-            date={date}
             item={item}
-            categories={categories}
-            setCategories={setCategories}
-            activeCategory={activeCategory}
-            cardPressed={cardPressed}
-            setCardPressed={setCardPressed}
             finishedAnimation={finishedAnimation}
             setFinishedAnimation={setFinishedAnimation}
             isList={isList}
@@ -53,7 +46,7 @@ export default function BudgetCarouselComponent({
         initialNumToRender={3}
         windowSize={3}
         onSnapToItem={(index) => {
-          setActiveCategory(index);
+          dispatch(updateActiveCategory(index));
           categoryListRef.current.scrollToIndex({
             animated: true,
             index: index,

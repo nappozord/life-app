@@ -14,39 +14,26 @@ import { Checkbox, IconButton } from "react-native-paper";
 import { setDefaultCategoryForecast } from "~/api/apiManager";
 import { KeyboardAvoidingView } from "react-native";
 import Animated, { SlideInDown } from "react-native-reanimated";
+import { useDispatch, useSelector } from "react-redux";
+import { updateForecast } from "../../../../app/categoriesSlice";
 
 export default function EditForecastModalComponent({
   item,
   modalVisible,
   setModalVisible,
-  categories,
-  setCategories,
-  date,
 }) {
+  const dispatch = useDispatch();
+
   const amount = useRef(Math.abs(item.forecast).toString());
   const [checked, setChecked] = React.useState(false);
   const inputRef = React.useRef(null);
 
-  const updateForecast = () => {
+  const handleUpdateForecast = () => {
     amount.current === null || amount.current === ""
       ? (amount.current = 0)
       : null;
 
-    const category = categories.find((obj) => item.id === obj.id);
-
-    const prevForecast = parseFloat(category.forecast);
-
-    if (category.income) {
-      category.forecast = -parseFloat(amount.current);
-    } else {
-      category.forecast = parseFloat(amount.current);
-    }
-
-    if (checked) {
-      setDefaultCategoryForecast(category);
-    }
-
-    setCategories([...categories]);
+    dispatch(updateForecast({ id: item.id, checked, amount: amount.current }));
   };
 
   return (
@@ -68,11 +55,9 @@ export default function EditForecastModalComponent({
       <Image
         className="absolute h-full w-full"
         source={require("~/assets/splash.png")}
-        //blurRadius={80}
         style={{ opacity: 0.9 }}
       />
       <KeyboardAvoidingView
-        //keyboardVerticalOffset={-50}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
@@ -193,7 +178,7 @@ export default function EditForecastModalComponent({
                     borderTopRightRadius: 24,
                   }}
                   onPress={() => {
-                    updateForecast();
+                    handleUpdateForecast();
                     setModalVisible(false);
                   }}
                 >

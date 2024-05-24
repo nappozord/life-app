@@ -8,18 +8,19 @@ import { ActivityIndicator, IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
 import EditForecastModalComponent from "./EditForecastModalComponent";
 import EditCategoryModalComponent from "~/components/budget/chip/EditCategoryModalComponent";
+import { useDispatch, useSelector } from "react-redux";
+import { updateCardPressed } from "~/app/categoriesSlice";
 
 export default function UserCategoryComponent({
   item,
   loading,
-  categories,
-  setCategories,
-  cardPressed,
-  setCardPressed,
   finishedAnimation,
   setFinishedAnimation,
-  date,
 }) {
+  const { categories, cardPressed } = useSelector((state) => state.categories);
+
+  const dispatch = useDispatch();
+
   const [modalForecastVisible, setModalForecastVisible] = useState(false);
   const [modalCategoryVisible, setModalCategoryVisible] = useState(false);
 
@@ -35,8 +36,6 @@ export default function UserCategoryComponent({
               item={item}
               modalVisible={modalCategoryVisible}
               setModalVisible={setModalCategoryVisible}
-              categories={categories}
-              setCategories={setCategories}
             />
             <TouchableOpacity
               className="p-5 rounded-full"
@@ -53,12 +52,9 @@ export default function UserCategoryComponent({
           <View></View>
         )}
         <EditForecastModalComponent
-          date={date}
           item={item}
           modalVisible={modalForecastVisible}
           setModalVisible={setModalForecastVisible}
-          categories={categories}
-          setCategories={setCategories}
         />
         <Pressable
           className="-mt-12"
@@ -66,8 +62,6 @@ export default function UserCategoryComponent({
         >
           <DonutChartComponent
             item={item}
-            categories={categories}
-            setCategories={setCategories}
             showTotal={cardPressed ? true : false}
           />
         </Pressable>
@@ -80,7 +74,7 @@ export default function UserCategoryComponent({
               className="p-5 rounded-full"
               onPress={() => {
                 setFinishedAnimation(false);
-                setCardPressed(false);
+                dispatch(updateCardPressed(false));
               }}
             >
               <IconButton
@@ -111,24 +105,14 @@ export default function UserCategoryComponent({
           entering={FadeIn.duration(500)}
           exiting={FadeOut.duration(500)}
         >
-          <UserCategorySummaryComponent
-            categories={categories}
-            setCategories={setCategories}
-            item={item}
-            date={date}
-          />
+          <UserCategorySummaryComponent item={item} />
         </Animated.View>
       ) : (
         <Animated.View
           key={item.id + cardPressed}
           entering={FadeIn.duration(500)}
         >
-          <ExpensesListComponent
-            item={item}
-            categories={categories}
-            setCategories={setCategories}
-            date={date}
-          />
+          <ExpensesListComponent item={item} />
         </Animated.View>
       )}
     </View>

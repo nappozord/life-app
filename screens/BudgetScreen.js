@@ -12,26 +12,34 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 import { formatDate } from "~/utils/manageDate";
-import {
-  getCategories,
-  saveCategories,
-} from "~/api/apiManager";
+import { getCategories, saveCategories } from "~/api/apiManager";
 import HeaderComponent from "~/components/header/HeaderComponent";
 import { useNavigation } from "@react-navigation/native";
 import { signOut } from "aws-amplify/auth";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+
+import { updateActiveCategory } from "~/app/categorySlice";
 
 export default function BudgetScreen() {
   const user = useSelector((state) => state.user.user);
+  const { date, categories, activeCategory, cardPressed } = useSelector(
+    (state) => state.categories
+  );
 
+  const dispatch = useDispatch();
   const navigation = useNavigation();
-  const [date, setDate] = useState(() => formatDate(new Date()));
-  const [categories, setCategories] = useState([]);
-  const [activeCategory, setActiveCategory] = useState(0);
-  const [cardPressed, setCardPressed] = useState(false);
   const categoryListRef = useRef(null);
-
   const searchBarHeight = useSharedValue(76);
+  const searchBarAnimatedStyle = useAnimatedStyle(() => ({
+    height: searchBarHeight.value,
+  }));
+
+  if (!categories.find((obj) => obj.index === activeCategory))
+    dispatch(updateActiveCategory(0));
+
+  cardPressed
+    ? (searchBarHeight.value = withTiming(0, { duration: 500 }))
+    : (searchBarHeight.value = withTiming(76, { duration: 500 }));
 
   useEffect(() => {
     const backAction = () => {
@@ -61,31 +69,7 @@ export default function BudgetScreen() {
     return () => backHandler.remove();
   }, []);
 
-  useEffect(() => {
-    cardPressed
-      ? (searchBarHeight.value = withTiming(0, { duration: 500 }))
-      : (searchBarHeight.value = withTiming(76, { duration: 500 }));
-  }, [cardPressed]);
-
-  useEffect(() => {
-    if (!categories.find((obj) => obj.index === activeCategory))
-      setActiveCategory(0);
-    if (categories.length > 0) saveCategories(categories, date);
-  }, [categories]);
-
-  const searchBarAnimatedStyle = useAnimatedStyle(() => ({
-    height: searchBarHeight.value,
-  }));
-
-  useEffect(() => {
-    getCategories(date).then((r) => {
-      setCategories(r.categories);
-    });
-  }, [date]);
-
-  useEffect(() => {
-    if (activeCategory === 0) setCardPressed(false);
-  }, [activeCategory]);
+  if (activeCategory === 0) dispatch(updateActiveCategory(false));
 
   return (
     <View className="flex-1 relative">
@@ -93,28 +77,17 @@ export default function BudgetScreen() {
       <Image
         className="absolute h-full w-full"
         source={require("~/assets/splash.png")}
-        //blurRadius={80}
       />
       {user.userId ? (
         <View className="mt-16">
           <Animated.View style={searchBarAnimatedStyle} className="mx-5">
-            {cardPressed ? (
-              <View></View>
-            ) : (
-              <HeaderComponent />
-            )}
+            {cardPressed ? <View></View> : <HeaderComponent />}
           </Animated.View>
           <View className="mb-3 -mt-4">
-            <DatePickerComponent date={date} setDate={setDate} />
+            <DatePickerComponent />
           </View>
           <View>
-            <ChipCategoryListComponent
-              categories={categories}
-              setCategories={setCategories}
-              activeCategory={activeCategory}
-              setActiveCategory={setActiveCategory}
-              categoryListRef={categoryListRef}
-            />
+            <ChipCategoryListComponent categoryListRef={categoryListRef} />
           </View>
           <Animated.View
             className="mt-1 py-2"
@@ -122,16 +95,7 @@ export default function BudgetScreen() {
             entering={FadeIn}
             exiting={FadeOut}
           >
-            <BudgetCarouselComponent
-              date={date}
-              categories={categories}
-              setCategories={setCategories}
-              activeCategory={activeCategory}
-              setActiveCategory={setActiveCategory}
-              categoryListRef={categoryListRef}
-              cardPressed={cardPressed}
-              setCardPressed={setCardPressed}
-            />
+            <BudgetCarouselComponent categoryListRef={categoryListRef} />
           </Animated.View>
         </View>
       ) : (

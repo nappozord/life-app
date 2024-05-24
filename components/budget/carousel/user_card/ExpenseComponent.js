@@ -3,14 +3,7 @@ import React, { useState } from "react";
 import { themeColors } from "~/theme";
 import EditExpenseModalComponent from "./EditExpenseModalComponent";
 
-export default function ExpenseComponent({
-  item,
-  itemIcon,
-  itemCategory,
-  categories,
-  setCategories,
-  date,
-}) {
+export default function ExpenseComponent({ item, itemIcon, itemCategory }) {
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
@@ -28,9 +21,6 @@ export default function ExpenseComponent({
           item={item}
           itemIcon={itemIcon}
           itemCategory={itemCategory}
-          categories={categories}
-          setCategories={setCategories}
-          date={date}
         />
       ) : null}
       <View style={{ maxWidth: "80%" }}>

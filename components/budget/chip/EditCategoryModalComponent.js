@@ -17,17 +17,26 @@ import {
   addDefaultCategory,
   deleteDefaultCategory,
   updateDeafultCategory,
-} from "~/api/apiManager";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+} from "~/api/apiCategories";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  updateCategory,
+  addCategory,
+  deleteCategory,
+} from "~/app/categoriesSlice";
 
 export default function EditCategoryModalComponent({
   item,
-  categories,
-  setCategories,
   modalVisible,
   setModalVisible,
   isList,
 }) {
+  const defaultCategories = useSelector(
+    (state) => state.categories.defaultCategories
+  );
+  const categories = useSelector((state) => state.categories.categories);
+  const dispatch = useDispatch();
+
   const description = useRef(item ? item.title.toString() : null);
   const [icon, setIcon] = useState(
     item ? item.icon.toString() : "card-outline"
@@ -36,32 +45,25 @@ export default function EditCategoryModalComponent({
 
   const [checked, setChecked] = useState(false);
 
-  const addCategory = () => {
+  const handleAddCategory = () => {
     if (!isList) {
-      AsyncStorage.getItem("defaultCategories").then((r) => {
-        const result = JSON.parse(r);
-        const index = result[result.length - 1].id + 1;
+      const index = defaultCategories[defaultCategories.length - 1].id + 1;
 
-        const category = {
-          id: index > categories.length ? index : categories.length,
-          title: description.current,
-          real: 0,
-          forecast: 0,
-          icon: icon,
-          expenses: [],
-          income: false,
-          index: categories.length,
-        };
+      const category = {
+        id: index > categories.length ? index : categories.length,
+        title: description.current,
+        real: 0,
+        forecast: 0,
+        icon: icon,
+        expenses: [],
+        income: false,
+        index: categories.length,
+      };
 
-        categories.push(category);
+      if (checked) addDefaultCategory(category);
 
-        if (checked) {
-          addDefaultCategory(category);
-        }
-
-        setCategories([...categories]);
-      });
-    } else {
+      dispatch(addCategory(category));
+    } /*else {
       const category = {
         id: categories.length,
         title: description.current,
@@ -76,27 +78,25 @@ export default function EditCategoryModalComponent({
       categories.push(category);
 
       setCategories([...categories]);
+    }*/
+  };
+
+  const handleDeleteCategory = () => {
+    if (!isList) {
+      if (checked) deleteDefaultCategory(item);
+
+      dispatch(deleteCategory(item.id));
     }
   };
 
-  const deleteCategory = () => {
-    categories = categories.filter((obj) => obj.id !== item.id);
-
-    if (checked) {
-      deleteDefaultCategory(item);
-    }
-
-    setCategories([...categories]);
-  };
-
-  const updateCategory = () => {
-    categories.find((obj) => obj.id === item.id).title = description.current;
-    categories.find((obj) => obj.id === item.id).icon = icon;
-
-    if(!isList)
+  const handleUpdateCategories = () => {
+    if (!isList) {
       updateDeafultCategory(categories.find((obj) => obj.id === item.id));
 
-    setCategories([...categories]);
+      dispatch(
+        updateCategory({ id: item.id, title: description.current, icon })
+      );
+    }
   };
 
   return (
@@ -187,7 +187,9 @@ export default function EditCategoryModalComponent({
                       backgroundColor: themeColors.onSecondaryContainer,
                       color: themeColors.background,
                     }}
-                    placeholder={"E.g. New Awesome " + (isList ? "List" : "Category") + "!"}
+                    placeholder={
+                      "E.g. New Awesome " + (isList ? "List" : "Category") + "!"
+                    }
                     selectionColor={themeColors.background}
                     defaultValue={description.current}
                     onChangeText={(text) => {
@@ -267,7 +269,7 @@ export default function EditCategoryModalComponent({
                           borderTopLeftRadius: 24,
                         }}
                         onPress={() => {
-                          updateCategory();
+                          handleUpdateCategories();
                           setModalVisible(false);
                         }}
                       >
@@ -289,7 +291,7 @@ export default function EditCategoryModalComponent({
                           borderTopRightRadius: 24,
                         }}
                         onPress={() => {
-                          deleteCategory();
+                          handleDeleteCategory();
                           setModalVisible(false);
                         }}
                       >
@@ -311,7 +313,7 @@ export default function EditCategoryModalComponent({
                       borderTopLeftRadius: 24,
                     }}
                     onPress={() => {
-                      addCategory();
+                      handleAddCategory();
                       setModalVisible(false);
                     }}
                   >

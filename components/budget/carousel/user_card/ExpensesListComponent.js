@@ -7,13 +7,7 @@ import EditExpenseButtonComponent from "./EditExpenseButtonComponent";
 import ItemComponent from "~/components/list/list_card/ItemComponent";
 import { sortByBought, sortByName } from "~/utils/sortItems";
 
-export default function UserCategoryExpensesComponent({
-  item,
-  categories,
-  setCategories,
-  date,
-  isList,
-}) {
+export default function UserCategoryExpensesComponent({ item, isList }) {
   const icon = item.icon;
   const category = item.title;
 
@@ -34,11 +28,8 @@ export default function UserCategoryExpensesComponent({
           <IconButton icon={item.icon} color={themeColors.primary} />
         </View>
         <EditExpenseButtonComponent
-          date={date}
           icon={item.icon}
           category={item.title}
-          categories={categories}
-          setCategories={setCategories}
           isList={isList}
         />
       </View>
@@ -52,22 +43,16 @@ export default function UserCategoryExpensesComponent({
             return !isList ? (
               <ExpenseComponent
                 key={item.id + "_" + item.title}
-                categories={categories}
-                setCategories={setCategories}
                 item={item}
                 itemIcon={icon}
                 itemCategory={category}
-                date={date}
               />
             ) : (
               <ItemComponent
                 key={item.id + "_" + item.title}
-                categories={categories}
-                setCategories={setCategories}
                 item={item}
                 itemIcon={icon}
                 itemCategory={category}
-                date={date}
               />
             );
           })}

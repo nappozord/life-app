@@ -34,7 +34,7 @@ async function getMonthCategories(totalCategories, date) {
   };
 }
 
-async function getDefaultCategories(date, item) {
+export async function getDefaultCategories(date, item) {
   let jsonValue = await AsyncStorage.getItem(date.title);
   if (jsonValue === null) {
     jsonValue = await AsyncStorage.getItem("defaultCategories");

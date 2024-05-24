@@ -3,23 +3,22 @@ import React, { useState } from "react";
 import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
 import EditCategoryModalComponent from "./EditCategoryModalComponent";
+import { useDispatch } from "react-redux";
+import { updateActiveCategory } from "~/app/categoriesSlice";
 
 export default function ChipCategoryComponent({
   item,
   isActive,
-  setActiveCategory,
   categoryListRef,
-  categories,
-  setCategories,
   isList,
 }) {
+  const dispatch = useDispatch();
+
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
     <>
       <EditCategoryModalComponent
-        categories={categories}
-        setCategories={setCategories}
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         isList={isList}
@@ -31,7 +30,7 @@ export default function ChipCategoryComponent({
               animated: true,
               index: item.index,
             });
-            setActiveCategory(item.index);
+            dispatch(updateActiveCategory(item.index));
           } else {
             setModalVisible(true);
           }

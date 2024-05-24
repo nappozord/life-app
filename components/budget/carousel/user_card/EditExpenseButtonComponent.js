@@ -5,39 +5,27 @@ import { themeColors } from "~/theme";
 import EditExpenseModalComponent from "./EditExpenseModalComponent";
 import EditItemModalComponent from "~/components/list/list_card/EditItemModalComponent";
 
-export default function EditExpenseButtonComponent({
-  categories,
-  setCategories,
-  icon,
-  category,
-  date,
-  isList,
-}) {
+export default function EditExpenseButtonComponent({ icon, category, isList }) {
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
     <>
-      {modalVisible ? 
-      isList ? (
-        <EditItemModalComponent
-          categories={categories}
-          setCategories={setCategories}
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-          itemIcon={icon}
-          itemCategory={category}
-          date={date}
-        />
-      ) : (
-        <EditExpenseModalComponent
-          categories={categories}
-          setCategories={setCategories}
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-          itemIcon={icon}
-          itemCategory={category}
-          date={date}
-        />
+      {modalVisible ? (
+        isList ? (
+          <EditItemModalComponent
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+            itemIcon={icon}
+            itemCategory={category}
+          />
+        ) : (
+          <EditExpenseModalComponent
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+            itemIcon={icon}
+            itemCategory={category}
+          />
+        )
       ) : null}
       <TouchableOpacity
         onPress={() => {

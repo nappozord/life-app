@@ -7,12 +7,18 @@ import BarChartComponent from "~/components/budget/charts/BarChartComponent";
 import { getRemainingDaysInMonth } from "~/utils/manageDate";
 import { calculateMonthlyInOut } from "~/utils/calculateMoneyFlow";
 
-export default function OverallCategoryComponent({ date, item, categories }) {
+export default function OverallCategoryComponent({ item }) {
+  const { categories, date } = useSelector(
+    (state) => state.categories
+  );
+
+  const dispatch = useDispatch();
+
   const [total, setTotal] = useState(() => getOverall());
 
   useEffect(() => {
     getOverall();
-  }, [categories]);
+  }, [dispatch]);
 
   function getOverall() {
     calculateMonthlyInOut(categories).then((inOut) => {

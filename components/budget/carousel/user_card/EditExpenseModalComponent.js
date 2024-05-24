@@ -17,6 +17,7 @@ import { isPreviousMonth } from "~/utils/manageDate";
 import { useDispatch, useSelector } from "react-redux";
 
 import { updateUser } from "~/app/userSlice";
+import { addExpense, deleteExpense } from "~/app/categoriesSlice";
 
 export default function EditExpenseModalComponent({
   item,
@@ -24,15 +25,14 @@ export default function EditExpenseModalComponent({
   setModalVisible,
   itemIcon,
   itemCategory,
-  categories,
-  setCategories,
-  date,
 }) {
+  const user = useSelector((state) => state.user.user);
+  const { categories, date } = useSelector((state) => state.categories);
+
   const inputRef = useRef(null);
   const currentDate = new Date().toDateString();
 
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.user);
 
   const description = useRef(item ? item.title.toString() : null);
   const amount = useRef(item ? parseFloat(item.total).toFixed(2) : null);
@@ -40,7 +40,7 @@ export default function EditExpenseModalComponent({
     item ? (item.date ? item.date : currentDate) : currentDate
   );
 
-  const addExpense = () => {
+  const handleAddExpense = () => {
     amount.current === null || amount.current === ""
       ? (amount.current = 0)
       : null;
@@ -51,7 +51,6 @@ export default function EditExpenseModalComponent({
     const category = categories.find((obj) => itemCategory === obj.title);
 
     if (category.income) {
-      category.real -= parseFloat(amount.current);
       if (!isPreviousMonth(date.month, date.year))
         dispatch(
           updateUser({
@@ -60,7 +59,6 @@ export default function EditExpenseModalComponent({
           })
         );
     } else {
-      category.real += parseFloat(amount.current);
       if (!isPreviousMonth(date.month, date.year))
         dispatch(
           updateUser({
@@ -70,35 +68,25 @@ export default function EditExpenseModalComponent({
         );
     }
 
-    let occurrences = 1;
-
-    category.expenses.forEach((obj) => {
-      if (obj.title === description.current) occurrences += 1;
-    });
-
-    category.expenses.push({
-      title: description.current,
-      total: parseFloat(amount.current),
-      id: category.expenses[category.expenses.length - 1]
-        ? category.expenses[category.expenses.length - 1].id + 1
-        : 0,
-      occurrence: occurrences,
-      date: expenseDate.current,
-    });
-
-    setCategories([...categories]);
+    dispatch(
+      addExpense({
+        itemCategory,
+        expenseDate: expenseDate.current,
+        amount: amount.current,
+        description: description.current,
+      })
+    );
   };
 
-  const updateExpense = () => {
-    addExpense();
-    deleteExpense();
+  const handleUpdateExpense = () => {
+    handleDeleteExpense();
+    handleAddExpense();
   };
 
-  const deleteExpense = () => {
+  const handleDeleteExpense = () => {
     const category = categories.find((obj) => itemCategory === obj.title);
 
     if (category.income) {
-      category.real += parseFloat(item.total);
       if (!isPreviousMonth(date.month, date.year))
         dispatch(
           updateUser({
@@ -107,7 +95,6 @@ export default function EditExpenseModalComponent({
           })
         );
     } else {
-      category.real -= parseFloat(item.total);
       if (!isPreviousMonth(date.month, date.year))
         dispatch(
           updateUser({
@@ -117,20 +104,14 @@ export default function EditExpenseModalComponent({
         );
     }
 
-    const filteredArray = category.expenses.filter((obj) => obj.id !== item.id);
-
-    let occurrences = 1;
-
-    filteredArray.forEach((obj) => {
-      if (obj.title === item.title) {
-        obj.occurrence = occurrences;
-        occurrences += 1;
-      }
-    });
-
-    category.expenses = filteredArray;
-
-    setCategories([...categories]);
+    dispatch(
+      deleteExpense({
+        itemCategory,
+        id: item.id,
+        title: item.title,
+        total: item.total,
+      })
+    );
   };
 
   return (
@@ -288,7 +269,7 @@ export default function EditExpenseModalComponent({
                           borderTopLeftRadius: 24,
                         }}
                         onPress={() => {
-                          updateExpense();
+                          handleUpdateExpense();
                           setModalVisible(false);
                         }}
                       >
@@ -310,7 +291,7 @@ export default function EditExpenseModalComponent({
                           borderTopRightRadius: 24,
                         }}
                         onPress={() => {
-                          deleteExpense();
+                          handleDeleteExpense();
                           setModalVisible(false);
                         }}
                       >
@@ -332,7 +313,7 @@ export default function EditExpenseModalComponent({
                       borderTopLeftRadius: 24,
                     }}
                     onPress={() => {
-                      addExpense();
+                      handleAddExpense();
                       setModalVisible(false);
                     }}
                   >

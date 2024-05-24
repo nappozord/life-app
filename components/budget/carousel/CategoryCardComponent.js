@@ -13,6 +13,8 @@ import UserCategoryComponent from "./user_card/UserCategoryComponent";
 import OverallCategoryComponent from "./overall_card/OverallCategoryComponent";
 import OverallListCategoryComponent from "~/components/list/overall_card/OverallListCategoryComponent";
 import ListCategoryComponent from "~/components/list/list_card/ListCategoryComponent";
+import { useDispatch, useSelector } from "react-redux";
+import { updateCardPressed } from "~/app/categoriesSlice";
 
 const HEIGHT = 400;
 const OUTER_HEIGHT = 150;
@@ -20,16 +22,16 @@ const WIDTH = 300;
 
 export default function CategoryCardComponent({
   item,
-  date,
-  categories,
-  setCategories,
-  activeCategory,
-  cardPressed,
-  setCardPressed,
   finishedAnimation,
   setFinishedAnimation,
   isList,
 }) {
+  const { activeCategory, cardPressed } = useSelector(
+    (state) => state.categories
+  );
+
+  const dispatch = useDispatch();
+
   const dimensions = useWindowDimensions();
   const [loading, setLoading] = useState(false);
 
@@ -38,7 +40,7 @@ export default function CategoryCardComponent({
 
   useEffect(() => {
     if (loading) {
-      setCardPressed(true);
+      dispatch(updateCardPressed(true));
       startAnimation(500);
     }
   }, [loading]);
@@ -118,36 +120,22 @@ export default function CategoryCardComponent({
           ]}
         >
           {item.id === 0 ? (
-            !isList ? <OverallCategoryComponent
-              date={date}
+            !isList ? (
+              <OverallCategoryComponent item={item} />
+            ) : (
+              <OverallListCategoryComponent item={item} />
+            )
+          ) : !isList ? (
+            <UserCategoryComponent
               item={item}
-              categories={categories}
-              setCategories={setCategories}
-            /> : <OverallListCategoryComponent
-            date={date}
-              item={item}
-              categories={categories}
-              setCategories={setCategories}
-            />
-          ) : (
-            !isList ? <UserCategoryComponent
-              item={item}
-              date={date}
               loading={loading}
-              categories={categories}
-              setCategories={setCategories}
-              cardPressed={cardPressed}
-              setCardPressed={setCardPressed}
               finishedAnimation={finishedAnimation}
               setFinishedAnimation={setFinishedAnimation}
-            /> : <ListCategoryComponent
+            />
+          ) : (
+            <ListCategoryComponent
               item={item}
-              date={date}
               loading={loading}
-              categories={categories}
-              setCategories={setCategories}
-              cardPressed={cardPressed}
-              setCardPressed={setCardPressed}
               finishedAnimation={finishedAnimation}
               setFinishedAnimation={setFinishedAnimation}
             />
