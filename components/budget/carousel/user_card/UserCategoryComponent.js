@@ -9,15 +9,15 @@ import { themeColors } from "~/theme";
 import EditForecastModalComponent from "./EditForecastModalComponent";
 import EditCategoryModalComponent from "~/components/budget/chip/EditCategoryModalComponent";
 import { useDispatch, useSelector } from "react-redux";
-import { updateCardPressed } from "~/app/categoriesSlice";
+import {
+  updateCardPressed,
+  updateFinishedAnimation,
+} from "~/app/categoriesSlice";
 
-export default function UserCategoryComponent({
-  item,
-  loading,
-  finishedAnimation,
-  setFinishedAnimation,
-}) {
-  const { categories, cardPressed } = useSelector((state) => state.categories);
+export default function UserCategoryComponent({ item, loading }) {
+  const { finishedAnimation, cardPressed } = useSelector(
+    (state) => state.categories
+  );
 
   const dispatch = useDispatch();
 
@@ -73,7 +73,7 @@ export default function UserCategoryComponent({
             <TouchableOpacity
               className="p-5 rounded-full"
               onPress={() => {
-                setFinishedAnimation(false);
+                updateFinishedAnimation(false);
                 dispatch(updateCardPressed(false));
               }}
             >

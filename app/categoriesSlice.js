@@ -13,6 +13,7 @@ const initialState = {
   date: new Date(),
   cardPressed: false,
   activeCategory: 0,
+  finishedAnimation: false,
 };
 
 // Async thunk for fetching categories
@@ -127,6 +128,9 @@ const userSlice = createSlice({
     updateActiveCategory(state, action) {
       state.activeCategory = action.payload;
     },
+    updateFinishedAnimation(state, action) {
+      state.finishedAnimation = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -172,6 +176,7 @@ export const {
   addExpense,
   deleteExpense,
   updateForecast,
+  updateFinishedAnimation,
 } = userSlice.actions;
 
 export default userSlice.reducer;

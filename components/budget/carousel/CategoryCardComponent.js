@@ -14,18 +14,16 @@ import OverallCategoryComponent from "./overall_card/OverallCategoryComponent";
 import OverallListCategoryComponent from "~/components/list/overall_card/OverallListCategoryComponent";
 import ListCategoryComponent from "~/components/list/list_card/ListCategoryComponent";
 import { useDispatch, useSelector } from "react-redux";
-import { updateCardPressed } from "~/app/categoriesSlice";
+import {
+  updateCardPressed,
+  updateFinishedAnimation,
+} from "~/app/categoriesSlice";
 
 const HEIGHT = 400;
 const OUTER_HEIGHT = 150;
 const WIDTH = 300;
 
-export default function CategoryCardComponent({
-  item,
-  finishedAnimation,
-  setFinishedAnimation,
-  isList,
-}) {
+export default function CategoryCardComponent({ item, isList }) {
   const { activeCategory, cardPressed } = useSelector(
     (state) => state.categories
   );
@@ -47,7 +45,7 @@ export default function CategoryCardComponent({
 
   const finishAnimationCallback = (finished) => {
     if (activeCategory == item.id) {
-      setFinishedAnimation(finished);
+      updateFinishedAnimation(finished);
       setLoading(false);
     }
   };
@@ -126,19 +124,9 @@ export default function CategoryCardComponent({
               <OverallListCategoryComponent item={item} />
             )
           ) : !isList ? (
-            <UserCategoryComponent
-              item={item}
-              loading={loading}
-              finishedAnimation={finishedAnimation}
-              setFinishedAnimation={setFinishedAnimation}
-            />
+            <UserCategoryComponent item={item} loading={loading} />
           ) : (
-            <ListCategoryComponent
-              item={item}
-              loading={loading}
-              finishedAnimation={finishedAnimation}
-              setFinishedAnimation={setFinishedAnimation}
-            />
+            <ListCategoryComponent item={item} loading={loading} />
           )}
         </Animated.View>
       </Animated.View>
