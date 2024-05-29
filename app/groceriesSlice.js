@@ -6,19 +6,15 @@ import {
 } from "~/api/apiCategories";
 
 const initialState = {
-  categories: [],
+  groceries: [],
   defaultCategories: [],
   status: "idle",
   error: null,
-  date: new Date(),
-  cardPressed: false,
-  activeCategory: 0,
-  finishedAnimation: false,
 };
 
-// Async thunk for fetching categories
+// Async thunk for fetching groceries
 export const fetchCategories = createAsyncThunk(
-  "categories/fetchCategories",
+  "groceries/fetchCategories",
   async (range) => {
     const response = await getCategories(range);
     return response;
@@ -26,39 +22,39 @@ export const fetchCategories = createAsyncThunk(
 );
 
 export const fetchDefaultCategories = createAsyncThunk(
-  "categories/fetchDefaultCategories",
+  "groceries/fetchDefaultCategories",
   async () => {
     const response = await AsyncStorage.getItem("defaultCategories");
     return JSON.stringify(response);
   }
 );
 
-const categoriesSlice = createSlice({
-  name: "categories",
+const groceriesSlice = createSlice({
+  name: "groceries",
   initialState,
   reducers: {
     addCategory(state, action) {
-      state.categories.push(action.payload);
-      updateCategories(state.categories, state.date);
+      state.groceries.push(action.payload);
+      updateCategories(state.groceries, state.date);
     },
     updateCategory(state, action) {
       const { id, title, icon } = action.payload;
-      const index = state.categories.findIndex((cat) => cat.id === id);
+      const index = state.groceries.findIndex((cat) => cat.id === id);
       if (index !== -1) {
-        state.categories[index] = { ...category, title, icon };
-        updateCategories(state.categories, state.categories[index].date);
+        state.groceries[index] = { ...category, title, icon };
+        updateCategories(state.groceries, state.groceries[index].date);
       }
     },
     deleteCategory(state, action) {
-      state.categories = state.categories.filter(
+      state.groceries = state.groceries.filter(
         (cat) => cat.id !== action.payload
       );
-      updateCategories(state.categories, state.date);
+      updateCategories(state.groceries, state.date);
     },
     addExpense(state, action) {
       const { itemCategory, expenseDate, description, amount } = action.payload;
 
-      const category = state.categories.find(
+      const category = state.groceries.find(
         (obj) => itemCategory === obj.title
       );
 
@@ -84,7 +80,7 @@ const categoriesSlice = createSlice({
     deleteExpense(state, action) {
       const { itemCategory, id, title, total } = action.payload;
 
-      const category = state.categories.find(
+      const category = state.groceries.find(
         (obj) => itemCategory === obj.title
       );
 
@@ -107,7 +103,7 @@ const categoriesSlice = createSlice({
     updateForecast(state, action) {
       const { id, checked, amount } = action.payload;
 
-      const category = state.categories.find((obj) => id === obj.id);
+      const category = state.groceries.find((obj) => id === obj.id);
 
       if (category.income) {
         category.forecast = -parseFloat(amount);
@@ -139,7 +135,7 @@ const categoriesSlice = createSlice({
       })
       .addCase(fetchCategories.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.categories = action.payload;
+        state.groceries = action.payload;
       })
       .addCase(fetchCategories.rejected, (state, action) => {
         state.status = "failed";
@@ -152,11 +148,11 @@ const categoriesSlice = createSlice({
         (action) => {
           return action.type === updateDate.type;
         },
-        (state) => {
+        (state, action) => {
           // Dispatch fetchCategories after updating date
           fetchCategories(state.date)
             .then((response) => {
-              state.categories = response;
+              state.groceries = response;
             })
             .catch((error) => {
               state.error = error.message;
@@ -177,6 +173,6 @@ export const {
   deleteExpense,
   updateForecast,
   updateFinishedAnimation,
-} = categoriesSlice.actions;
+} = groceriesSlice.actions;
 
-export default categoriesSlice.reducer;
+export default groceriesSlice.reducer;

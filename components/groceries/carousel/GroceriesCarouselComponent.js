@@ -9,7 +9,7 @@ import ItemsListComponent from "./items/ItemsListComponent";
 import RecipesListComponent from "./recipes/RecipesListComponent";
 import GroceriesCard from "./list/GroceriesCard";
 
-export default function BudgetCarouselComponent({
+export default function GroceriesCarouselComponent({
   categories,
   meals,
   setMeals,
@@ -37,21 +37,23 @@ export default function BudgetCarouselComponent({
           <Animated.View
             entering={FadeIn}
             className="justify-end h-full"
-            style={{width: dimensions.width - 40}}
+            style={{ width: dimensions.width - 40 }}
           >
-            <View className="flex-1 mt-10 rounded-3xl"
-            style={[
-              {
-                backgroundColor: themeColors.onSecondary,
-              },
-              item.index === 1
-                ? {
-                    borderBottomLeftRadius: 16,
-                    borderBottomRightRadius: 16,
-                    paddingBottom: 0,
-                  }
-                : {},
-            ]}>
+            <View
+              className="flex-1 mt-10 rounded-3xl"
+              style={[
+                {
+                  backgroundColor: themeColors.onSecondary,
+                },
+                item.index === 1
+                  ? {
+                      borderBottomLeftRadius: 16,
+                      borderBottomRightRadius: 16,
+                      paddingBottom: 0,
+                    }
+                  : {},
+              ]}
+            >
               {item.index === 0 ? (
                 <>
                   <CalendarComponent
@@ -93,10 +95,7 @@ export default function BudgetCarouselComponent({
                   setRecipes={setRecipes}
                 />
               ) : item.index === 4 ? (
-                <ItemsListComponent
-                  items={items}
-                  setItems={setItems}
-                />
+                <ItemsListComponent items={items} setItems={setItems} />
               ) : null}
             </View>
           </Animated.View>
