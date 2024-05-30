@@ -32,7 +32,7 @@ export default function BudgetCarouselComponent({ categoryListRef, isList }) {
         renderItem={({ item }) => (
           <CategoryCardComponent
             key={"carousel_" + item.id}
-            item={item}
+            categoryId={item.id}
             isList={isList}
           />
         )}

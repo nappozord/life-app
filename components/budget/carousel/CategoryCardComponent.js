@@ -23,7 +23,7 @@ const HEIGHT = 400;
 const OUTER_HEIGHT = 150;
 const WIDTH = 300;
 
-export default function CategoryCardComponent({ item, isList }) {
+export default function CategoryCardComponent({ categoryId, isList }) {
   const { activeCategory, cardPressed } = useSelector(
     (state) => state.categories
   );
@@ -44,7 +44,7 @@ export default function CategoryCardComponent({ item, isList }) {
   }, [loading]);
 
   const finishAnimationCallback = (finished) => {
-    if (activeCategory == item.id) {
+    if (activeCategory == categoryId) {
       updateFinishedAnimation(finished);
       setLoading(false);
     }
@@ -58,9 +58,9 @@ export default function CategoryCardComponent({ item, isList }) {
   };
 
   useEffect(() => {
-    if (item.id !== 0) {
+    if (categoryId !== 0) {
       if (!cardPressed) {
-        if (activeCategory !== item.id) {
+        if (activeCategory !== categoryId) {
           width.value = WIDTH;
           height.value = HEIGHT;
         } else {
@@ -68,7 +68,7 @@ export default function CategoryCardComponent({ item, isList }) {
           height.value = withTiming(HEIGHT, { duration: 500 });
         }
       } else {
-        if (activeCategory !== item.id) {
+        if (activeCategory !== categoryId) {
           width.value = dimensions.width;
           height.value = dimensions.height;
         } else {
@@ -117,16 +117,16 @@ export default function CategoryCardComponent({ item, isList }) {
             },
           ]}
         >
-          {item.id === 0 ? (
+          {categoryId === 0 ? (
             !isList ? (
-              <OverallCategoryComponent item={item} />
+              <OverallCategoryComponent categoryId={categoryId} />
             ) : (
-              <OverallListCategoryComponent item={item} />
+              <OverallListCategoryComponent categoryId={categoryId} />
             )
           ) : !isList ? (
-            <UserCategoryComponent item={item} loading={loading} />
+            <UserCategoryComponent categoryId={categoryId} loading={loading} />
           ) : (
-            <ListCategoryComponent item={item} loading={loading} />
+            <ListCategoryComponent categoryId={categoryId} loading={loading} />
           )}
         </Animated.View>
       </Animated.View>

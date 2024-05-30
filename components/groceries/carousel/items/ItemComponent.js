@@ -12,14 +12,11 @@ import ItemModal from "./ItemModal";
 import ItemPercentageComponent from "./ItemPercentageComponent";
 import { updateLogs } from "~/api/apiManager";
 import { sortByDate } from "~/utils/sortItems";
+import { useSelector } from "react-redux";
 
-export default function ItemComponent({
-  items,
-  setItems,
-  item,
-  search,
-  setSearch,
-}) {
+export default function ItemComponent({ item, search, setSearch }) {
+  const items = useSelector((state) => state.items.items);
+
   const [modalVisible, setModalVisible] = useState(false);
 
   const addItem = () => {

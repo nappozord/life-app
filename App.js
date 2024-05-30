@@ -7,14 +7,19 @@ import { Provider } from "react-redux";
 import { store } from "./app/store";
 import { fetchUser } from "./app/userSlice";
 import { fetchCategories, fetchDefaultCategories } from "./app/categoriesSlice";
+import { fetchIngredients } from "./app/ingredientsSlice";
+import { fetchRecipes } from "./app/recipesSlice";
+import { fetchItems } from "./app/itemsSlice";
 
 Amplify.configure(awsmobile);
 
 export default function App() {
-
   store.dispatch(fetchUser());
   store.dispatch(fetchCategories(new Date()));
   store.dispatch(fetchDefaultCategories());
+  store.dispatch(fetchIngredients());
+  store.dispatch(fetchRecipes());
+  store.dispatch(fetchItems());
 
   return (
     <Provider store={store}>

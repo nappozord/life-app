@@ -11,17 +11,9 @@ import GroceriesCard from "./list/GroceriesCard";
 
 export default function GroceriesCarouselComponent({
   categories,
-  meals,
-  setMeals,
-  ingredients,
-  setIngredients,
-  recipes,
-  setRecipes,
   activeChip,
   setActiveChip,
   chipListRef,
-  items,
-  setItems,
 }) {
   const dimensions = useWindowDimensions();
   const carouselRef = useRef(null);
@@ -55,47 +47,15 @@ export default function GroceriesCarouselComponent({
               ]}
             >
               {item.index === 0 ? (
-                <>
-                  <CalendarComponent
-                    meals={meals}
-                    setMeals={setMeals}
-                    ingredients={ingredients}
-                    setIngredients={setIngredients}
-                    recipes={recipes}
-                    setRecipes={setRecipes}
-                  />
-                </>
+                <CalendarComponent />
               ) : item.index === 1 ? (
-                <GroceriesCard
-                  meals={meals}
-                  setMeals={setMeals}
-                  ingredients={ingredients}
-                  setIngredients={setIngredients}
-                  recipes={recipes}
-                  setRecipes={setRecipes}
-                  items={items}
-                  setItems={setItems}
-                />
+                <GroceriesCard />
               ) : item.index === 2 ? (
-                <RecipesListComponent
-                  meals={meals}
-                  setMeals={setMeals}
-                  ingredients={ingredients}
-                  setIngredients={setIngredients}
-                  recipes={recipes}
-                  setRecipes={setRecipes}
-                />
+                <RecipesListComponent />
               ) : item.index === 3 ? (
-                <IngredientsListComponent
-                  meals={meals}
-                  setMeals={setMeals}
-                  ingredients={ingredients}
-                  setIngredients={setIngredients}
-                  recipes={recipes}
-                  setRecipes={setRecipes}
-                />
+                <IngredientsListComponent />
               ) : item.index === 4 ? (
-                <ItemsListComponent items={items} setItems={setItems} />
+                <ItemsListComponent />
               ) : null}
             </View>
           </Animated.View>

@@ -14,7 +14,7 @@ import {
   updateFinishedAnimation,
 } from "~/app/categoriesSlice";
 
-export default function UserCategoryComponent({ item, loading }) {
+export default function UserCategoryComponent({ categoryId, loading }) {
   const { finishedAnimation, cardPressed } = useSelector(
     (state) => state.categories
   );
@@ -33,7 +33,7 @@ export default function UserCategoryComponent({ item, loading }) {
             exiting={FadeOut.duration(200)}
           >
             <EditCategoryModalComponent
-              item={item}
+              categoryId={categoryId}
               modalVisible={modalCategoryVisible}
               setModalVisible={setModalCategoryVisible}
             />
@@ -52,7 +52,7 @@ export default function UserCategoryComponent({ item, loading }) {
           <View></View>
         )}
         <EditForecastModalComponent
-          item={item}
+          categoryId={categoryId}
           modalVisible={modalForecastVisible}
           setModalVisible={setModalForecastVisible}
         />
@@ -61,7 +61,7 @@ export default function UserCategoryComponent({ item, loading }) {
           onPress={() => setModalForecastVisible(true)}
         >
           <DonutChartComponent
-            item={item}
+            categoryId={categoryId}
             showTotal={cardPressed ? true : false}
           />
         </Pressable>
@@ -101,18 +101,18 @@ export default function UserCategoryComponent({ item, loading }) {
         </Animated.View>
       ) : !cardPressed ? (
         <Animated.View
-          key={item.id + cardPressed}
+          key={categoryId + cardPressed}
           entering={FadeIn.duration(500)}
           exiting={FadeOut.duration(500)}
         >
-          <UserCategorySummaryComponent item={item} />
+          <UserCategorySummaryComponent categoryId={categoryId} />
         </Animated.View>
       ) : (
         <Animated.View
-          key={item.id + cardPressed}
+          key={categoryId + cardPressed}
           entering={FadeIn.duration(500)}
         >
-          <ExpensesListComponent item={item} />
+          <ExpensesListComponent categoryId={categoryId} />
         </Animated.View>
       )}
     </View>

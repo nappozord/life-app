@@ -3,7 +3,6 @@ import { getRecipes, updateRecipes } from "~/api/apiRecipes";
 
 const initialState = {
   recipes: [],
-  defaultRecipes: [],
   status: "idle",
   error: null,
 };

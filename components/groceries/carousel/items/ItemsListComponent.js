@@ -5,24 +5,26 @@ import { themeColors } from "~/theme";
 import ItemComponent from "./ItemComponent";
 import ItemModal from "./ItemModal";
 import { FlashList } from "@shopify/flash-list";
-import { getItems } from "~/api/apiManager";
 import SearchComponent from "~/components/groceries/searchbar/SearchComponent";
 import { sortByName, sortByStock } from "~/utils/sortItems";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchItems } from "~/app/itemsSlice";
 
-export default function ItemsListComponent({ items, setItems }) {
+export default function ItemsListComponent() {
+  const items = useSelector((state) => state.items.items);
+  const dispatch = useDispatch();
+
   const [sort, setSort] = useState("alphabetical");
   const [modalVisible, setModalVisible] = useState(false);
-  const [refreshing, setRefreshing] = React.useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState(items);
 
-  const onRefresh = React.useCallback(() => {
+  const onRefresh = useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
     }, 500);
-    getItems().then((r) => {
-      setItems([...r]);
-    });
+    dispatch(fetchItems());
   }, []);
 
   useEffect(() => {
@@ -185,8 +187,6 @@ export default function ItemsListComponent({ items, setItems }) {
               >
                 <ItemComponent
                   item={item}
-                  items={items}
-                  setItems={setItems}
                   search={search}
                   setSearch={setSearch}
                 />

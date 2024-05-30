@@ -3,7 +3,6 @@ import { getIngredients, updateIngredients } from "~/api/apiIngredients";
 
 const initialState = {
   ingredients: [],
-  defaultIngredients: [],
   status: "idle",
   error: null,
 };

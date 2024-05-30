@@ -1,16 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { View, Image } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import {
-  getItems,
-  updateItems,
-  getMeals,
-  updateMeals,
-  getIngredients,
-  updateIngredients,
-  getRecipes,
-  updateRecipes,
-} from "~/api/apiManager";
 import Animated, {
   FadeIn,
   FadeOut,
@@ -25,11 +15,10 @@ import GroceriesCarouselComponent from "~/components/groceries/carousel/Grocerie
 
 export default function GroceryScreen() {
   const user = useSelector((state) => state.user.user);
+  const ingredients = useSelector((state) => state.ingredients.ingredients);
+  const meals = useSelector((state) => state.meals.meals);
+  const recipes = useSelector((state) => state.recipes.recipes);
 
-  const [meals, setMeals] = useState();
-  const [ingredients, setIngredients] = useState();
-  const [items, setItems] = useState();
-  const [recipes, setRecipes] = useState();
   const [activeChip, setActiveChip] = useState(0);
   const chipListRef = useRef(null);
 
@@ -57,24 +46,6 @@ export default function GroceryScreen() {
   ];
 
   const searchBarHeight = useSharedValue(76);
-
-  useEffect(() => {
-    !meals ? getMeals().then((r) => setMeals(r)) : updateMeals(meals);
-  }, [meals]);
-
-  useEffect(() => {
-    !items ? getItems().then((r) => setItems(r)) : updateItems(items);
-  }, [items]);
-
-  useEffect(() => {
-    !ingredients
-      ? getIngredients().then((r) => setIngredients(r))
-      : updateIngredients(ingredients);
-  }, [ingredients]);
-
-  useEffect(() => {
-    !recipes ? getRecipes().then((r) => setRecipes(r)) : updateRecipes(recipes);
-  }, [recipes]);
 
   const searchBarAnimatedStyle = useAnimatedStyle(() => ({
     height: searchBarHeight.value,
@@ -111,17 +82,9 @@ export default function GroceryScreen() {
                 <View className="pb-24">
                   <GroceriesCarouselComponent
                     categories={categories}
-                    meals={meals}
-                    setMeals={setMeals}
-                    ingredients={ingredients}
-                    setIngredients={setIngredients}
-                    recipes={recipes}
-                    setRecipes={setRecipes}
                     activeChip={activeChip}
                     setActiveChip={setActiveChip}
                     chipListRef={chipListRef}
-                    items={items}
-                    setItems={setItems}
                   />
                 </View>
               </Animated.View>

@@ -179,4 +179,9 @@ export const {
   updateFinishedAnimation,
 } = categoriesSlice.actions;
 
+export const getCategory = (state, id) =>
+  state.categories.find((category) => category.id === id);
+
+export const getExpense = (state, id) => {};
+
 export default categoriesSlice.reducer;

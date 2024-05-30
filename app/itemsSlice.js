@@ -3,7 +3,7 @@ import { getItems, updateItems } from "~/api/apiItems";
 
 const initialState = {
   items: [],
-  defaultItems: [],
+  search: [],
   status: "idle",
   error: null,
 };
@@ -47,6 +47,7 @@ const itemsSlice = createSlice({
       .addCase(fetchItems.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.items = action.payload;
+        state.search = action.payload;
       })
       .addCase(fetchItems.rejected, (state, action) => {
         state.status = "failed";

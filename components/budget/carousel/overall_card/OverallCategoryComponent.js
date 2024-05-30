@@ -6,11 +6,13 @@ import { IconButton } from "react-native-paper";
 import BarChartComponent from "~/components/budget/charts/BarChartComponent";
 import { getRemainingDaysInMonth } from "~/utils/manageDate";
 import { calculateMonthlyInOut } from "~/utils/calculateMoneyFlow";
+import { useDispatch } from "react-redux";
+import { getCategory } from "~/app/categoriesSlice";
 
-export default function OverallCategoryComponent({ item }) {
-  const { categories, date } = useSelector(
-    (state) => state.categories
-  );
+export default function OverallCategoryComponent({ categoryId }) {
+  const { categories, date } = useSelector((state) => state.categories);
+
+  const category = useSelector(getCategory);
 
   const dispatch = useDispatch();
 
@@ -33,8 +35,7 @@ export default function OverallCategoryComponent({ item }) {
           <View className="flex-row justify-center -mt-12">
             <DonutChartComponent
               item={{
-                id: item.id,
-                title: item.title,
+                id: categoryId,
                 real: total.real.out,
                 forecast: total.real.in,
               }}
@@ -46,13 +47,13 @@ export default function OverallCategoryComponent({ item }) {
                 className="text-3xl font-semibold z-10"
                 style={{ color: themeColors.onSecondaryContainer }}
               >
-                {item.title}
+                {category.title}
               </Text>
-              <IconButton icon={item.icon} color={themeColors.primary} />
+              <IconButton icon={category.icon} color={themeColors.primary} />
             </View>
             <View className="flex-row">
               <View className="space-y-1">
-              <View className="flex-row items-center space-x-1">
+                <View className="flex-row items-center space-x-1">
                   <Text
                     className="text-base"
                     style={{ color: themeColors.onSecondaryContainer }}
