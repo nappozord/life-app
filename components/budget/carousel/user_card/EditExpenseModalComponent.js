@@ -15,41 +15,39 @@ import { IconButton } from "react-native-paper";
 import Animated, { SlideInDown } from "react-native-reanimated";
 import { isPreviousMonth } from "~/utils/manageDate";
 import { useDispatch, useSelector } from "react-redux";
-
 import { updateUser } from "~/app/userSlice";
-import { addExpense, deleteExpense } from "~/app/categoriesSlice";
+import {
+  addExpense,
+  deleteExpense,
+  getCategory,
+  getExpense,
+} from "~/app/categoriesSlice";
 
 export default function EditExpenseModalComponent({
-  item,
+  categoryId,
+  expenseId,
   modalVisible,
   setModalVisible,
-  itemIcon,
-  itemCategory,
 }) {
   const user = useSelector((state) => state.user.user);
-  const { categories, date } = useSelector((state) => state.categories);
+  const date = useSelector((state) => state.categories.date);
+  const expense = useSelector((state) =>
+    getExpense(state, expenseId, categoryId)
+  );
+  const category = useSelector((state) => getCategory(state, categoryId));
 
   const inputRef = useRef(null);
   const currentDate = new Date().toDateString();
 
   const dispatch = useDispatch();
 
-  const description = useRef(item ? item.title.toString() : null);
-  const amount = useRef(item ? parseFloat(item.total).toFixed(2) : null);
+  const description = useRef(expense ? expense.title.toString() : null);
+  const amount = useRef(expense ? parseFloat(expense.total).toFixed(2) : null);
   const expenseDate = useRef(
-    item ? (item.date ? item.date : currentDate) : currentDate
+    expense ? (expense.date ? expense.date : currentDate) : currentDate
   );
 
   const handleAddExpense = () => {
-    amount.current === null || amount.current === ""
-      ? (amount.current = 0)
-      : null;
-    description.current === null || description.current === ""
-      ? (description.current = "New Expense")
-      : null;
-
-    const category = categories.find((obj) => itemCategory === obj.title);
-
     if (category.income) {
       if (!isPreviousMonth(date.month, date.year))
         dispatch(
@@ -70,7 +68,7 @@ export default function EditExpenseModalComponent({
 
     dispatch(
       addExpense({
-        itemCategory,
+        categoryId,
         expenseDate: expenseDate.current,
         amount: amount.current,
         description: description.current,
@@ -79,19 +77,15 @@ export default function EditExpenseModalComponent({
   };
 
   const handleUpdateExpense = () => {
-    handleDeleteExpense();
-    handleAddExpense();
-  };
-
-  const handleDeleteExpense = () => {
-    const category = categories.find((obj) => itemCategory === obj.title);
-
     if (category.income) {
       if (!isPreviousMonth(date.month, date.year))
         dispatch(
           updateUser({
             ...user,
-            balance: parseFloat(user.balance) - parseFloat(item.total),
+            balance:
+              parseFloat(user.balance) -
+              parseFloat(expense.total) +
+              parseFloat(amount.current),
           })
         );
     } else {
@@ -99,17 +93,54 @@ export default function EditExpenseModalComponent({
         dispatch(
           updateUser({
             ...user,
-            balance: parseFloat(user.balance) + parseFloat(item.total),
+            balance:
+              parseFloat(user.balance) +
+              parseFloat(expense.total) -
+              parseFloat(amount.current),
           })
         );
     }
 
     dispatch(
       deleteExpense({
-        itemCategory,
-        id: item.id,
-        title: item.title,
-        total: item.total,
+        expenseId: expense.id,
+        categoryId: category.id,
+      })
+    );
+
+    dispatch(
+      addExpense({
+        categoryId,
+        expenseDate: expenseDate.current,
+        amount: amount.current,
+        description: description.current,
+      })
+    );
+  };
+
+  const handleDeleteExpense = () => {
+    if (category.income) {
+      if (!isPreviousMonth(date.month, date.year))
+        dispatch(
+          updateUser({
+            ...user,
+            balance: parseFloat(user.balance) - parseFloat(expense.total),
+          })
+        );
+    } else {
+      if (!isPreviousMonth(date.month, date.year))
+        dispatch(
+          updateUser({
+            ...user,
+            balance: parseFloat(user.balance) + parseFloat(expense.total),
+          })
+        );
+    }
+
+    dispatch(
+      deleteExpense({
+        expenseId: expense.id,
+        categoryId: category.id,
       })
     );
   };
@@ -133,11 +164,9 @@ export default function EditExpenseModalComponent({
       <Image
         className="absolute h-full w-full"
         source={require("~/assets/splash.png")}
-        //blurRadius={80}
         style={{ opacity: 0.9 }}
       />
       <KeyboardAvoidingView
-        //keyboardVerticalOffset={-50}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
@@ -166,13 +195,13 @@ export default function EditExpenseModalComponent({
                 >
                   <View className="flex-row">
                     <IconButton
-                      icon={item ? "pencil" : "plus"}
+                      icon={expense ? "pencil" : "plus"}
                       color={themeColors.onBackground}
                       size={30}
                       className="-mr-2"
                     />
                     <IconButton
-                      icon={itemIcon}
+                      icon={category.icon}
                       color={themeColors.onBackground}
                       size={30}
                       className="-ml-2"
@@ -182,7 +211,7 @@ export default function EditExpenseModalComponent({
                     className="text-xl font-semibold -mt-4 mb-4"
                     style={{ color: themeColors.onBackground }}
                   >
-                    {itemCategory}
+                    {category.title}
                   </Text>
                 </View>
                 <View />
@@ -257,7 +286,7 @@ export default function EditExpenseModalComponent({
                     </View>
                   </View>
                 </View>
-                {item ? (
+                {expense ? (
                   <View className="flex-row justify-between items-center">
                     <View className="flex-1">
                       <TouchableOpacity

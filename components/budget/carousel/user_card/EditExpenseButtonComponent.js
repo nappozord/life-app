@@ -5,7 +5,7 @@ import { themeColors } from "~/theme";
 import EditExpenseModalComponent from "./EditExpenseModalComponent";
 import EditItemModalComponent from "~/components/list/list_card/EditItemModalComponent";
 
-export default function EditExpenseButtonComponent({ icon, category, isList }) {
+export default function EditExpenseButtonComponent({ categoryId, isList }) {
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
@@ -15,15 +15,13 @@ export default function EditExpenseButtonComponent({ icon, category, isList }) {
           <EditItemModalComponent
             modalVisible={modalVisible}
             setModalVisible={setModalVisible}
-            itemIcon={icon}
-            itemCategory={category}
+            categoryId={categoryId}
           />
         ) : (
           <EditExpenseModalComponent
             modalVisible={modalVisible}
             setModalVisible={setModalVisible}
-            itemIcon={icon}
-            itemCategory={category}
+            categoryId={categoryId}
           />
         )
       ) : null}

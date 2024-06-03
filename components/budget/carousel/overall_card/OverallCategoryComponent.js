@@ -6,27 +6,26 @@ import { IconButton } from "react-native-paper";
 import BarChartComponent from "~/components/budget/charts/BarChartComponent";
 import { getRemainingDaysInMonth } from "~/utils/manageDate";
 import { calculateMonthlyInOut } from "~/utils/calculateMoneyFlow";
-import { useDispatch } from "react-redux";
-import { getCategory } from "~/app/categoriesSlice";
+import { useSelector } from "react-redux";
 
-export default function OverallCategoryComponent({ categoryId }) {
-  const { categories, date } = useSelector((state) => state.categories);
+export default function OverallCategoryComponent() {
+  const categories = useSelector((state) => state.categories.categories);
 
-  const category = useSelector(getCategory);
+  const date = useSelector((state) => state.categories.date);
 
-  const dispatch = useDispatch();
+  const category = categories[0];
 
   const [total, setTotal] = useState(() => getOverall());
-
-  useEffect(() => {
-    getOverall();
-  }, [dispatch]);
 
   function getOverall() {
     calculateMonthlyInOut(categories).then((inOut) => {
       setTotal(inOut);
     });
   }
+
+  useEffect(() => {
+    getOverall();
+  }, [categories]);
 
   return (
     <Pressable>
@@ -35,7 +34,7 @@ export default function OverallCategoryComponent({ categoryId }) {
           <View className="flex-row justify-center -mt-12">
             <DonutChartComponent
               item={{
-                id: categoryId,
+                id: 0,
                 real: total.real.out,
                 forecast: total.real.in,
               }}

@@ -23,10 +23,12 @@ const HEIGHT = 400;
 const OUTER_HEIGHT = 150;
 const WIDTH = 300;
 
-export default function CategoryCardComponent({ categoryId, isList }) {
-  const { activeCategory, cardPressed } = useSelector(
-    (state) => state.categories
-  );
+export default function CategoryCardComponent({
+  categoryId,
+  isList,
+  isActive,
+}) {
+  const cardPressed = useSelector((state) => state.categories.cardPressed);
 
   const dispatch = useDispatch();
 
@@ -44,8 +46,8 @@ export default function CategoryCardComponent({ categoryId, isList }) {
   }, [loading]);
 
   const finishAnimationCallback = (finished) => {
-    if (activeCategory == categoryId) {
-      updateFinishedAnimation(finished);
+    if (isActive) {
+      dispatch(updateFinishedAnimation(finished));
       setLoading(false);
     }
   };
@@ -60,7 +62,7 @@ export default function CategoryCardComponent({ categoryId, isList }) {
   useEffect(() => {
     if (categoryId !== 0) {
       if (!cardPressed) {
-        if (activeCategory !== categoryId) {
+        if (!isActive) {
           width.value = WIDTH;
           height.value = HEIGHT;
         } else {
@@ -68,7 +70,7 @@ export default function CategoryCardComponent({ categoryId, isList }) {
           height.value = withTiming(HEIGHT, { duration: 500 });
         }
       } else {
-        if (activeCategory !== categoryId) {
+        if (!isActive) {
           width.value = dimensions.width;
           height.value = dimensions.height;
         } else {
@@ -119,7 +121,7 @@ export default function CategoryCardComponent({ categoryId, isList }) {
         >
           {categoryId === 0 ? (
             !isList ? (
-              <OverallCategoryComponent categoryId={categoryId} />
+              <OverallCategoryComponent />
             ) : (
               <OverallListCategoryComponent categoryId={categoryId} />
             )

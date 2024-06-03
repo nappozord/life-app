@@ -10,16 +10,17 @@ import { fetchCategories, fetchDefaultCategories } from "./app/categoriesSlice";
 import { fetchIngredients } from "./app/ingredientsSlice";
 import { fetchRecipes } from "./app/recipesSlice";
 import { fetchItems } from "./app/itemsSlice";
+import { formatDate } from "./utils/manageDate";
 
 Amplify.configure(awsmobile);
 
 export default function App() {
   store.dispatch(fetchUser());
-  store.dispatch(fetchCategories(new Date()));
+  store.dispatch(fetchCategories(formatDate(new Date())));
   store.dispatch(fetchDefaultCategories());
-  store.dispatch(fetchIngredients());
+  /*store.dispatch(fetchIngredients());
   store.dispatch(fetchRecipes());
-  store.dispatch(fetchItems());
+  store.dispatch(fetchItems());*/
 
   return (
     <Provider store={store}>

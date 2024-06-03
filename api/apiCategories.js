@@ -1,18 +1,36 @@
 import { defaultCategories } from "~/data";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getMonthNumber } from "~/utils/manageDate";
+import { getMonthNumber, sortDatesDescending } from "~/utils/manageDate";
 import { calculateMonthlyInOut } from "~/utils/calculateMoneyFlow";
 
-async function getMonthCategories(totalCategories, date) {
-  const parts = date.title.split(", ");
+async function calculateMonthStartingBalance(totalCategories, date) {
+  const jsonValue = await AsyncStorage.getItem("user");
+  const user = JSON.parse(jsonValue);
+  let balance = user.balance;
 
-  const month = parts[0];
-  const year = parseInt(parts[1]);
+  if (totalCategories) {
+    const month = date.month;
+    const year = date.year;
+
+    for (obj of sortDatesDescending(totalCategories)) {
+      if (obj.year > year || (obj.year === year && obj.month >= month)) {
+        const monthlyBalance = await calculateMonthlyInOut(obj.categories);
+        balance -= monthlyBalance.real.in - monthlyBalance.real.out;
+      }
+    }
+  }
+
+  return balance;
+}
+
+async function getMonthCategories(totalCategories, date) {
+  const month = date.month;
+  const year = date.year;
 
   const item = {
     title: date.title,
-    month: getMonthNumber(month),
-    year: year,
+    month,
+    year,
     startingBalance: await calculateMonthStartingBalance(totalCategories, date),
   };
 
@@ -63,7 +81,10 @@ export async function getDefaultCategories(date, item) {
 export async function addDefaultCategory(category) {
   const jsonValue = await AsyncStorage.getItem("defaultCategories");
   const defCategories = JSON.parse(jsonValue);
-  defCategories.push(category);
+  defCategories.push({
+    ...category,
+    id: defCategories.length,
+  });
 
   await AsyncStorage.setItem(
     "defaultCategories",
@@ -74,7 +95,14 @@ export async function addDefaultCategory(category) {
 export async function deleteDefaultCategory(category) {
   const jsonValue = await AsyncStorage.getItem("defaultCategories");
   let defCategories = JSON.parse(jsonValue);
-  defCategories = defCategories.filter((obj) => obj.id !== category.id);
+  defCategories = defCategories.filter((obj) => obj.title !== category.title);
+
+  let i = 0;
+
+  defCategories.forEach((c) => {
+    c.id = i;
+    i++;
+  });
 
   await AsyncStorage.setItem(
     "defaultCategories",
@@ -148,7 +176,8 @@ export async function updateCategories(categories, date) {
 
   if (
     categories.length === 0 ||
-    (catTotals.real.in === defTotals.real.in &&
+    (categories.length === defCategories.length &&
+      catTotals.real.in === defTotals.real.in &&
       catTotals.real.out === defTotals.real.out &&
       catTotals.forecast.in === defTotals.forecast.in &&
       catTotals.forecast.out === defTotals.forecast.out)
@@ -169,16 +198,14 @@ export async function updateCategories(categories, date) {
     totalCategories.find((obj) => obj.title === date.title).startingBalance =
       startingBalance;
   } else {
-    const parts = date.title.split(", ");
-
-    const month = parts[0];
-    const year = parseInt(parts[1]);
+    const month = date.month;
+    const year = date.year;
 
     totalCategories.push({
       title: date.title,
       categories: categories,
-      month: getMonthNumber(month),
-      year: year,
+      month,
+      year,
     });
   }
 

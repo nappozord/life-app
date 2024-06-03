@@ -11,20 +11,20 @@ import {
 import React, { useRef } from "react";
 import { themeColors } from "~/theme";
 import { Checkbox, IconButton } from "react-native-paper";
-import { setDefaultCategoryForecast } from "~/api/apiManager";
 import { KeyboardAvoidingView } from "react-native";
 import Animated, { SlideInDown } from "react-native-reanimated";
 import { useDispatch, useSelector } from "react-redux";
-import { updateForecast } from "../../../../app/categoriesSlice";
+import { updateForecast, getCategory } from "~/app/categoriesSlice";
 
 export default function EditForecastModalComponent({
-  item,
+  categoryId,
   modalVisible,
   setModalVisible,
 }) {
+  const category = useSelector((state) => getCategory(state, categoryId));
   const dispatch = useDispatch();
 
-  const amount = useRef(Math.abs(item.forecast).toString());
+  const amount = useRef(Math.abs(category.forecast).toString());
   const [checked, setChecked] = React.useState(false);
   const inputRef = React.useRef(null);
 
@@ -33,7 +33,9 @@ export default function EditForecastModalComponent({
       ? (amount.current = 0)
       : null;
 
-    dispatch(updateForecast({ id: item.id, checked, amount: amount.current }));
+    dispatch(
+      updateForecast({ id: category.id, checked, amount: amount.current })
+    );
   };
 
   return (
@@ -92,7 +94,7 @@ export default function EditForecastModalComponent({
                       className="-mr-2"
                     />
                     <IconButton
-                      icon={item.icon}
+                      icon={category.icon}
                       color={themeColors.onBackground}
                       size={30}
                       className="-ml-2"
@@ -102,7 +104,7 @@ export default function EditForecastModalComponent({
                     className="text-xl font-semibold -mt-4 mb-4"
                     style={{ color: themeColors.onBackground }}
                   >
-                    {item.title}
+                    {category.title}
                   </Text>
                 </View>
                 <View />

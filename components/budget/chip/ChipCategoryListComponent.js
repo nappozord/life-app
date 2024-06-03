@@ -1,41 +1,63 @@
 import { View, FlatList } from "react-native";
-import React from "react";
+import React, { useRef, useEffect, useCallback, useMemo } from "react";
 import ChipCategoryComponent from "./ChipCategoryComponent";
 import { useSelector } from "react-redux";
 
-export default function ChipCategoryListComponent({ categoryListRef, isList }) {
-  const { categories, activeCategory } = useSelector(
-    (state) => state.categories
+const MemoizedChipCategoryComponent = React.memo(ChipCategoryComponent);
+
+export default function ChipCategoryListComponent({ isList }) {
+  const categories = useSelector((state) => state.categories.categories);
+
+  const activeCategory = useSelector(
+    (state) => state.categories.activeCategory
+  );
+
+  const currentIndex = useRef(activeCategory);
+
+  const chipsRef = useRef(null);
+
+  useEffect(() => {
+    if (chipsRef.current && activeCategory !== currentIndex.current) {
+      chipsRef.current.scrollToIndex({
+        animated: true,
+        index: activeCategory,
+      });
+      currentIndex.current = activeCategory;
+    }
+  }, [activeCategory]);
+
+  const renderItem = useCallback(
+    ({ item }) => (
+      <MemoizedChipCategoryComponent
+        item={item}
+        isList={isList}
+        isActive={activeCategory === item.id}
+      />
+    ),
+    [activeCategory, isList, categories]
+  );
+
+  const keyExtractor = useCallback(
+    (item) => item.id,
+    [activeCategory, isList, categories]
+  );
+
+  const data = useMemo(
+    () => [{ id: -1, title: "Add", index: -1 }, ...categories],
+    [categories]
   );
 
   return (
     <View>
       <FlatList
-        ref={categoryListRef}
+        ref={chipsRef}
         horizontal
         fadingEdgeLength={50}
         showsHorizontalScrollIndicator={false}
-        data={[
-          {
-            id: -1,
-            title: "Add",
-            index: -1,
-          },
-          ...categories,
-        ]}
-        keyExtractor={(item) => item.id}
+        data={data}
+        keyExtractor={keyExtractor}
         className="overflow-visible"
-        renderItem={({ item }) => {
-          const isActive = item.id == activeCategory;
-          return (
-            <ChipCategoryComponent
-              item={item}
-              isActive={isActive}
-              categoryListRef={categoryListRef}
-              isList={isList}
-            />
-          );
-        }}
+        renderItem={renderItem}
       />
     </View>
   );

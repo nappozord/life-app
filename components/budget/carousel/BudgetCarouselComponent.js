@@ -1,42 +1,55 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useMemo, useCallback } from "react";
 import Carousel from "react-native-snap-carousel";
 import CategoryCardComponent from "./CategoryCardComponent";
 import { useWindowDimensions } from "react-native";
 import Animated from "react-native-reanimated";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  updateActiveCategory,
-  updateFinishedAnimation,
-} from "~/app/categoriesSlice";
+import { updateActiveCategory } from "~/app/categoriesSlice";
 
-export default function BudgetCarouselComponent({ categoryListRef, isList }) {
-  const { categories, activeCategory, finishedAnimation } = useSelector(
-    (state) => state.categories
+const MemoizedCategoryCardComponent = React.memo(CategoryCardComponent);
+
+export default function BudgetCarouselComponent({ isList }) {
+  const categories = useSelector((state) => state.categories.categories);
+  const activeCategory = useSelector(
+    (state) => state.categories.activeCategory
   );
-
   const dispatch = useDispatch();
-
   const dimensions = useWindowDimensions();
+  const currentIndex = useRef(null);
   const carouselRef = useRef(null);
 
-  if (carouselRef.current) carouselRef.current.snapToItem(activeCategory);
+  if (carouselRef.current && activeCategory !== currentIndex) {
+    carouselRef.current.snapToItem(activeCategory);
+    currentIndex.current = activeCategory;
+  }
 
-  if (activeCategory === 0 && finishedAnimation) updateFinishedAnimation(false);
+  const memoizedCategories = useMemo(() => categories, [categories]);
+
+  const renderItem = useCallback(
+    ({ item }) => (
+      <MemoizedCategoryCardComponent
+        categoryId={item.id}
+        isList={isList}
+        isActive={activeCategory === item.id}
+      />
+    ),
+    [isList, activeCategory, categories]
+  );
+
+  const handleSnapToItem = useCallback(
+    (index) => {
+      dispatch(updateActiveCategory(index));
+    },
+    [dispatch]
+  );
 
   return (
     <Animated.View>
       <Carousel
         ref={carouselRef}
         containerCustomStyle={{ overflow: "visible" }}
-        data={categories}
-        renderItem={({ item }) => (
-          <CategoryCardComponent
-            key={"carousel_" + item.id}
-            categoryId={item.id}
-            isList={isList}
-          />
-        )}
-        firstItem={activeCategory}
+        data={memoizedCategories}
+        renderItem={renderItem}
         inactiveSlideOpacity={1}
         inactiveSlideScale={1}
         sliderWidth={410}
@@ -44,13 +57,7 @@ export default function BudgetCarouselComponent({ categoryListRef, isList }) {
         slideStyle={{ display: "flex", alignItems: "center" }}
         initialNumToRender={3}
         windowSize={3}
-        onSnapToItem={(index) => {
-          dispatch(updateActiveCategory(index));
-          categoryListRef.current.scrollToIndex({
-            animated: true,
-            index: index,
-          });
-        }}
+        onSnapToItem={handleSnapToItem}
       />
     </Animated.View>
   );

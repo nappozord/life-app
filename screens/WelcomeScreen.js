@@ -37,6 +37,9 @@ import { checkIngredientQuantity } from "~/utils/manageIngredients";
 const height = Dimensions.get("window").height;
 
 export default function WelcomeScreen() {
+  const user = useSelector((state) => state.user.user);
+  const dispatch = useDispatch();
+
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
   const [login, setLogin] = useState(false);
@@ -60,9 +63,6 @@ export default function WelcomeScreen() {
   const dev = false;
   const reset = false;
 
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.user);
-
   useEffect(() => {
     checkIngredientQuantity(new Date());
 
@@ -80,14 +80,14 @@ export default function WelcomeScreen() {
       }
 
       if (reset) {
-        /*updateUser(defaultUser);
-        restoreBackup("January, 2024");
-        restoreBackup("December, 2023");
-        AsyncStorage.clear();
-        AsyncStorage.removeItem("logs");
-        AsyncStorage.removeItem("defaultCategories");
-        AsyncStorage.removeItem("categories");*/
-        AsyncStorage.removeItem("lists");
+        //updateUser(defaultUser);
+        //restoreBackup("January, 2024");
+        //restoreBackup("December, 2023");
+        //AsyncStorage.clear();
+        //AsyncStorage.removeItem("logs");
+        //AsyncStorage.removeItem("defaultCategories");
+        //AsyncStorage.removeItem("categories");
+        //AsyncStorage.removeItem("lists");
       }
 
       getCurrentUser()

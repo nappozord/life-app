@@ -19,7 +19,7 @@ export function formatDate(inputDate) {
   const month = inputDate.toLocaleString("default", { month: "long" });
   const year = inputDate.getFullYear();
   return {
-    date: inputDate,
+    date: inputDate.toISOString(),
     month: inputDate.getMonth() + 1,
     year: year,
     title: month + ", " + year,

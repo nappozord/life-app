@@ -1,9 +1,15 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { themeColors } from "~/theme";
+import { getExpense } from "~/app/categoriesSlice";
+import { useSelector } from "react-redux";
 import EditExpenseModalComponent from "./EditExpenseModalComponent";
 
-export default function ExpenseComponent({ item, itemIcon, itemCategory }) {
+export default function ExpenseComponent({ expenseId, categoryId }) {
+  const expense = useSelector((state) =>
+    getExpense(state, expenseId, categoryId)
+  );
+
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
@@ -18,9 +24,8 @@ export default function ExpenseComponent({ item, itemIcon, itemCategory }) {
         <EditExpenseModalComponent
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
-          item={item}
-          itemIcon={itemIcon}
-          itemCategory={itemCategory}
+          categoryId={categoryId}
+          expenseId={expenseId}
         />
       ) : null}
       <View style={{ maxWidth: "80%" }}>
@@ -30,8 +35,8 @@ export default function ExpenseComponent({ item, itemIcon, itemCategory }) {
           ellipsizeMode="tail"
           style={{ color: themeColors.onSecondaryContainer }}
         >
-          {item.title +
-            (item.occurrence > 1 ? " (" + item.occurrence + ")" : "")}
+          {expense.title +
+            (expense.occurrence > 1 ? " (" + expense.occurrence + ")" : "")}
         </Text>
       </View>
       <View>
@@ -39,7 +44,7 @@ export default function ExpenseComponent({ item, itemIcon, itemCategory }) {
           className="text-lg font-semibold z-10"
           style={{ color: themeColors.onSecondaryContainer }}
         >
-          €{parseFloat(item.total).toFixed(2)}
+          €{parseFloat(expense.total).toFixed(2)}
         </Text>
       </View>
     </TouchableOpacity>

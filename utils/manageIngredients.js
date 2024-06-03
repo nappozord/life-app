@@ -1,12 +1,7 @@
-import {
-  getMeals,
-  getIngredients,
-  getRecipes,
-  updateIngredients,
-  updateMeals,
-  updateRecipes,
-  updateLogs,
-} from "~/api/apiManager";
+import { getMeals, updateMeals } from "~/api/apiMeals";
+import { getIngredients, updateIngredients } from "~/api/apiIngredients";
+import { getRecipes, updateRecipes } from "~/api/apiRecipes";
+import { updateLogs } from "~/api/apiLogs";
 
 export function getIngredientFromMeal(
   meal,

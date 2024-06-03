@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getUser, updateUser } from "~/api/apiUser";
+import { getUser, updateUser as updateUserFromAPI } from "~/api/apiUser";
 
 const initialState = {
   user: {},
@@ -19,7 +19,7 @@ const userSlice = createSlice({
     updateUser: {
       reducer(state, action) {
         state.user = action.payload;
-        updateUser(action.payload);
+        updateUserFromAPI(action.payload);
       },
     },
   },

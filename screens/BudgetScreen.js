@@ -1,9 +1,9 @@
 import { View, Image, BackHandler, Alert } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import React, { useState, useRef, useEffect } from "react";
-import ChipCategoryListComponent from "~/components/budget/chip/ChipCategoryListComponent";
-import BudgetCarouselComponent from "~/components/budget/carousel/BudgetCarouselComponent";
-import DatePickerComponent from "~/components/budget/datepicker/DatePickerComponent";
+import React, { useEffect, useMemo, useCallback } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { signOut } from "aws-amplify/auth";
+import { useSelector } from "react-redux";
 import Animated, {
   withTiming,
   FadeIn,
@@ -11,35 +11,34 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
 } from "react-native-reanimated";
-import { formatDate } from "~/utils/manageDate";
-import { getCategories, saveCategories } from "~/api/apiManager";
-import HeaderComponent from "~/components/header/HeaderComponent";
-import { useNavigation } from "@react-navigation/native";
-import { signOut } from "aws-amplify/auth";
-import { useDispatch, useSelector } from "react-redux";
 
-import { updateActiveCategory } from "~/app/categorySlice";
+import ChipCategoryListComponent from "~/components/budget/chip/ChipCategoryListComponent";
+import BudgetCarouselComponent from "~/components/budget/carousel/BudgetCarouselComponent";
+import DatePickerComponent from "~/components/budget/datepicker/DatePickerComponent";
+import HeaderComponent from "~/components/header/HeaderComponent";
+
+const MemoizedHeaderComponent = React.memo(HeaderComponent);
+const MemoizedDatePickerComponent = React.memo(DatePickerComponent);
+const MemoizedChipCategoryListComponent = React.memo(ChipCategoryListComponent);
+const MemoizedBudgetCarouselComponent = React.memo(BudgetCarouselComponent);
 
 export default function BudgetScreen() {
   const user = useSelector((state) => state.user.user);
-  const { date, categories, activeCategory, cardPressed } = useSelector(
-    (state) => state.categories
-  );
+  const cardPressed = useSelector((state) => state.categories.cardPressed);
 
-  const dispatch = useDispatch();
   const navigation = useNavigation();
-  const categoryListRef = useRef(null);
   const searchBarHeight = useSharedValue(76);
   const searchBarAnimatedStyle = useAnimatedStyle(() => ({
     height: searchBarHeight.value,
   }));
 
-  if (!categories.find((obj) => obj.index === activeCategory))
-    dispatch(updateActiveCategory(0));
-
-  cardPressed
-    ? (searchBarHeight.value = withTiming(0, { duration: 500 }))
-    : (searchBarHeight.value = withTiming(76, { duration: 500 }));
+  useEffect(() => {
+    if (cardPressed) {
+      searchBarHeight.value = withTiming(0, { duration: 500 });
+    } else {
+      searchBarHeight.value = withTiming(76, { duration: 500 });
+    }
+  }, [cardPressed]);
 
   useEffect(() => {
     const backAction = () => {
@@ -54,7 +53,7 @@ export default function BudgetScreen() {
           onPress: () => {
             signOut()
               .then(() => navigation.push("Welcome"))
-              .catch((e) => navigation.push("Welcome"));
+              .catch(() => navigation.push("Welcome"));
           },
         },
       ]);
@@ -67,9 +66,11 @@ export default function BudgetScreen() {
     );
 
     return () => backHandler.remove();
-  }, []);
+  }, [navigation]);
 
-  if (activeCategory === 0) dispatch(updateActiveCategory(false));
+  const renderHeader = useMemo(() => {
+    return cardPressed ? <View></View> : <MemoizedHeaderComponent />;
+  }, [cardPressed]);
 
   return (
     <View className="flex-1 relative">
@@ -81,21 +82,20 @@ export default function BudgetScreen() {
       {user.userId ? (
         <View className="mt-16">
           <Animated.View style={searchBarAnimatedStyle} className="mx-5">
-            {cardPressed ? <View></View> : <HeaderComponent />}
+            {renderHeader}
           </Animated.View>
           <View className="mb-3 -mt-4">
-            <DatePickerComponent />
+            <MemoizedDatePickerComponent />
           </View>
           <View>
-            <ChipCategoryListComponent categoryListRef={categoryListRef} />
+            <MemoizedChipCategoryListComponent />
           </View>
           <Animated.View
             className="mt-1 py-2"
-            key={date.date}
             entering={FadeIn}
             exiting={FadeOut}
           >
-            <BudgetCarouselComponent categoryListRef={categoryListRef} />
+            <MemoizedBudgetCarouselComponent />
           </Animated.View>
         </View>
       ) : (

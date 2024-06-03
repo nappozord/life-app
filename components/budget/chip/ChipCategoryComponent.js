@@ -3,15 +3,10 @@ import React, { useState } from "react";
 import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
 import EditCategoryModalComponent from "./EditCategoryModalComponent";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { updateActiveCategory } from "~/app/categoriesSlice";
 
-export default function ChipCategoryComponent({
-  item,
-  isActive,
-  categoryListRef,
-  isList,
-}) {
+export default function ChipCategoryComponent({ item, isList, isActive }) {
   const dispatch = useDispatch();
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -26,18 +21,14 @@ export default function ChipCategoryComponent({
       <TouchableOpacity
         onPress={() => {
           if (item.id >= 0) {
-            categoryListRef.current.scrollToIndex({
-              animated: true,
-              index: item.index,
-            });
-            dispatch(updateActiveCategory(item.index));
+            dispatch(updateActiveCategory(item.id));
           } else {
             setModalVisible(true);
           }
         }}
         className="p-3 px-5 rounded-full mr-2 shadow"
         style={{
-          marginLeft: item.index === -1 ? 18 : 0,
+          marginLeft: item.id === -1 ? 18 : 0,
           backgroundColor: isActive
             ? themeColors.primary
             : themeColors.secondary,

@@ -23,23 +23,25 @@ import {
   updateCategory,
   addCategory,
   deleteCategory,
+  getCategory,
+  updateActiveCategory,
 } from "~/app/categoriesSlice";
 
 export default function EditCategoryModalComponent({
-  item,
+  categoryId,
   modalVisible,
   setModalVisible,
   isList,
 }) {
-  const defaultCategories = useSelector(
-    (state) => state.categories.defaultCategories
-  );
   const categories = useSelector((state) => state.categories.categories);
+
+  const category = useSelector((state) => getCategory(state, categoryId));
+
   const dispatch = useDispatch();
 
-  const description = useRef(item ? item.title.toString() : null);
+  const description = useRef(category ? category.title.toString() : null);
   const [icon, setIcon] = useState(
-    item ? item.icon.toString() : "card-outline"
+    category ? category.icon.toString() : "card-outline"
   );
   const inputRef = useRef(null);
 
@@ -47,17 +49,14 @@ export default function EditCategoryModalComponent({
 
   const handleAddCategory = () => {
     if (!isList) {
-      const index = defaultCategories[defaultCategories.length - 1].id + 1;
-
       const category = {
-        id: index > categories.length ? index : categories.length,
+        id: categories.length,
         title: description.current,
         real: 0,
         forecast: 0,
         icon: icon,
         expenses: [],
         income: false,
-        index: categories.length,
       };
 
       if (checked) addDefaultCategory(category);
@@ -83,18 +82,19 @@ export default function EditCategoryModalComponent({
 
   const handleDeleteCategory = () => {
     if (!isList) {
-      if (checked) deleteDefaultCategory(item);
+      if (checked && category.id !== 1) deleteDefaultCategory(category);
 
-      dispatch(deleteCategory(item.id));
+      dispatch(deleteCategory(category.id));
+      dispatch(updateActiveCategory(0));
     }
   };
 
   const handleUpdateCategories = () => {
     if (!isList) {
-      updateDeafultCategory(categories.find((obj) => obj.id === item.id));
+      updateDeafultCategory(category);
 
       dispatch(
-        updateCategory({ id: item.id, title: description.current, icon })
+        updateCategory({ id: category.id, title: description.current, icon })
       );
     }
   };
@@ -118,11 +118,9 @@ export default function EditCategoryModalComponent({
       <Image
         className="absolute h-full w-full"
         source={require("~/assets/splash.png")}
-        //blurRadius={80}
         style={{ opacity: 0.9 }}
       />
       <KeyboardAvoidingView
-        //keyboardVerticalOffset={-50}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
@@ -151,7 +149,7 @@ export default function EditCategoryModalComponent({
                 >
                   <View className="flex-row">
                     <IconButton
-                      icon={item ? "pencil" : "plus"}
+                      icon={category ? "pencil" : "plus"}
                       color={themeColors.onBackground}
                       size={30}
                       className="-mr-2"
@@ -257,7 +255,7 @@ export default function EditCategoryModalComponent({
                     </View>
                   )}
                 </View>
-                {item ? (
+                {category ? (
                   <View className="flex-row justify-between items-center">
                     <View className="flex-1">
                       <TouchableOpacity

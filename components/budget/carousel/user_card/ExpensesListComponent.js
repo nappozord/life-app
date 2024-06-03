@@ -6,13 +6,16 @@ import ExpenseComponent from "./ExpenseComponent";
 import EditExpenseButtonComponent from "./EditExpenseButtonComponent";
 import ItemComponent from "~/components/list/list_card/ItemComponent";
 import { sortByBought, sortByName } from "~/utils/sortItems";
+import { getCategory } from "~/app/categoriesSlice";
+import { useSelector } from "react-redux";
 
-export default function UserCategoryExpensesComponent({ item, isList }) {
-  const icon = item.icon;
-  const category = item.title;
+export default function UserCategoryExpensesComponent({ categoryId, isList }) {
+  const category = useSelector((state) => getCategory(state, categoryId));
+
+  let sortedList = sortByName([...category.expenses]);
 
   if (isList) {
-    item.expenses = sortByBought(item.expenses);
+    sortedList = sortByBought(sortedList);
   }
 
   return (
@@ -23,15 +26,11 @@ export default function UserCategoryExpensesComponent({ item, isList }) {
             className="text-3xl font-semibold z-10"
             style={{ color: themeColors.onSecondaryContainer }}
           >
-            {item.title}
+            {category.title}
           </Text>
-          <IconButton icon={item.icon} color={themeColors.primary} />
+          <IconButton icon={category.icon} color={themeColors.primary} />
         </View>
-        <EditExpenseButtonComponent
-          icon={item.icon}
-          category={item.title}
-          isList={isList}
-        />
+        <EditExpenseButtonComponent categoryId={categoryId} isList={isList} />
       </View>
       <View style={{ height: isList ? 324 : 336 }}>
         <ScrollView
@@ -39,20 +38,18 @@ export default function UserCategoryExpensesComponent({ item, isList }) {
           className="mt-3"
           fadingEdgeLength={30}
         >
-          {sortByBought(sortByName(item.expenses)).map((item) => {
+          {sortedList.map((item) => {
             return !isList ? (
               <ExpenseComponent
                 key={item.id + "_" + item.title}
-                item={item}
-                itemIcon={icon}
-                itemCategory={category}
+                expenseId={item.id}
+                categoryId={categoryId}
               />
             ) : (
               <ItemComponent
                 key={item.id + "_" + item.title}
-                item={item}
-                itemIcon={icon}
-                itemCategory={category}
+                expenseId={item.id}
+                categoryId={categoryId}
               />
             );
           })}
