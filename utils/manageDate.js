@@ -50,7 +50,7 @@ export function timeToString(time) {
 
 export function getCurrentWeek(date) {
   const result = [];
-  const currentDate = date;
+  const currentDate = new Date(date);
   const dayOfWeek = currentDate.getDay();
 
   const startDate = new Date(currentDate);
@@ -66,7 +66,7 @@ export function getCurrentWeek(date) {
       dayName: currentDay.toDateString({ weekday: "short" }).slice(0, 3),
       dayNumber: currentDay.getDate().toString().padStart(2, "0"),
       dateString: currentDay.toISOString().split("T")[0],
-      date: currentDay,
+      date: currentDay.toISOString(),
       index: i,
     });
   }

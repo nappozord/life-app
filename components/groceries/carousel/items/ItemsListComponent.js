@@ -1,5 +1,5 @@
 import { View, TouchableOpacity, Text, RefreshControl } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
 import ItemComponent from "./ItemComponent";
@@ -24,11 +24,10 @@ export default function ItemsListComponent() {
     setTimeout(() => {
       setRefreshing(false);
     }, 500);
-    dispatch(fetchItems());
   }, []);
 
   useEffect(() => {
-    setSearch([...search]);
+    setSearch([...items]);
   }, [items]);
 
   return (
@@ -37,10 +36,6 @@ export default function ItemsListComponent() {
         <ItemModal
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
-          items={items}
-          setItems={setItems}
-          search={search}
-          setSearch={setSearch}
         />
       ) : null}
       <View className="absolute w-full -mt-10">
@@ -175,21 +170,19 @@ export default function ItemsListComponent() {
           removeClippedSubviews={false}
           showsVerticalScrollIndicator={false}
           data={
-            sort === "alphabetical" ? sortByName(search) : sortByStock(search)
+            sort === "alphabetical"
+              ? sortByName([...search])
+              : sortByStock([...search])
           }
           renderItem={({ index, item }) => {
             return (
               <View
                 className={
                   (index === 0 ? "mt-3 " : "") +
-                  (index === items.length - 1 ? "mb-2 " : "")
+                  (index === search.length - 1 ? "mb-2 " : "")
                 }
               >
-                <ItemComponent
-                  item={item}
-                  search={search}
-                  setSearch={setSearch}
-                />
+                <ItemComponent itemId={item.id} />
               </View>
             );
           }}

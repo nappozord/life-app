@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { themeColors } from "~/theme";
-import { Divider, IconButton } from "react-native-paper";
+import { IconButton } from "react-native-paper";
 import Animated, {
   SlideInRight,
   SlideInUp,
@@ -10,144 +10,152 @@ import Animated, {
 } from "react-native-reanimated";
 import IngredientModal from "./IngredientModal";
 import IngredientPercentageComponent from "./IngredientPercentageComponent";
-import { updateLogs } from "~/api/apiManager";
+import { useDispatch, useSelector } from "react-redux";
+import { addLog } from "~/app/logsSlice";
+import {
+  getIngredient,
+  incrementIngredient,
+  decrementIngredient,
+} from "~/app/ingredientsSlice";
 
-export default function IngredientComponent({
-  meals,
-  setMeals,
-  ingredients,
-  setIngredients,
-  recipes,
-  setRecipes,
-  item,
-  search,
-  setSearch,
-}) {
+export default function IngredientComponent({ ingredientId }) {
+  const ingredient = useSelector((state) => getIngredient(state, ingredientId));
+
+  const dispatch = useDispatch();
+
   const [modalVisible, setModalVisible] = useState(false);
 
-  const addItem = () => {
-    item.stock += 1;
-    setIngredients([...ingredients]);
-    updateLogs([{
-      text: 'ADD ' + item.title,
-      description: 'Manual add of item ' + item.title + ' for a total of ' + item.stock + '.',
-      icon: 'plus',
-      auto: false,
-    }])
+  const handleIncrementIngredient = () => {
+    dispatch(incrementIngredient(ingredientId));
+    dispatch(
+      addLog([
+        {
+          text: "ADD " + ingredient.title,
+          description:
+            "Manual add of ingredient " +
+            ingredient.title +
+            " for a total of " +
+            ingredient.stock +
+            ".",
+          icon: "plus",
+          auto: false,
+        },
+      ])
+    );
   };
 
-  const subItem = () => {
-    item.stock >= 1 ? (item.stock -= 1) : (item.stock = 0);
-    setIngredients([...ingredients]);
-    updateLogs([{
-      text: 'REMOVE ' + item.title,
-      description: 'Manual remove of item ' + item.title + ' for a total of ' + item.stock + '.',
-      icon: 'minus',
-      auto: false,
-    }])
+  const handleDecrementIngredient = () => {
+    dispatch(decrementIngredient(ingredientId));
+    dispatch(
+      addLog([
+        {
+          text: "REMOVE " + ingredient.title,
+          description:
+            "Manual remove of ingredient " +
+            ingredient.title +
+            " for a total of " +
+            ingredient.stock +
+            ".",
+          icon: "minus",
+          auto: false,
+        },
+      ])
+    );
   };
 
   return (
     <>
-      {modalVisible ? (
-        <IngredientModal
-          item={item}
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-          ingredients={ingredients}
-          setIngredients={setIngredients}
-          recipes={recipes}
-          setRecipes={setRecipes}
-          search={search}
-          setSearch={setSearch}
-          meals={meals}
-          setMeals={setMeals}
-        />
-      ) : null}
-      <Animated.View exiting={SlideOutLeft} entering={SlideInRight}>
-        <TouchableOpacity
-          style={{
-            backgroundColor: themeColors.secondaryContainer,
-          }}
-          className="mb-1 px-1 py-1 rounded-xl overflow-hidden"
-          onPress={() => setModalVisible(!modalVisible)}
-        >
-          <View className="flex-row justify-between p-0">
-            <View className="flex-row items-center">
-              <View
-                className="rounded-full px-4 py-1 mx-1 overflow-hidden"
-                style={{
-                  backgroundColor: themeColors.secondary,
-                  elevation: 5,
-                }}
-              >
-                <Animated.View
-                  entering={SlideInUp}
-                  exiting={SlideOutDown}
-                  key={item.id + item.stock}
-                >
-                  <Text
-                    className="text-lg font-semibold"
-                    style={{ color: themeColors.onSecondary }}
-                  >
-                    {Math.ceil(item.stock)}
-                  </Text>
-                </Animated.View>
-              </View>
-              <View className="ml-1 items-start">
-                <Text
-                  className="text-lg "
-                  style={{ color: themeColors.onSecondaryContainer }}
-                >
-                  {item.title}
-                </Text>
-                <View className="flex-row items-center space-x-1">
-                  <Text
-                    className="text-sm "
-                    style={{ color: themeColors.onSecondaryContainer }}
-                  >
-                    {"€" + parseFloat(item.cost).toFixed(2)}
-                  </Text>
+      {ingredient ? (
+        <>
+          {modalVisible ? (
+            <IngredientModal
+              ingredientId={ingredientId}
+              modalVisible={modalVisible}
+              setModalVisible={setModalVisible}
+            />
+          ) : null}
+          <Animated.View exiting={SlideOutLeft} entering={SlideInRight}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: themeColors.secondaryContainer,
+              }}
+              className="mb-1 px-1 py-1 rounded-xl overflow-hidden"
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <View className="flex-row justify-between p-0">
+                <View className="flex-row items-center">
                   <View
-                    className="rounded-full px-1.5 py-0"
-                    style={{ backgroundColor: themeColors.secondary }}
+                    className="rounded-full px-4 py-1 mx-1 overflow-hidden"
+                    style={{
+                      backgroundColor: themeColors.secondary,
+                      elevation: 5,
+                    }}
                   >
-                    <Text
-                      className=" text-xs font-semibold"
-                      style={{ color: themeColors.onSecondary }}
+                    <Animated.View
+                      entering={SlideInUp}
+                      exiting={SlideOutDown}
+                      key={ingredientId + ingredient.stock}
                     >
-                      {"x" + item.quantity}
+                      <Text
+                        className="text-lg font-semibold"
+                        style={{ color: themeColors.onSecondary }}
+                      >
+                        {Math.ceil(ingredient.stock)}
+                      </Text>
+                    </Animated.View>
+                  </View>
+                  <View className="ml-1 items-start">
+                    <Text
+                      className="text-lg "
+                      style={{ color: themeColors.onSecondaryContainer }}
+                    >
+                      {ingredient.title}
                     </Text>
+                    <View className="flex-row items-center space-x-1">
+                      <Text
+                        className="text-sm "
+                        style={{ color: themeColors.onSecondaryContainer }}
+                      >
+                        {"€" + parseFloat(ingredient.cost).toFixed(2)}
+                      </Text>
+                      <View
+                        className="rounded-full px-1.5 py-0"
+                        style={{ backgroundColor: themeColors.secondary }}
+                      >
+                        <Text
+                          className=" text-xs font-semibold"
+                          style={{ color: themeColors.onSecondary }}
+                        >
+                          {"x" + ingredient.quantity}
+                        </Text>
+                      </View>
+                    </View>
                   </View>
                 </View>
+                <View className="flex-row items-center">
+                  <IconButton
+                    icon={"minus"}
+                    color={themeColors.onSecondaryContainer}
+                    size={28}
+                    className="m-0 p-0"
+                    onPress={() => handleDecrementIngredient()}
+                  />
+                  <IconButton
+                    icon={"plus"}
+                    color={themeColors.onSecondaryContainer}
+                    size={28}
+                    className="m-0 p-0"
+                    onPress={() => handleIncrementIngredient()}
+                  />
+                </View>
               </View>
-            </View>
-            <View className="flex-row items-center">
-              <IconButton
-                icon={"minus"}
-                color={themeColors.onSecondaryContainer}
-                size={28}
-                className="m-0 p-0"
-                onPress={() => subItem()}
-              />
-              <IconButton
-                icon={"plus"}
-                color={themeColors.onSecondaryContainer}
-                size={28}
-                className="m-0 p-0"
-                onPress={() => addItem()}
-              />
-            </View>
-          </View>
-          <View className="mt-1 -mb-1 -mx-1">
-            <IngredientPercentageComponent
-              item={item}
-              meals={meals}
-              recipes={recipes}
-            />
-          </View>
-        </TouchableOpacity>
-      </Animated.View>
+              <View className="mt-1 -mb-1 -mx-1">
+                <IngredientPercentageComponent ingredientId={ingredientId} />
+              </View>
+            </TouchableOpacity>
+          </Animated.View>
+        </>
+      ) : null}
     </>
   );
 }

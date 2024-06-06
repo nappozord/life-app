@@ -6,7 +6,6 @@ import {
   withTiming,
   useDerivedValue,
 } from "react-native-reanimated";
-import { calculatePercentageDifference } from "~/utils/calculatePercentage";
 import { themeColors } from "~/theme";
 
 const WIDTH = 180;
@@ -17,14 +16,13 @@ export default function BarChartComponent({ forecast, real }) {
 
   let percentage = real / forecast;
   percentage.toString() === "NaN" ? (percentage = 1) : null;
+  percentage.toString() === "Infinity" ? (percentage = 1) : null;
 
   const innerWidth = useSharedValue(0);
   innerWidth.value = withTiming(
     WIDTH * (percentage > 1 ? 1 : percentage) - (percentage > 0.9 ? 6 : 0),
     { duration: 1000 }
   );
-
-  const diffPercentage = calculatePercentageDifference(real, forecast);
 
   totalValue.value = withTiming(percentage, { duration: 1000 });
 

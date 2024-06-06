@@ -133,13 +133,6 @@ export async function setDefaultCategoryForecast(category) {
   defCategories.find((obj) => obj.id === category.id).forecast =
     category.forecast;
 
-  if (category.income)
-    defCategories[0].forecast.in =
-      parseFloat(defCategories[0].forecast.in) - parseFloat(category.forecast);
-  else
-    defCategories[0].forecast.out =
-      parseFloat(defCategories[0].forecast.out) + parseFloat(category.forecast);
-
   await AsyncStorage.setItem(
     "defaultCategories",
     JSON.stringify(defCategories)
@@ -156,6 +149,8 @@ export async function getCategories(range) {
     for (const m of range) {
       const monthCategories = await getMonthCategories(totalCategories, {
         title: m.fullName + ", " + m.year,
+        month: m.index,
+        year: m.year,
       });
       categories.push(monthCategories);
     }

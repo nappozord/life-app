@@ -33,11 +33,9 @@ export default function BudgetScreen() {
   }));
 
   useEffect(() => {
-    if (cardPressed) {
-      searchBarHeight.value = withTiming(0, { duration: 500 });
-    } else {
-      searchBarHeight.value = withTiming(76, { duration: 500 });
-    }
+    cardPressed
+      ? (searchBarHeight.value = withTiming(0, { duration: 500 }))
+      : (searchBarHeight.value = withTiming(76, { duration: 500 }));
   }, [cardPressed]);
 
   useEffect(() => {

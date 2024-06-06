@@ -1,18 +1,16 @@
 import React, { useRef, useMemo, useCallback } from "react";
 import Carousel from "react-native-snap-carousel";
-import CategoryCardComponent from "./CategoryCardComponent";
+import CategoryListCardComponent from "./CategoryListCardComponent";
 import { useWindowDimensions } from "react-native";
 import Animated from "react-native-reanimated";
 import { useDispatch, useSelector } from "react-redux";
-import { updateActiveCategory } from "~/app/categoriesSlice";
+import { updateActiveCategory } from "~/app/listsSlice";
 
-const MemoizedCategoryCardComponent = React.memo(CategoryCardComponent);
+const MemoizedCategoryCardComponent = React.memo(CategoryListCardComponent);
 
-export default function BudgetCarouselComponent() {
-  const categories = useSelector((state) => state.categories.categories);
-  const activeCategory = useSelector(
-    (state) => state.categories.activeCategory
-  );
+export default function ListCarouselComponent() {
+  const lists = useSelector((state) => state.lists.lists);
+  const activeCategory = useSelector((state) => state.lists.activeCategory);
   const dispatch = useDispatch();
   const dimensions = useWindowDimensions();
   const currentIndex = useRef(null);
@@ -23,16 +21,16 @@ export default function BudgetCarouselComponent() {
     currentIndex.current = activeCategory;
   }
 
-  const memoizedCategories = useMemo(() => categories, [categories]);
+  const memoizedCategories = useMemo(() => lists, [lists]);
 
   const renderItem = useCallback(
     ({ item }) => (
       <MemoizedCategoryCardComponent
-        categoryId={item.id}
+        listId={item.id}
         isActive={activeCategory === item.id}
       />
     ),
-    [activeCategory, categories]
+    [activeCategory, lists]
   );
 
   const handleSnapToItem = useCallback(

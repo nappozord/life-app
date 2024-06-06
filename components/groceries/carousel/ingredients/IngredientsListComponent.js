@@ -1,5 +1,5 @@
 import { View, TouchableOpacity, Text, RefreshControl } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
 import IngredientComponent from "./IngredientComponent";
@@ -8,32 +8,25 @@ import { FlashList } from "@shopify/flash-list";
 import { getIngredients } from "~/api/apiManager";
 import SearchComponent from "~/components/groceries/searchbar/SearchComponent";
 import { sortByName, sortByStock } from "~/utils/sortItems";
+import { useSelector } from "react-redux";
 
-export default function IngredientsListComponent({
-  meals,
-  setMeals,
-  ingredients,
-  setIngredients,
-  recipes,
-  setRecipes,
-}) {
+export default function IngredientsListComponent() {
+  const ingredients = useSelector((state) => state.ingredients.ingredients);
+
   const [sort, setSort] = useState("alphabetical");
   const [modalVisible, setModalVisible] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState(ingredients);
 
-  const onRefresh = React.useCallback(() => {
+  const onRefresh = useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
     }, 500);
-    getIngredients().then((r) => {
-      setIngredients([...r]);
-    });
   }, []);
 
   useEffect(() => {
-    setSearch([...search]);
+    setSearch([...ingredients]);
   }, [ingredients]);
 
   return (
@@ -42,14 +35,6 @@ export default function IngredientsListComponent({
         <IngredientModal
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
-          ingredients={ingredients}
-          setIngredients={setIngredients}
-          search={search}
-          setSearch={setSearch}
-          recipes={recipes}
-          setRecipes={setRecipes}
-          meals={meals}
-          setMeals={setMeals}
         />
       ) : null}
       <View className="absolute w-full -mt-10">
@@ -184,7 +169,9 @@ export default function IngredientsListComponent({
           removeClippedSubviews={false}
           showsVerticalScrollIndicator={false}
           data={
-            sort === "alphabetical" ? sortByName(search) : sortByStock(search)
+            sort === "alphabetical"
+              ? sortByName([...search])
+              : sortByStock([...search])
           }
           renderItem={({ index, item }) => {
             return (
@@ -194,17 +181,7 @@ export default function IngredientsListComponent({
                   (index === search.length - 1 ? "mb-2 " : "")
                 }
               >
-                <IngredientComponent
-                  item={item}
-                  meals={meals}
-                  setMeals={setMeals}
-                  ingredients={ingredients}
-                  setIngredients={setIngredients}
-                  recipes={recipes}
-                  setRecipes={setRecipes}
-                  search={search}
-                  setSearch={setSearch}
-                />
+                <IngredientComponent ingredientId={item.id} />
               </View>
             );
           }}

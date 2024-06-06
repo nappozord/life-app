@@ -13,101 +13,43 @@ import React, { useRef } from "react";
 import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
 import Animated, { SlideInDown } from "react-native-reanimated";
+import { useDispatch, useSelector } from "react-redux";
+import { getItem, addItem, deleteItem, updateItem } from "~/app/itemsSlice";
 
-export default function ItemModal({
-  item,
-  modalVisible,
-  setModalVisible,
-  items,
-  setItems,
-  search,
-  setSearch,
-}) {
+export default function ItemModal({ itemId, modalVisible, setModalVisible }) {
+  const item = useSelector((state) => getItem(state, itemId));
+
+  const dispatch = useDispatch();
+
   const inputRef = useRef(null);
 
   const name = useRef(item ? item.title.toString() : null);
   const cost = useRef(item ? parseFloat(item.cost).toFixed(2) : null);
   const duration = useRef(item ? item.duration.toString() : "1");
 
-  function addItem() {
-    if (cost.current === "" || cost.current === null) cost.current = 0.0;
-
-    if (duration.current === "" || duration.current === null)
-      duration.current = 1;
-
-    if (name.current === "" || name.current === null) name.current = "New Item";
-
-    const ids = items.map((object) => {
-      return object.id;
-    });
-
-    const max = ids.length > 0 ? Math.max(...ids) : 10000;
-
-    items.push({
-      id: max + 1,
-      title: name.current,
-      cost: parseFloat(cost.current),
-      duration: parseFloat(duration.current),
-      stock: 0,
-      lastUpdate: new Date().toLocaleDateString("it-IT"),
-      buyingDate: [],
-      history: [
-        {
-          id: 0,
-          date: new Date().toLocaleDateString("it-IT"),
-          cost: parseFloat(cost.current),
-        },
-      ],
-    });
-
-    if (search.length === items.length - 1) setSearch([...items]);
-
-    setItems([...items]);
+  function handleAddItem() {
+    dispatch(
+      addItem({
+        cost: cost.current,
+        duration: duration.current,
+        name: name.current,
+      })
+    );
   }
 
-  function updateItem() {
-    if (cost.current === "" || cost.current === null) cost.current = 0.0;
-
-    if (duration.current === "" || duration.current === null)
-      duration.current = 1;
-
-    if (name.current === "" || name.current === null) name.current = "New Item";
-
-    const it = items.find((obj) => obj.id === item.id);
-
-    it.title = name.current;
-    it.cost = parseFloat(cost.current);
-    it.duration = parseFloat(duration.current);
-    it.lastUpdate = new Date().toLocaleDateString("it-IT");
-    if (it.history) {
-      if (it.history.find((i) => i.id === it.history.length - 1))
-        if (
-          it.history.find((i) => i.id === it.history.length - 1).cost !==
-          parseFloat(cost.current)
-        )
-          it.history.push({
-            id: it.history.length,
-            date: new Date().toLocaleDateString("it-IT"),
-            cost: parseFloat(cost.current),
-          });
-    } else {
-      i.history = [
-        {
-          id: 0,
-          date: new Date().toLocaleDateString("it-IT"),
-          cost: parseFloat(cost.current),
-        },
-      ];
-    }
-
-    setItems([...items]);
+  function handleUpdateItem() {
+    dispatch(
+      updateItem({
+        itemId,
+        cost: cost.current,
+        duration: duration.current,
+        name: name.current,
+      })
+    );
   }
 
-  function deleteItem() {
-    items = items.filter((obj) => obj.id !== item.id);
-    search = search.filter((obj) => obj.id !== item.id);
-    setSearch([...search]);
-    setItems([...items]);
+  function handleDeleteItem() {
+    dispatch(deleteItem(itemId));
   }
 
   return (
@@ -129,11 +71,9 @@ export default function ItemModal({
       <Image
         className="absolute h-full w-full"
         source={require("~/assets/splash.png")}
-        //blurRadius={80}
         style={{ opacity: 0.9 }}
       />
       <KeyboardAvoidingView
-        //keyboardVerticalOffset={-50}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
@@ -359,7 +299,7 @@ export default function ItemModal({
                           borderTopLeftRadius: 24,
                         }}
                         onPress={() => {
-                          updateItem();
+                          handleUpdateItem();
                           setModalVisible(false);
                         }}
                       >
@@ -381,7 +321,7 @@ export default function ItemModal({
                           borderTopRightRadius: 24,
                         }}
                         onPress={() => {
-                          deleteItem();
+                          handleDeleteItem();
                           setModalVisible(false);
                         }}
                       >
@@ -403,7 +343,7 @@ export default function ItemModal({
                       borderTopLeftRadius: 24,
                     }}
                     onPress={() => {
-                      addItem();
+                      handleAddItem();
                       setModalVisible(false);
                     }}
                   >

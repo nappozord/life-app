@@ -3,146 +3,52 @@ import {
   Text,
   TextInput,
   Image,
+  Platform,
   Modal,
   Pressable,
-  Platform,
   TouchableOpacity,
   KeyboardAvoidingView,
 } from "react-native";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { themeColors } from "~/theme";
-import { IconButton } from "react-native-paper";
+import { Checkbox, IconButton } from "react-native-paper";
 import Animated, { SlideInDown } from "react-native-reanimated";
-import { isPreviousMonth } from "~/utils/manageDate";
 import { useDispatch, useSelector } from "react-redux";
-import { updateUser } from "~/app/userSlice";
-import {
-  addExpense,
-  deleteExpense,
-  getCategory,
-  getExpense,
-} from "~/app/categoriesSlice";
+import { updateList, addList, deleteList, getList } from "~/app/listsSlice";
 
-export default function EditExpenseModalComponent({
-  categoryId,
-  expenseId,
+export default function EditCategoryListModalComponent({
+  listId,
   modalVisible,
   setModalVisible,
 }) {
-  const user = useSelector((state) => state.user.user);
-  const date = useSelector((state) => state.categories.date);
-  const expense = useSelector((state) =>
-    getExpense(state, expenseId, categoryId)
-  );
-  const category = useSelector((state) => getCategory(state, categoryId));
+  const lists = useSelector((state) => state.lists.lists);
 
-  const inputRef = useRef(null);
-  const currentDate = new Date().toDateString();
+  const list = useSelector((state) => getList(state, listId));
 
   const dispatch = useDispatch();
 
-  const description = useRef(expense ? expense.title.toString() : null);
-  const amount = useRef(expense ? parseFloat(expense.total).toFixed(2) : null);
-  const expenseDate = useRef(
-    expense ? (expense.date ? expense.date : currentDate) : currentDate
-  );
+  const description = useRef(list ? list.title : null);
+  const [icon, setIcon] = useState(list ? list.icon : "card-outline");
+  const inputRef = useRef(null);
 
-  const handleAddExpense = () => {
-    if (category.income) {
-      if (!isPreviousMonth(date.month, date.year))
-        dispatch(
-          updateUser({
-            ...user,
-            balance: parseFloat(user.balance) + parseFloat(amount.current),
-          })
-        );
-    } else {
-      if (!isPreviousMonth(date.month, date.year))
-        dispatch(
-          updateUser({
-            ...user,
-            balance: parseFloat(user.balance) - parseFloat(amount.current),
-          })
-        );
-    }
+  const handleAddList = () => {
+    const list = {
+      id: lists.length,
+      title: description.current,
+      icon: icon,
+      expenses: [],
+      income: false,
+    };
 
-    dispatch(
-      addExpense({
-        categoryId,
-        expenseDate: expenseDate.current,
-        amount: amount.current,
-        description: description.current,
-      })
-    );
+    dispatch(addList(list));
   };
 
-  const handleUpdateExpense = () => {
-    if (category.income) {
-      if (!isPreviousMonth(date.month, date.year))
-        dispatch(
-          updateUser({
-            ...user,
-            balance:
-              parseFloat(user.balance) -
-              parseFloat(expense.total) +
-              parseFloat(amount.current),
-          })
-        );
-    } else {
-      if (!isPreviousMonth(date.month, date.year))
-        dispatch(
-          updateUser({
-            ...user,
-            balance:
-              parseFloat(user.balance) +
-              parseFloat(expense.total) -
-              parseFloat(amount.current),
-          })
-        );
-    }
-
-    dispatch(
-      deleteExpense({
-        expenseId,
-        categoryId,
-      })
-    );
-
-    dispatch(
-      addExpense({
-        categoryId,
-        expenseDate: expenseDate.current,
-        amount: amount.current,
-        description: description.current,
-      })
-    );
+  const handleDeleteList = () => {
+    dispatch(deleteList(listId));
   };
 
-  const handleDeleteExpense = () => {
-    if (category.income) {
-      if (!isPreviousMonth(date.month, date.year))
-        dispatch(
-          updateUser({
-            ...user,
-            balance: parseFloat(user.balance) - parseFloat(expense.total),
-          })
-        );
-    } else {
-      if (!isPreviousMonth(date.month, date.year))
-        dispatch(
-          updateUser({
-            ...user,
-            balance: parseFloat(user.balance) + parseFloat(expense.total),
-          })
-        );
-    }
-
-    dispatch(
-      deleteExpense({
-        expenseId: expense.id,
-        categoryId: category.id,
-      })
-    );
+  const handleUpdateCategories = () => {
+    dispatch(updateList({ id: listId, title: description.current, icon }));
   };
 
   return (
@@ -195,13 +101,13 @@ export default function EditExpenseModalComponent({
                 >
                   <View className="flex-row">
                     <IconButton
-                      icon={expense ? "pencil" : "plus"}
+                      icon={list ? "pencil" : "plus"}
                       color={themeColors.onBackground}
                       size={30}
                       className="-mr-2"
                     />
                     <IconButton
-                      icon={category.icon}
+                      icon="animation-outline"
                       color={themeColors.onBackground}
                       size={30}
                       className="-ml-2"
@@ -211,7 +117,7 @@ export default function EditExpenseModalComponent({
                     className="text-xl font-semibold -mt-4 mb-4"
                     style={{ color: themeColors.onBackground }}
                   >
-                    {category.title}
+                    {"List"}
                   </Text>
                 </View>
                 <View />
@@ -222,7 +128,7 @@ export default function EditExpenseModalComponent({
                     className="font-semibold text-lg ml-2"
                     style={{ color: themeColors.onSecondaryContainer }}
                   >
-                    Description
+                    Name
                   </Text>
                   <TextInput
                     ref={inputRef}
@@ -231,7 +137,7 @@ export default function EditExpenseModalComponent({
                       backgroundColor: themeColors.onSecondaryContainer,
                       color: themeColors.background,
                     }}
-                    placeholder="E.g. Pizza!"
+                    placeholder={"E.g. New Awesome List!"}
                     selectionColor={themeColors.background}
                     defaultValue={description.current}
                     onChangeText={(text) => {
@@ -242,51 +148,38 @@ export default function EditExpenseModalComponent({
                     className="font-semibold text-lg ml-2"
                     style={{ color: themeColors.onSecondaryContainer }}
                   >
-                    Amount
+                    Icon
                   </Text>
-                  <View className="flex-row items-center">
-                    <View className="flex-1">
-                      <View
-                        className="flex-row items-center rounded-2xl p-1 overflow-visible"
-                        style={{
-                          backgroundColor: themeColors.onSecondaryContainer,
-                          height: 50,
-                        }}
-                      >
-                        <TextInput
-                          keyboardType="numeric"
-                          placeholder="E.g. €12.34"
-                          className="px-2 flex-1 text-base"
-                          style={{ color: themeColors.background }}
-                          selectionColor={themeColors.background}
-                          defaultValue={amount.current}
-                          onChangeText={(text) => {
-                            amount.current = text.split(" ").join("");
-                          }}
-                        />
-                        <Pressable
-                          className="rounded-2xl pr-0.5"
-                          style={{ backgroundColor: themeColors.background }}
-                        >
-                          <IconButton
-                            size={20}
-                            icon="currency-eur"
-                            color={themeColors.onBackground}
-                          />
-                        </Pressable>
-                      </View>
-                    </View>
-                    <View className="flex-1 items-center">
-                      <Text
-                        className="text-lg"
-                        style={{ color: themeColors.onSecondaryContainer }}
-                      >
-                        {expenseDate.current}
-                      </Text>
-                    </View>
+                  <View
+                    className="flex-row items-center rounded-2xl p-1 mb-4"
+                    style={{
+                      backgroundColor: themeColors.onSecondaryContainer,
+                      height: 50,
+                    }}
+                  >
+                    <TextInput
+                      placeholder="E.g. basket"
+                      className="px-2 flex-1 text-base"
+                      style={{ color: themeColors.background }}
+                      selectionColor={themeColors.background}
+                      defaultValue={icon}
+                      onChangeText={(text) => {
+                        setIcon(text.split(" ").join("-").toLowerCase());
+                      }}
+                    />
+                    <Pressable
+                      className="rounded-2xl"
+                      style={{ backgroundColor: themeColors.background }}
+                    >
+                      <IconButton
+                        size={20}
+                        icon={icon}
+                        color={themeColors.onBackground}
+                      />
+                    </Pressable>
                   </View>
                 </View>
-                {expense ? (
+                {list ? (
                   <View className="flex-row justify-between items-center">
                     <View className="flex-1">
                       <TouchableOpacity
@@ -298,7 +191,7 @@ export default function EditExpenseModalComponent({
                           borderTopLeftRadius: 24,
                         }}
                         onPress={() => {
-                          handleUpdateExpense();
+                          handleUpdateCategories();
                           setModalVisible(false);
                         }}
                       >
@@ -320,7 +213,7 @@ export default function EditExpenseModalComponent({
                           borderTopRightRadius: 24,
                         }}
                         onPress={() => {
-                          handleDeleteExpense();
+                          handleDeleteList();
                           setModalVisible(false);
                         }}
                       >
@@ -342,7 +235,7 @@ export default function EditExpenseModalComponent({
                       borderTopLeftRadius: 24,
                     }}
                     onPress={() => {
-                      handleAddExpense();
+                      handleAddList();
                       setModalVisible(false);
                     }}
                   >
@@ -350,7 +243,7 @@ export default function EditExpenseModalComponent({
                       className="font-bold text-center text-xl"
                       style={{ color: themeColors.onPrimary }}
                     >
-                      Add Expense
+                      Add List
                     </Text>
                   </TouchableOpacity>
                 )}

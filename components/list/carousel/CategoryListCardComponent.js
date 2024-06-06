@@ -9,20 +9,17 @@ import Animated, {
   runOnJS,
 } from "react-native-reanimated";
 import { themeColors } from "~/theme";
-import UserCategoryComponent from "./user_card/UserCategoryComponent";
-import OverallCategoryComponent from "./overall_card/OverallCategoryComponent";
+import OverallListCategoryComponent from "~/components/list/carousel/overall_card/OverallListCategoryComponent";
+import ListCategoryComponent from "~/components/list/carousel/list_card/ListCategoryComponent";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  updateCardPressed,
-  updateFinishedAnimation,
-} from "~/app/categoriesSlice";
+import { updateCardPressed, updateFinishedAnimation } from "~/app/listsSlice";
 
 const HEIGHT = 400;
 const OUTER_HEIGHT = 150;
 const WIDTH = 300;
 
-export default function CategoryCardComponent({ categoryId, isActive }) {
-  const cardPressed = useSelector((state) => state.categories.cardPressed);
+export default function CategoryListCardComponent({ listId, isActive }) {
+  const cardPressed = useSelector((state) => state.lists.cardPressed);
 
   const dispatch = useDispatch();
 
@@ -54,7 +51,7 @@ export default function CategoryCardComponent({ categoryId, isActive }) {
   };
 
   useEffect(() => {
-    if (categoryId !== 0) {
+    if (listId !== 0) {
       if (!cardPressed) {
         if (!isActive) {
           width.value = WIDTH;
@@ -113,10 +110,10 @@ export default function CategoryCardComponent({ categoryId, isActive }) {
             },
           ]}
         >
-          {categoryId === 0 ? (
-            <OverallCategoryComponent />
+          {listId === 0 ? (
+            <OverallListCategoryComponent />
           ) : (
-            <UserCategoryComponent categoryId={categoryId} loading={loading} />
+            <ListCategoryComponent listId={listId} loading={loading} />
           )}
         </Animated.View>
       </Animated.View>

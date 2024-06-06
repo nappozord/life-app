@@ -10,9 +10,37 @@ const initialState = {
 // Async thunk for fetching recipes
 export const fetchRecipes = createAsyncThunk(
   "recipes/fetchRecipes",
-  async (range) => {
-    const response = await getRecipes(range);
+  async () => {
+    const response = await getRecipes();
     return response;
+  }
+);
+
+export const addRecipe = createAsyncThunk(
+  "recipes/addRecipe",
+  async (payload, { dispatch, getState }) => {
+    dispatch(_addRecipe(payload));
+    const state = getState().recipes;
+    updateRecipes(state.recipes);
+  }
+);
+
+export const updateRecipe = createAsyncThunk(
+  "recipes/updateRecipe",
+  async (payload, { dispatch, getState }) => {
+    dispatch(_updateRecipe(payload));
+    const state = getState().recipes;
+    updateRecipes(state.recipes);
+  }
+);
+
+export const deleteRecipe = createAsyncThunk(
+  "recipes/deleteRecipe",
+  async (payload, { dispatch, getState }) => {
+    dispatch(_deleteRecipe(payload));
+    const state = getState().recipes;
+    updateRecipes(state.recipes);
+    //deleteRecipeFromMeal
   }
 );
 
@@ -20,22 +48,50 @@ const recipesSlice = createSlice({
   name: "recipes",
   initialState,
   reducers: {
-    addRecipe(state, action) {
-      state.recipes.push(action.payload);
-      updateRecipes(state.recipes);
+    _addRecipe(state, action) {
+      const { name, icon, selected } = action.payload;
+
+      if (name === "" || name === null) name = "New Recipe";
+
+      if (icon === "" || icon === null) icon = "food";
+
+      const ids = state.recipes.map((object) => {
+        return object.id;
+      });
+
+      const max = ids.length > 0 ? Math.max(...ids) : 0;
+
+      state.recipes.push({
+        id: max + 1,
+        title: name,
+        icon: icon,
+        used: 0,
+        ingredients: [...selected],
+      });
     },
-    updateRecipe(state, action) {
-      const recipe = action.payload;
-      const index = state.recipes.findIndex((i) => recipe.id === i.id);
-      if (index !== -1) {
-        state.recipes[index] = recipe;
-        updateRecipes(state.recipes, state.recipes[index].date);
-      }
+    _deleteRecipe(state, action) {
+      state.recipes = state.recipes.filter((obj) => obj.id !== action.payload);
     },
-    deleteRecipe(state, action) {
-      const recipe = action.payload;
-      state.recipes = state.recipes.filter((i) => i.id !== recipe.id);
-      updateRecipes(state.recipes);
+    _updateRecipe(state, action) {
+      const { icon, name, recipeId, selected } = action.payload;
+
+      const recipe = state.recipes.find((obj) => obj.id === recipeId);
+
+      if (name === "" || name === null) name = "New Recipe";
+
+      if (icon === "" || icon === null) icon = "food";
+
+      recipe.title = name;
+      recipe.icon = icon;
+      recipe.ingredients = [...selected];
+    },
+    _incrementRecipe(state, action) {
+      const recipe = state.recipes.find((i) => action.payload === i.id);
+      recipe.stock += 1;
+    },
+    _decrementRecipe(state, action) {
+      const recipe = state.recipes.find((i) => action.payload === i.id);
+      recipe.stock >= 1 ? (recipe.stock -= 1) : (recipe.stock = 0);
     },
   },
   extraReducers: (builder) => {
@@ -54,6 +110,15 @@ const recipesSlice = createSlice({
   },
 });
 
-export const { addRecipe, updateRecipe, deleteRecipe } = recipesSlice.actions;
+export const {
+  _addRecipe,
+  _deleteRecipe,
+  _updateRecipe,
+  _incrementRecipe,
+  _decrementRecipe,
+} = recipesSlice.actions;
+
+export const getRecipe = (state, id) =>
+  state.recipes.recipes.find((i) => i.id === id);
 
 export default recipesSlice.reducer;

@@ -1,8 +1,8 @@
 import { View, Image } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import React, { useState, useRef, useEffect } from "react";
-import ChipCategoryListComponent from "~/components/budget/chip/ChipCategoryListComponent";
-import BudgetCarouselComponent from "~/components/budget/carousel/BudgetCarouselComponent";
+import React, { useState, useRef, useEffect, useMemo } from "react";
+import ChipCategoryListComponent from "~/components/list/chip/ChipListCategoryListComponent";
+import ListCarouselComponent from "~/components/list/carousel/ListCarouselComponent";
 import Animated, {
   withTiming,
   FadeIn,
@@ -10,23 +10,25 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
 } from "react-native-reanimated";
-import { formatDate } from "~/utils/manageDate";
-import { getListCategories, updateListCategories } from "~/api/apiManager";
 import HeaderComponent from "~/components/header/HeaderComponent";
 import SearchComponent from "~/components/groceries/searchbar/SearchComponent";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { updateActiveCategory, updateCardPressed } from "~/app/listsSlice";
+
+const MemoizedChipCategoryListComponent = React.memo(ChipCategoryListComponent);
+const MemoizedListCarouselComponent = React.memo(ListCarouselComponent);
 
 export default function ListScreen() {
   const user = useSelector((state) => state.user.user);
+  const cardPressed = useSelector((state) => state.lists.cardPressed);
+  const lists = useSelector((state) => state.lists.lists);
 
-  const [date, setDate] = useState(() => formatDate(new Date()));
-  const [categories, setCategories] = useState([]);
-  const [activeCategory, setActiveCategory] = useState(0);
-  const [cardPressed, setCardPressed] = useState(false);
-  const [itemsForSearch, setItemsForSearch] = useState([]);
-  const categoryListRef = useRef(null);
+  const dispatch = useDispatch();
 
   const searchBarHeight = useSharedValue(76);
+  const searchBarAnimatedStyle = useAnimatedStyle(() => ({
+    height: searchBarHeight.value,
+  }));
 
   useEffect(() => {
     cardPressed
@@ -34,52 +36,34 @@ export default function ListScreen() {
       : (searchBarHeight.value = withTiming(76, { duration: 500 }));
   }, [cardPressed]);
 
-  useEffect(() => {
-    if (!categories.find((obj) => obj.index === activeCategory))
-      setActiveCategory(0);
-    if (categories.length > 0) updateListCategories(categories);
+  const itemsForSearch = useMemo(() => {
+    const items = [];
+    lists.forEach((c) => {
+      items.push({ title: c.title, id: c.id, list: true });
 
-    itemsForSearch.length = 0;
-
-    categories.forEach((c) => {
-      itemsForSearch.push({ title: c.title, index: c.index, list: true });
-
-      if (c.id > 0)
+      if (c.id > 0) {
         c.expenses.forEach((e) => {
-          itemsForSearch.push({ title: e.title, index: c.index, list: false });
-          setItemsForSearch([...itemsForSearch]);
+          items.push({ title: e.title, id: c.id, list: false });
         });
+      }
     });
-  }, [categories]);
-
-  const searchBarAnimatedStyle = useAnimatedStyle(() => ({
-    height: searchBarHeight.value,
-  }));
-
-  useEffect(() => {
-    getListCategories(date).then((r) => {
-      setCategories(r);
-    });
-  }, [date]);
-
-  useEffect(() => {
-    if (activeCategory === 0) setCardPressed(false);
-  }, [activeCategory]);
+    return items;
+  }, [lists]);
 
   function setSearch(item) {
     const lists = item.filter((obj) => obj.list);
     if (lists.length > 0) {
       const lowest = lists.reduce((acc, curr) => {
-        return curr.index < acc.index ? curr : acc;
+        return curr.id < acc.id ? curr : acc;
       });
-      setActiveCategory(lowest.index);
-      setCardPressed(false);
+      dispatch(updateActiveCategory(lowest.id));
+      dispatch(updateCardPressed(false));
     } else {
       const lowest = item.reduce((acc, curr) => {
-        return curr.index < acc.index ? curr : acc;
+        return curr.id < acc.id ? curr : acc;
       });
-      setActiveCategory(lowest.index);
-      setCardPressed(true);
+      dispatch(updateActiveCategory(lowest.id));
+      dispatch(updateCardPressed(true));
     }
   }
 
@@ -89,16 +73,11 @@ export default function ListScreen() {
       <Image
         className="absolute h-full w-full"
         source={require("~/assets/splash.png")}
-        //blurRadius={80}
       />
       {user.userId ? (
         <View className="mt-16">
           <Animated.View style={searchBarAnimatedStyle} className="mx-5">
-            {cardPressed ? (
-              <View></View>
-            ) : (
-              <HeaderComponent />
-            )}
+            {cardPressed ? <View></View> : <HeaderComponent />}
           </Animated.View>
           <View className="mb-5 mx-4">
             <SearchComponent
@@ -110,32 +89,14 @@ export default function ListScreen() {
             />
           </View>
           <View>
-            <ChipCategoryListComponent
-              categories={categories}
-              setCategories={setCategories}
-              activeCategory={activeCategory}
-              setActiveCategory={setActiveCategory}
-              categoryListRef={categoryListRef}
-              isList={true}
-            />
+            <MemoizedChipCategoryListComponent />
           </View>
           <Animated.View
             className="mt-1 py-2"
-            key={date.date}
             entering={FadeIn}
             exiting={FadeOut}
           >
-            <BudgetCarouselComponent
-              date={date}
-              categories={categories}
-              setCategories={setCategories}
-              activeCategory={activeCategory}
-              setActiveCategory={setActiveCategory}
-              categoryListRef={categoryListRef}
-              cardPressed={cardPressed}
-              setCardPressed={setCardPressed}
-              isList={true}
-            />
+            <MemoizedListCarouselComponent />
           </Animated.View>
         </View>
       ) : (

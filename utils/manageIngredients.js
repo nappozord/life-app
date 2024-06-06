@@ -1,7 +1,8 @@
 import { getMeals, updateMeals } from "~/api/apiMeals";
 import { getIngredients, updateIngredients } from "~/api/apiIngredients";
 import { getRecipes, updateRecipes } from "~/api/apiRecipes";
-import { updateLogs } from "~/api/apiLogs";
+import { useDispatch } from "react-redux";
+import { addLog } from "~/app/logsSlice";
 
 export function getIngredientFromMeal(
   meal,
@@ -49,7 +50,8 @@ function calculateIngredientCheck(
   recipes,
   ingredients,
   meals,
-  setFutureIngredients
+  setFutureIngredients,
+  dispatch
 ) {
   if (meals) {
     let yesterday = new Date(date);
@@ -143,7 +145,7 @@ function calculateIngredientCheck(
     });
 
     if (!setFutureIngredients) {
-      updateLogs(logs);
+      dispatch(addLog(logs));
       updateRecipes([...recipes]);
       updateMeals([...meals]);
       updateIngredients([...ingredients]);
@@ -159,7 +161,8 @@ export function checkIngredientQuantity(
   setFutureIngredients,
   ingredients,
   recipes,
-  meals
+  meals,
+  dispatch
 ) {
   if (!futureIngredients) {
     getIngredients().then((_ingredients) => {
@@ -167,7 +170,13 @@ export function checkIngredientQuantity(
         getRecipes().then((_recipes) => {
           if (_recipes) {
             getMeals().then((_meals) => {
-              calculateIngredientCheck(date, _recipes, _ingredients, _meals);
+              calculateIngredientCheck(
+                date,
+                _recipes,
+                _ingredients,
+                _meals,
+                dispatch
+              );
             });
           }
         });
@@ -179,7 +188,8 @@ export function checkIngredientQuantity(
       recipes,
       ingredients,
       meals,
-      setFutureIngredients
+      setFutureIngredients,
+      dispatch
     );
   }
 }

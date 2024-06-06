@@ -54,7 +54,6 @@ export default function LogsModal({ setLogs }) {
       <Image
         className="absolute w-full mt-16"
         source={require("~/assets/splash.png")}
-        //blurRadius={80}
         style={{
           borderTopLeftRadius: 50,
           borderTopRightRadius: 50,
@@ -83,9 +82,7 @@ export default function LogsModal({ setLogs }) {
               color={themeColors.onBackground}
             />
           </TouchableOpacity>
-          <Pressable
-            className="flex-row justify-between items-center -ml-6"
-          >
+          <Pressable className="flex-row justify-between items-center -ml-6">
             <IconButton
               className="ml-0"
               icon="calendar"
@@ -118,7 +115,6 @@ export default function LogsModal({ setLogs }) {
           </TouchableOpacity>
         </View>
         <LogsListComponent date={date} />
-        
       </View>
     </Animated.View>
   );

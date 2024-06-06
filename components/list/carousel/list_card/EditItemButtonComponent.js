@@ -2,18 +2,18 @@ import { TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
-import EditExpenseModalComponent from "./EditExpenseModalComponent";
+import EditItemModalComponent from "./EditItemModalComponent";
 
-export default function EditExpenseButtonComponent({ categoryId }) {
+export default function EditItemButtonComponent({ listId }) {
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
     <>
       {modalVisible ? (
-        <EditExpenseModalComponent
+        <EditItemModalComponent
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
-          categoryId={categoryId}
+          listId={listId}
         />
       ) : null}
       <TouchableOpacity

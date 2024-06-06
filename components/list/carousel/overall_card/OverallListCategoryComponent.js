@@ -7,19 +7,21 @@ import BarChartComponent from "~/components/budget/charts/BarChartComponent";
 import { calculateTotalLists } from "~/utils/calculateMoneyFlow";
 import { useSelector } from "react-redux";
 
-export default function OverallListCategoryComponent({
-  item,
-  categories,
-}) {
-  const [total, setTotal] = useState(() => getOverall());
+export default function OverallListCategoryComponent() {
+  const lists = useSelector((state) => state.lists.lists);
+
   const user = useSelector((state) => state.user.user);
+
+  const list = lists[0];
+
+  const [total, setTotal] = useState(() => getOverall());
 
   useEffect(() => {
     getOverall();
-  }, [categories]);
+  }, [lists]);
 
   function getOverall() {
-    calculateTotalLists(categories).then((inOut) => {
+    calculateTotalLists(lists).then((inOut) => {
       setTotal(inOut);
     });
   }
@@ -31,9 +33,8 @@ export default function OverallListCategoryComponent({
           <View className="flex-row justify-center -mt-12">
             <DonutChartComponent
               item={{
-                id: item.id,
-                title: item.title,
-                real: total.realBought,
+                id: 0,
+                real: total.bought,
                 forecast: total.real,
               }}
             />
@@ -44,9 +45,9 @@ export default function OverallListCategoryComponent({
                 className="text-3xl font-semibold z-10"
                 style={{ color: themeColors.onSecondaryContainer }}
               >
-                {item.title}
+                {list.title}
               </Text>
-              <IconButton icon={item.icon} color={themeColors.primary} />
+              <IconButton icon={list.icon} color={themeColors.primary} />
             </View>
             <View className="flex-row">
               <View className="space-y-1">
@@ -67,7 +68,7 @@ export default function OverallListCategoryComponent({
                 <View className="flex-row justify-between items-center">
                   <BarChartComponent
                     forecast={total.real}
-                    real={total.realBought}
+                    real={total.bought}
                   />
                   <View
                     className="p-1 px-3 rounded-full ml-3"
@@ -77,7 +78,7 @@ export default function OverallListCategoryComponent({
                       className="text-base font-semibold"
                       style={{ color: themeColors.onPrimary }}
                     >
-                      {"€" + Math.ceil(total.realBought)}
+                      {"€" + Math.ceil(total.bought)}
                     </Text>
                   </View>
                 </View>
@@ -130,7 +131,7 @@ export default function OverallListCategoryComponent({
                   className="text-base font-semibold"
                   style={{ color: themeColors.primary }}
                 >
-                  €{(user.balance - (total.real - total.realBought)).toFixed(2)}
+                  €{(user.balance - (total.real - total.bought)).toFixed(2)}
                 </Text>
               </View>
             </View>

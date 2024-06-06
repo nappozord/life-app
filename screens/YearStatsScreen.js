@@ -11,14 +11,17 @@ import { getYTDMonths } from "~/utils/manageDate";
 import { getCategories } from "~/api/apiManager";
 import StatsChipListComponent from "~/components/year_stats/chip/StatsChipListComponent";
 import StatsCarouselComponent from "~/components/year_stats/carousel/StatsCarouselComponent";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { updateYear } from "~/app/statsSlice";
 
 export default function YearStatsScreen() {
   const user = useSelector((state) => state.user.user);
 
-  const [year, setYear] = useState(() => new Date().getFullYear());
-  const [loading, setLoading] = useState(false);
-  let [yearCategories, setYearCategories] = useState([]);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(updateYear(new Date().getFullYear()));
+  }, []);
 
   const searchBarHeight = useSharedValue(76);
 
@@ -26,27 +29,12 @@ export default function YearStatsScreen() {
     height: searchBarHeight.value,
   }));
 
-  useEffect(() => {
-    setLoading(true);
-
-    yearCategories = [];
-    const months = getYTDMonths(year);
-
-    getCategories(months)
-      .then((r) => {
-        setYearCategories([...r]);
-        setLoading(false);
-      })
-      .catch((e) => console.log(e));
-  }, [year]);
-
   return (
     <View className="flex-1 relative">
       <StatusBar style="light" />
       <Image
         className="absolute h-full w-full"
         source={require("~/assets/splash.png")}
-        //blurRadius={80}
       />
       {user.userId ? (
         <View className="mt-16">
@@ -54,15 +42,12 @@ export default function YearStatsScreen() {
             <HeaderComponent />
           </Animated.View>
           <View className="mb-4 -mt-4">
-            <YearPickerComponent year={year} setYear={setYear} />
+            <YearPickerComponent />
           </View>
           <View className="mb-14">
-            <StatsChipListComponent items={yearCategories} />
+            <StatsChipListComponent />
           </View>
-          <StatsCarouselComponent
-            yearCategories={yearCategories}
-            loading={loading}
-          />
+          <StatsCarouselComponent />
         </View>
       ) : (
         <View></View>

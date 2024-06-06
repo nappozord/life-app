@@ -1,16 +1,14 @@
 import { View, FlatList } from "react-native";
 import React, { useRef, useEffect, useCallback, useMemo } from "react";
-import ChipCategoryComponent from "./ChipCategoryComponent";
+import ChipListCategoryComponent from "./ChipListCategoryComponent";
 import { useSelector } from "react-redux";
 
-const MemoizedChipCategoryComponent = React.memo(ChipCategoryComponent);
+const MemoizedChipCategoryComponent = React.memo(ChipListCategoryComponent);
 
-export default function ChipCategoryListComponent() {
-  const categories = useSelector((state) => state.categories.categories);
+export default function ChipListCategoryListComponent() {
+  const lists = useSelector((state) => state.lists.lists);
 
-  const activeCategory = useSelector(
-    (state) => state.categories.activeCategory
-  );
+  const activeCategory = useSelector((state) => state.lists.activeCategory);
 
   const currentIndex = useRef(activeCategory);
 
@@ -33,17 +31,14 @@ export default function ChipCategoryListComponent() {
         isActive={activeCategory === item.id}
       />
     ),
-    [activeCategory, categories]
+    [activeCategory, lists]
   );
 
-  const keyExtractor = useCallback(
-    (item) => item.id,
-    [activeCategory, categories]
-  );
+  const keyExtractor = useCallback((item) => item.id, [activeCategory, lists]);
 
   const data = useMemo(
-    () => [{ id: -1, title: "Add", index: -1 }, ...categories],
-    [categories]
+    () => [{ id: -1, title: "Add", index: -1 }, ...lists],
+    [lists]
   );
 
   return (

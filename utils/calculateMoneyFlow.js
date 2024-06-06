@@ -5,8 +5,8 @@ export async function calculateMonthlyInOut(categories) {
   for (c of categories) {
     if (c.id !== 0) {
       if (c.income) {
-        real.in += -c.expenses.reduce((total, e) => total + e.total, 0);
-        forecast.in += -c.forecast;
+        real.in += c.expenses.reduce((total, e) => total + e.total, 0);
+        forecast.in += c.forecast;
       } else {
         real.out += c.expenses.reduce((total, e) => total + e.total, 0);
         forecast.out += c.forecast;
@@ -35,22 +35,24 @@ export async function calculateYearlyInOut(categories) {
 
 export async function calculateTotalLists(categories) {
   let real = 0;
-  let realBought = 0;
+  let bought = 0;
   let items = 0;
   let itemsBought = 0;
 
   for (c of categories) {
     if (c.id !== 0) {
-      real += c.real;
-      realBought += c.realBought;
+      real += c.expenses.reduce((total, e) => total + e.total, 0);
+      bought += c.expenses.reduce((total, e) => {
+        return e.dateBought ? total + e.total : total;
+      }, 0);
 
       items += c.expenses.length;
 
       for (e of c.expenses) {
-        itemsBought += e.bought ? 1 : 0;
+        itemsBought += e.dateBought ? 1 : 0;
       }
     }
   }
 
-  return { real, realBought, items, itemsBought };
+  return { real, bought, items, itemsBought };
 }

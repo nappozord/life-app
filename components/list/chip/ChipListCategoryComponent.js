@@ -2,18 +2,18 @@ import { Text, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
-import EditCategoryModalComponent from "./EditCategoryModalComponent";
+import EditCategoryListModalComponent from "./EditCategoryListModalComponent";
 import { useDispatch } from "react-redux";
-import { updateActiveCategory } from "~/app/categoriesSlice";
+import { updateActiveCategory } from "~/app/listsSlice";
 
-export default function ChipCategoryComponent({ item, isActive }) {
+export default function ChipListCategoryComponent({ item, isActive }) {
   const dispatch = useDispatch();
 
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
     <>
-      <EditCategoryModalComponent
+      <EditCategoryListModalComponent
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
       />

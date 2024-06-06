@@ -5,18 +5,13 @@ import { themeColors } from "~/theme";
 import RecipeComponent from "./RecipeComponent";
 import RecipeModal from "./RecipeModal";
 import { FlashList } from "@shopify/flash-list";
-import { getRecipes } from "~/api/apiManager";
 import SearchComponent from "~/components/groceries/searchbar/SearchComponent";
 import { sortByName, sortByUsage } from "~/utils/sortItems";
+import { useSelector } from "react-redux";
 
-export default function RecipesListComponent({
-  meals,
-  setMeals,
-  ingredients,
-  setIngredients,
-  recipes,
-  setRecipes,
-}) {
+export default function RecipesListComponent() {
+  const recipes = useSelector((state) => state.recipes.recipes);
+
   const [sort, setSort] = useState("alphabetical");
   const [modalVisible, setModalVisible] = useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
@@ -27,14 +22,11 @@ export default function RecipesListComponent({
     setTimeout(() => {
       setRefreshing(false);
     }, 500);
-    getRecipes().then((r) => {
-      setRecipes([...r]);
-    });
   }, []);
 
   useEffect(() => {
-    setSearch([...search]);
-  }, [recipes, ingredients]);
+    setSearch([...recipes]);
+  }, [recipes]);
 
   return (
     <View className="flex-1">
@@ -42,14 +34,6 @@ export default function RecipesListComponent({
         <RecipeModal
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
-          ingredients={ingredients}
-          setIngredients={setIngredients}
-          recipes={recipes}
-          setRecipes={setRecipes}
-          search={search}
-          setSearch={setSearch}
-          meals={meals}
-          setMeals={setMeals}
         />
       ) : null}
       <View className="absolute w-full -mt-10 z-10">
@@ -184,7 +168,9 @@ export default function RecipesListComponent({
           removeClippedSubviews={false}
           showsVerticalScrollIndicator={false}
           data={
-            sort === "alphabetical" ? sortByName(search) : sortByUsage(search)
+            sort === "alphabetical"
+              ? sortByName([...search])
+              : sortByUsage([...search])
           }
           renderItem={({ index, item }) => {
             return (
@@ -194,17 +180,7 @@ export default function RecipesListComponent({
                   (index === recipes.length - 1 ? "mb-2 " : "")
                 }
               >
-                <RecipeComponent
-                  item={item}
-                  meals={meals}
-                  setMeals={setMeals}
-                  ingredients={ingredients}
-                  setIngredients={setIngredients}
-                  recipes={recipes}
-                  setRecipes={setRecipes}
-                  search={search}
-                  setSearch={setSearch}
-                />
+                <RecipeComponent recipeId={item.id} />
               </View>
             );
           }}

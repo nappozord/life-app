@@ -1,36 +1,56 @@
-import { View } from "react-native";
-import React from "react";
+import { View, FlatList } from "react-native";
+import React, { useRef, useEffect, useCallback } from "react";
 import ChipComponent from "./ChipComponent";
-import { FlashList } from "@shopify/flash-list";
+import { useSelector } from "react-redux";
 
-export default function ChipListComponent({
-  categories,
-  activeChip,
-  setActiveChip,
-  chipListRef,
-}) {
+const MemoizedChipComponent = React.memo(ChipComponent);
+
+export default function ChipListComponent() {
+  const categories = useSelector((state) => state.groceries.categories);
+
+  const activeCategory = useSelector((state) => state.groceries.activeCategory);
+
+  const currentIndex = useRef(activeCategory);
+
+  const chipsRef = useRef(null);
+
+  useEffect(() => {
+    if (chipsRef.current && activeCategory !== currentIndex.current) {
+      chipsRef.current.scrollToIndex({
+        animated: true,
+        index: activeCategory,
+        viewPosition: 0.1,
+      });
+      currentIndex.current = activeCategory;
+    }
+  }, [activeCategory]);
+
+  const renderItem = useCallback(
+    ({ item }) => (
+      <MemoizedChipComponent
+        item={item}
+        isActive={activeCategory === item.id}
+      />
+    ),
+    [activeCategory, categories]
+  );
+
+  const keyExtractor = useCallback(
+    (item) => item.id,
+    [activeCategory, categories]
+  );
+
   return (
     <View>
-      <FlashList
-        estimatedItemSize={50}
-        ref={chipListRef}
+      <FlatList
+        ref={chipsRef}
         horizontal
         fadingEdgeLength={50}
         showsHorizontalScrollIndicator={false}
-        data={[...categories]}
-        keyExtractor={(item) => item.index}
+        data={categories}
+        keyExtractor={keyExtractor}
         className="overflow-visible"
-        renderItem={({ item }) => {
-          let isActive = item.index == activeChip;
-          return (
-            <ChipComponent
-              item={item}
-              isActive={isActive}
-              setActiveChip={setActiveChip}
-              chipListRef={chipListRef}
-            />
-          );
-        }}
+        renderItem={renderItem}
       />
     </View>
   );

@@ -7,10 +7,15 @@ import Animated, {
   SlideOutRight,
 } from "react-native-reanimated";
 import { IconButton } from "react-native-paper";
-import { formatDate } from "~/utils/manageDate";
 import { themeColors } from "~/theme";
+import { useDispatch, useSelector } from "react-redux";
+import { updateYear } from "~/app/statsSlice";
 
-export default function YearPickerComponent({ year, setYear }) {
+export default function YearPickerComponent() {
+  const year = useSelector((state) => state.stats.year);
+
+  const dispatch = useDispatch();
+
   const [animation, setAnimation] = useState("left");
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
@@ -20,7 +25,7 @@ export default function YearPickerComponent({ year, setYear }) {
       <TouchableOpacity
         onPress={() => {
           setAnimation("left");
-          setYear(year - 1);
+          dispatch(updateYear(year - 1));
         }}
       >
         <IconButton
@@ -49,7 +54,7 @@ export default function YearPickerComponent({ year, setYear }) {
       <TouchableOpacity
         onPress={() => {
           setAnimation("right");
-          if (year < currentYear) setYear(year + 1);
+          if (year < currentYear) dispatch(updateYear(year + 1));
         }}
       >
         <IconButton

@@ -15,35 +15,6 @@ import GroceriesCarouselComponent from "~/components/groceries/carousel/Grocerie
 
 export default function GroceryScreen() {
   const user = useSelector((state) => state.user.user);
-  const ingredients = useSelector((state) => state.ingredients.ingredients);
-  const meals = useSelector((state) => state.meals.meals);
-  const recipes = useSelector((state) => state.recipes.recipes);
-
-  const [activeChip, setActiveChip] = useState(0);
-  const chipListRef = useRef(null);
-
-  const categories = [
-    {
-      index: 0,
-      title: "Meal Plan",
-    },
-    {
-      index: 1,
-      title: "Groceries",
-    },
-    {
-      index: 2,
-      title: "Recipes",
-    },
-    {
-      index: 3,
-      title: "Ingredients",
-    },
-    {
-      index: 4,
-      title: "General",
-    },
-  ];
 
   const searchBarHeight = useSharedValue(76);
 
@@ -57,7 +28,6 @@ export default function GroceryScreen() {
       <Image
         className="absolute h-full w-full"
         source={require("~/assets/splash.png")}
-        //blurRadius={80}
       />
       {user.userId ? (
         <>
@@ -66,26 +36,16 @@ export default function GroceryScreen() {
               <HeaderComponent />
             </Animated.View>
             <View className="mb-4 -mt-1">
-              <ChipListComponent
-                categories={categories}
-                activeChip={activeChip}
-                setActiveChip={setActiveChip}
-                chipListRef={chipListRef}
-              />
+              <ChipListComponent />
             </View>
-            {meals && ingredients && recipes ? (
+            {user ? (
               <Animated.View
                 className="justify-end flex-1"
                 entering={FadeIn}
                 exiting={FadeOut}
               >
                 <View className="pb-24">
-                  <GroceriesCarouselComponent
-                    categories={categories}
-                    activeChip={activeChip}
-                    setActiveChip={setActiveChip}
-                    chipListRef={chipListRef}
-                  />
+                  <GroceriesCarouselComponent />
                 </View>
               </Animated.View>
             ) : (

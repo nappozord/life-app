@@ -114,6 +114,7 @@ const categoriesSlice = createSlice({
       const { id, title, icon } = action.payload;
       const index = state.categories.findIndex((cat) => cat.id === id);
       if (index !== -1) {
+        const category = state.categories[index];
         state.categories[index] = { ...category, title, icon };
       }
     },
@@ -129,7 +130,7 @@ const categoriesSlice = createSlice({
         i++;
       });
 
-      state.categories.activeCategory(0);
+      state.activeCategory = 0;
     },
     _addExpense(state, action) {
       let { categoryId, expenseDate, description, amount } = action.payload;

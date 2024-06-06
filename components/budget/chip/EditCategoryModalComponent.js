@@ -31,7 +31,6 @@ export default function EditCategoryModalComponent({
   categoryId,
   modalVisible,
   setModalVisible,
-  isList,
 }) {
   const categories = useSelector((state) => state.categories.categories);
 
@@ -48,55 +47,33 @@ export default function EditCategoryModalComponent({
   const [checked, setChecked] = useState(false);
 
   const handleAddCategory = () => {
-    if (!isList) {
-      const category = {
-        id: categories.length,
-        title: description.current,
-        real: 0,
-        forecast: 0,
-        icon: icon,
-        expenses: [],
-        income: false,
-      };
+    const category = {
+      id: categories.length,
+      title: description.current,
+      real: 0,
+      forecast: 0,
+      icon: icon,
+      expenses: [],
+      income: false,
+    };
 
-      if (checked) addDefaultCategory(category);
+    if (checked) addDefaultCategory(category);
 
-      dispatch(addCategory(category));
-    } /*else {
-      const category = {
-        id: categories.length,
-        title: description.current,
-        real: 0,
-        realBought: 0,
-        icon: icon,
-        expenses: [],
-        income: false,
-        index: categories.length,
-      };
-
-      categories.push(category);
-
-      setCategories([...categories]);
-    }*/
+    dispatch(addCategory(category));
   };
 
   const handleDeleteCategory = () => {
-    if (!isList) {
-      if (checked && category.id !== 1) deleteDefaultCategory(category);
+    if (checked && category.id !== 1) deleteDefaultCategory(category);
 
-      dispatch(deleteCategory(category.id));
-      dispatch(updateActiveCategory(0));
-    }
+    dispatch(deleteCategory(category.id));
   };
 
   const handleUpdateCategories = () => {
-    if (!isList) {
-      updateDeafultCategory(category);
+    updateDeafultCategory(category);
 
-      dispatch(
-        updateCategory({ id: category.id, title: description.current, icon })
-      );
-    }
+    dispatch(
+      updateCategory({ id: category.id, title: description.current, icon })
+    );
   };
 
   return (
@@ -165,7 +142,7 @@ export default function EditCategoryModalComponent({
                     className="text-xl font-semibold -mt-4 mb-4"
                     style={{ color: themeColors.onBackground }}
                   >
-                    {isList ? "List" : "Category"}
+                    {"Category"}
                   </Text>
                 </View>
                 <View />
@@ -185,9 +162,7 @@ export default function EditCategoryModalComponent({
                       backgroundColor: themeColors.onSecondaryContainer,
                       color: themeColors.background,
                     }}
-                    placeholder={
-                      "E.g. New Awesome " + (isList ? "List" : "Category") + "!"
-                    }
+                    placeholder={"E.g. New Awesome Category!"}
                     selectionColor={themeColors.background}
                     defaultValue={description.current}
                     onChangeText={(text) => {
@@ -228,32 +203,30 @@ export default function EditCategoryModalComponent({
                       />
                     </Pressable>
                   </View>
-                  {isList ? null : (
-                    <View className="flex-row justify-between items-center">
-                      <View className="flex-1">
-                        <Text
-                          className="text-lg font-semibold ml-2 "
-                          style={{ color: themeColors.onSecondaryContainer }}
-                        >
-                          Set as monthly default
-                        </Text>
-                      </View>
-                      <View
-                        className="mr-2 rounded-3xl"
-                        style={{
-                          backgroundColor: themeColors.onSecondaryContainer,
-                        }}
+                  <View className="flex-row justify-between items-center">
+                    <View className="flex-1">
+                      <Text
+                        className="text-lg font-semibold ml-2 "
+                        style={{ color: themeColors.onSecondaryContainer }}
                       >
-                        <Checkbox
-                          color={themeColors.secondaryContainer}
-                          status={checked ? "checked" : "unchecked"}
-                          onPress={() => {
-                            setChecked(!checked);
-                          }}
-                        />
-                      </View>
+                        Set as monthly default
+                      </Text>
                     </View>
-                  )}
+                    <View
+                      className="mr-2 rounded-3xl"
+                      style={{
+                        backgroundColor: themeColors.onSecondaryContainer,
+                      }}
+                    >
+                      <Checkbox
+                        color={themeColors.secondaryContainer}
+                        status={checked ? "checked" : "unchecked"}
+                        onPress={() => {
+                          setChecked(!checked);
+                        }}
+                      />
+                    </View>
+                  </View>
                 </View>
                 {category ? (
                   <View className="flex-row justify-between items-center">

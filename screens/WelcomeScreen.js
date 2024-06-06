@@ -64,7 +64,7 @@ export default function WelcomeScreen() {
   const reset = false;
 
   useEffect(() => {
-    checkIngredientQuantity(new Date());
+    checkIngredientQuantity(new Date(), dispatch);
 
     setTimeout(() => {
       if (dev) {
@@ -88,6 +88,8 @@ export default function WelcomeScreen() {
         //AsyncStorage.removeItem("defaultCategories");
         //AsyncStorage.removeItem("categories");
         //AsyncStorage.removeItem("lists");
+        //AsyncStorage.removeItem("recipes");
+        //AsyncStorage.removeItem("meals");
       }
 
       getCurrentUser()

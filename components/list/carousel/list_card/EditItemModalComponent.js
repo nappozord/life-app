@@ -12,85 +12,49 @@ import {
 import React, { useRef } from "react";
 import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
-import Animated, { SlideInDown } from "react-native-reanimated";
-import { isPreviousMonth } from "~/utils/manageDate";
+import Animated, {
+  SlideInDown,
+  dispatchCommand,
+} from "react-native-reanimated";
+import { useDispatch, useSelector } from "react-redux";
+import { getList } from "~/app/listsSlice";
+import { getExpense, addExpense, deleteExpense } from "~/app/listsSlice";
 
 export default function EditItemModalComponent({
-  item,
+  listId,
+  expenseId,
   modalVisible,
   setModalVisible,
-  itemIcon,
-  itemCategory,
-  categories,
-  setCategories,
 }) {
+  const list = useSelector((state) => getList(state, listId));
+  const expense = useSelector((state) => getExpense(state, expenseId, listId));
+
+  const dispatch = useDispatch();
+
   const inputRef = useRef(null);
 
-  const currentDate = new Date().toDateString();
+  const description = useRef(expense ? expense.title.toString() : null);
+  const amount = useRef(expense ? parseFloat(expense.total).toFixed(2) : null);
+  const url = useRef(expense ? expense.url.toString() : null);
 
-  const description = useRef(item ? item.title.toString() : null);
-  const amount = useRef(item ? parseFloat(item.total).toFixed(2) : null);
-  const url = useRef(item ? item.url.toString() : null);
-
-  const addExpense = () => {
-    amount.current === null || amount.current === ""
-      ? (amount.current = 0)
-      : null;
-    description.current === null || description.current === ""
-      ? (description.current = "New Item")
-      : null;
-    url.current === null || url.current === "" ? (url.current = "") : null;
-
-    const category = categories.find((obj) => itemCategory === obj.title);
-
-    category.real += parseFloat(amount.current);
-
-    let occurrences = 1;
-
-    category.expenses.forEach((obj) => {
-      if (obj.title === description.current) occurrences += 1;
-    });
-
-    category.expenses.push({
-      title: description.current,
-      total: parseFloat(amount.current),
-      id: category.expenses[category.expenses.length - 1]
-        ? category.expenses[category.expenses.length - 1].id + 1
-        : 0,
-      occurrence: occurrences,
-      url: url.current,
-      bought: false,
-    });
-
-    setCategories([...categories]);
+  const handleAddExpense = () => {
+    dispatch(
+      addExpense({
+        listId,
+        description: description.current,
+        amount: amount.current,
+        url: url.current,
+      })
+    );
   };
 
-  const updateExpense = () => {
-    deleteExpense();
-    addExpense();
+  const handleUpdateExpense = () => {
+    handleDeleteExpense();
+    handleAddExpense();
   };
 
-  const deleteExpense = () => {
-    const category = categories.find((obj) => itemCategory === obj.title);
-
-    category.real -= parseFloat(item.total);
-
-    if (item.bought) category.realBought -= parseFloat(item.total);
-
-    const filteredArray = category.expenses.filter((obj) => obj.id !== item.id);
-
-    let occurrences = 1;
-
-    filteredArray.forEach((obj) => {
-      if (obj.title === item.title) {
-        obj.occurrence = occurrences;
-        occurrences += 1;
-      }
-    });
-
-    category.expenses = filteredArray;
-
-    setCategories([...categories]);
+  const handleDeleteExpense = () => {
+    dispatch(deleteExpense({ listId, expenseId }));
   };
 
   return (
@@ -112,11 +76,9 @@ export default function EditItemModalComponent({
       <Image
         className="absolute h-full w-full"
         source={require("~/assets/splash.png")}
-        //blurRadius={80}
         style={{ opacity: 0.9 }}
       />
       <KeyboardAvoidingView
-        //keyboardVerticalOffset={-50}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
@@ -145,13 +107,13 @@ export default function EditItemModalComponent({
                 >
                   <View className="flex-row">
                     <IconButton
-                      icon={item ? "pencil" : "plus"}
+                      icon={expense ? "pencil" : "plus"}
                       color={themeColors.onBackground}
                       size={30}
                       className="-mr-2"
                     />
                     <IconButton
-                      icon={itemIcon}
+                      icon={list.icon}
                       color={themeColors.onBackground}
                       size={30}
                       className="-ml-2"
@@ -161,7 +123,7 @@ export default function EditItemModalComponent({
                     className="text-xl font-semibold -mt-4 mb-4"
                     style={{ color: themeColors.onBackground }}
                   >
-                    {itemCategory}
+                    {list.title}
                   </Text>
                 </View>
                 <View />
@@ -266,7 +228,7 @@ export default function EditItemModalComponent({
                     </View>
                   </View>
                 </View>
-                {item ? (
+                {expense ? (
                   <View className="flex-row justify-between items-center">
                     <View className="flex-1">
                       <TouchableOpacity
@@ -278,7 +240,7 @@ export default function EditItemModalComponent({
                           borderTopLeftRadius: 24,
                         }}
                         onPress={() => {
-                          updateExpense();
+                          handleUpdateExpense();
                           setModalVisible(false);
                         }}
                       >
@@ -300,7 +262,7 @@ export default function EditItemModalComponent({
                           borderTopRightRadius: 24,
                         }}
                         onPress={() => {
-                          deleteExpense();
+                          handleDeleteExpense();
                           setModalVisible(false);
                         }}
                       >
@@ -322,7 +284,7 @@ export default function EditItemModalComponent({
                       borderTopLeftRadius: 24,
                     }}
                     onPress={() => {
-                      addExpense();
+                      handleAddExpense();
                       setModalVisible(false);
                     }}
                   >

@@ -13,141 +13,82 @@ import React, { useRef } from "react";
 import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
 import Animated, { SlideInDown } from "react-native-reanimated";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getIngredient,
+  addIngredient,
+  updateIngredient,
+  deleteIngredient,
+} from "~/app/ingredientsSlice";
 
 export default function IngredientModal({
-  item,
+  ingredientId,
   modalVisible,
   setModalVisible,
-  ingredients,
-  setIngredients,
-  search,
-  setSearch,
-  recipes,
-  setRecipes,
-  meals,
-  setMeals,
 }) {
+  const ingredient = useSelector((state) => getIngredient(state, ingredientId));
+
+  const dispatch = useDispatch();
+
   const inputRef = useRef(null);
 
-  const name = useRef(item ? item.title.toString() : null);
-  const cost = useRef(item ? parseFloat(item.cost).toFixed(2) : null);
-  const quantity = useRef(item ? item.quantity.toString() : "1");
+  const name = useRef(ingredient ? ingredient.title.toString() : null);
+  const cost = useRef(
+    ingredient ? parseFloat(ingredient.cost).toFixed(2) : null
+  );
+  const quantity = useRef(ingredient ? ingredient.quantity.toString() : "1");
   const calories = useRef(
-    item ? (item.calories ? parseFloat(item.calories).toFixed(2) : null) : null
+    ingredient
+      ? ingredient.calories
+        ? parseFloat(ingredient.calories).toFixed(2)
+        : null
+      : null
   );
 
-  function addIngredient() {
-    if (cost.current === "" || cost.current === null) cost.current = 0.0;
-
-    if (quantity.current === "" || quantity.current === null)
-      quantity.current = 1;
-
-    if (name.current === "" || name.current === null)
-      name.current = "New Ingredient";
-
-    if (calories.current === "" || calories.current === null)
-      calories.current = 0;
-
-    const ids = ingredients.map((object) => {
-      return object.id;
-    });
-
-    const max = ids.length > 0 ? Math.max(...ids) : 0;
-
-    ingredients.push({
-      id: max + 1,
-      title: name.current,
-      cost: parseFloat(cost.current),
-      quantity: parseFloat(quantity.current),
-      calories: parseFloat(calories.current),
-      stock: 0,
-      duration: 7,
-      lastUpdate: new Date().toLocaleDateString("it-IT"),
-      history: [
-        {
-          id: 0,
-          date: new Date().toLocaleDateString("it-IT"),
-          cost: parseFloat(cost.current),
-        },
-      ],
-    });
-
-    if (search.length === ingredients.length - 1) setSearch([...ingredients]);
-
-    setIngredients([...ingredients]);
+  function handleAddIngredient() {
+    dispatch(
+      addIngredient({
+        cost: cost.current,
+        quantity: quantity.current,
+        name: name.current,
+        calories: calories.current,
+      })
+    );
   }
 
-  function updateIngredient() {
-    if (cost.current === "" || cost.current === null) cost.current = 0.0;
-
-    if (quantity.current === "" || quantity.current === null)
-      quantity.current = 1;
-
-    if (name.current === "" || name.current === null)
-      name.current = "New Ingredient";
-
-    if (calories.current === "" || calories.current === null)
-      calories.current = 0;
-
-    const ingredient = ingredients.find((obj) => obj.id === item.id);
-
-    ingredient.title = name.current;
-    ingredient.cost = parseFloat(cost.current);
-    ingredient.quantity = parseFloat(quantity.current);
-    ingredient.lastUpdate = new Date().toLocaleDateString("it-IT");
-    ingredient.calories = parseFloat(calories.current);
-    if (ingredient.history) {
-      if (
-        ingredient.history.find((i) => i.id === ingredient.history.length - 1)
-      )
-        if (
-          ingredient.history.find((i) => i.id === ingredient.history.length - 1)
-            .cost !== parseFloat(cost.current)
-        )
-          ingredient.history.push({
-            id: ingredient.history.length,
-            date: new Date().toLocaleDateString("it-IT"),
-            cost: parseFloat(cost.current),
-          });
-    } else {
-      ingredient.history = [
-        {
-          id: 0,
-          date: new Date().toLocaleDateString("it-IT"),
-          cost: parseFloat(cost.current),
-        },
-      ];
-    }
-
-    setIngredients([...ingredients]);
+  function handleUpdateIngredient() {
+    dispatch(
+      updateIngredient({
+        ingredientId,
+        cost: cost.current,
+        quantity: quantity.current,
+        name: name.current,
+        calories: calories.current,
+      })
+    );
   }
 
-  function deleteIngredient() {
-    ingredients = ingredients.filter((obj) => obj.id !== item.id);
-    search = search.filter((obj) => obj.id !== item.id);
-    setSearch([...search]);
-    setIngredients([...ingredients]);
-    deleteIngredientFromRecipes();
-    deleteIngredientFromMeals();
+  function handleDeleteIngredient() {
+    dispatch(deleteIngredient(ingredientId));
   }
 
   function deleteIngredientFromRecipes() {
-    recipes.forEach((r) => {
-      r.ingredients = r.ingredients.filter((obj) => obj.id !== item.id);
+    /*recipes.forEach((r) => {
+      r.ingredients = r.ingredients.filter((obj) => obj.id !== ingredientid);
     });
 
-    setRecipes([...recipes]);
+    setRecipes([...recipes]);*/
   }
 
   function deleteIngredientFromMeals() {
-    meals.forEach((m) => {
-      m["breakfast"].ingredients.filter((obj) => obj.id !== item.id);
-      m["lunch"].ingredients.filter((obj) => obj.id !== item.id);
-      m["dinner"].ingredients.filter((obj) => obj.id !== item.id);
-      m["snack"].ingredients.filter((obj) => obj.id !== item.id);
+    /*meals.forEach((m) => {
+      m["breakfast"].ingredients.filter((obj) => obj.id !== ingredientid);
+      m["lunch"].ingredients.filter((obj) => obj.id !== ingredientid);
+      m["dinner"].ingredients.filter((obj) => obj.id !== ingredientid);
+      m["snack"].ingredients.filter((obj) => obj.id !== ingredientid);
     });
 
-    setMeals([...meals]);
+    setMeals([...meals]);*/
   }
 
   return (
@@ -161,7 +102,7 @@ export default function IngredientModal({
       }}
       onShow={() => {
         const timeout = setTimeout(() => {
-          item ? null : inputRef.current.focus();
+          ingredient ? null : inputRef.current.focus();
         }, 10);
         return () => clearTimeout(timeout);
       }}
@@ -169,11 +110,9 @@ export default function IngredientModal({
       <Image
         className="absolute h-full w-full"
         source={require("~/assets/splash.png")}
-        //blurRadius={80}
         style={{ opacity: 0.9 }}
       />
       <KeyboardAvoidingView
-        //keyboardVerticalOffset={-50}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
@@ -200,7 +139,7 @@ export default function IngredientModal({
                     borderWidth: 5,
                   }}
                 >
-                  {item ? (
+                  {ingredient ? (
                     <>
                       <Text
                         className="text-sm mb-1 "
@@ -213,16 +152,20 @@ export default function IngredientModal({
                           className=" text-5xl font-semibold "
                           style={{ color: themeColors.onBackground }}
                         >
-                          {Math.ceil(item.stock)}
+                          {Math.ceil(ingredient.stock)}
                         </Text>
                         <Text
                           className="text-base mb-1 "
                           style={{ color: themeColors.onBackground }}
                         >
                           {"(" +
-                            (item.quantity === 1
-                              ? (item.stock * item.quantity).toFixed(1)
-                              : Math.round(item.stock * item.quantity)) +
+                            (ingredient.quantity === 1
+                              ? (
+                                  ingredient.stock * ingredient.quantity
+                                ).toFixed(1)
+                              : Math.round(
+                                  ingredient.stock * ingredient.quantity
+                                )) +
                             ")"}
                         </Text>
                       </View>
@@ -230,7 +173,7 @@ export default function IngredientModal({
                         className="text-xl font-semibold -mt-2 "
                         style={{ color: themeColors.onBackground }}
                       >
-                        {item.title}
+                        {ingredient.title}
                       </Text>
                     </>
                   ) : (
@@ -380,7 +323,7 @@ export default function IngredientModal({
                       calories.current = text;
                     }}
                   />
-                  {item ? (
+                  {ingredient ? (
                     <View className="flex-row justify-between items-center">
                       <View className="flex-row items-center">
                         <IconButton
@@ -394,8 +337,8 @@ export default function IngredientModal({
                           style={{ color: themeColors.onSecondaryContainer }}
                         >
                           {"Last update: " +
-                            (item && item.lastUpdate
-                              ? item.lastUpdate
+                            (ingredient && ingredient.lastUpdate
+                              ? ingredient.lastUpdate
                               : new Date().toLocaleDateString("it-IT"))}
                         </Text>
                       </View>
@@ -416,7 +359,7 @@ export default function IngredientModal({
                     </View>
                   ) : null}
                 </View>
-                {item ? (
+                {ingredient ? (
                   <View className="flex-row justify-between items-center">
                     <View className="flex-1">
                       <TouchableOpacity
@@ -428,7 +371,7 @@ export default function IngredientModal({
                           borderTopLeftRadius: 24,
                         }}
                         onPress={() => {
-                          updateIngredient();
+                          handleUpdateIngredient();
                           setModalVisible(false);
                         }}
                       >
@@ -450,7 +393,7 @@ export default function IngredientModal({
                           borderTopRightRadius: 24,
                         }}
                         onPress={() => {
-                          deleteIngredient();
+                          handleDeleteIngredient();
                           setModalVisible(false);
                         }}
                       >
@@ -472,7 +415,7 @@ export default function IngredientModal({
                       borderTopLeftRadius: 24,
                     }}
                     onPress={() => {
-                      addIngredient();
+                      handleAddIngredient();
                       setModalVisible(false);
                     }}
                   >

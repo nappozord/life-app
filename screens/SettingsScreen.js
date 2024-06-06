@@ -70,7 +70,6 @@ export default function SettingsScreen() {
       <Image
         className="absolute h-full w-full"
         source={require("~/assets/splash.png")}
-        //blurRadius={80}
       />
       {user.userId ? (
         <View className="mt-16 flex-1">
@@ -243,9 +242,7 @@ export default function SettingsScreen() {
             </View>
           </Animated.View>
           {finalSetup ? (
-            <FinalSetupComponent
-              setFinalSetup={setFinalSetup}
-            />
+            <FinalSetupComponent setFinalSetup={setFinalSetup} />
           ) : logs ? (
             <LogsModal setLogs={setLogs} />
           ) : null}
