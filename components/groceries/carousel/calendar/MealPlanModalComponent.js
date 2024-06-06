@@ -86,8 +86,6 @@ export default function MealPlanModalComponent({
     );
   };
 
-  console.log("REFREDSSSSS");
-
   return (
     <Modal
       animationType="fade"

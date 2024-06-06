@@ -151,12 +151,10 @@ const listsSlice = createSlice({
     },
     _updateExpenseBoughtDate(state, action) {
       const { listId, expenseId } = action.payload;
-      console.log("YO");
       const currentDate = new Date();
 
       const list = state.lists.find((obj) => obj.id === listId);
       const expense = list.expenses.find((obj) => obj.id === expenseId);
-      console.log(expense);
       expense.dateBought = !expense.dateBought
         ? currentDate.toISOString()
         : null;

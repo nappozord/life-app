@@ -4,18 +4,11 @@ import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
 import Animated, { FadeIn, SlideInUp } from "react-native-reanimated";
 import AddIngredientModal from "./AddIngredientModal";
+import { useDispatch } from "react-redux";
 
-export default function GroceryComponent({
-  item,
-  ingredientList,
-  setIngredientList,
-  groceryList,
-  setGroceryList,
-  ingredients,
-  setIngredients,
-  items,
-  setItems,
-}) {
+export default function GroceryComponent({ item }) {
+  const dispatch = useDispatch();
+
   const [modalVisible, setModalVisible] = useState(false);
 
   const toBuy = item.checked
@@ -27,7 +20,7 @@ export default function GroceryComponent({
       );
 
   function deleteFromGroceryList() {
-    ingredientList = ingredientList.filter(
+    /*ingredientList = ingredientList.filter(
       (obj) => obj.ingredient.id !== item.ingredient.id
     );
 
@@ -46,11 +39,11 @@ export default function GroceryComponent({
       (i) => i.id !== item.ingredient.id
     );
 
-    setGroceryList({ ...groceryList });
+    setGroceryList({ ...groceryList });*/
   }
 
   function saveGroceryList(i) {
-    if (
+    /*if (
       ingredientList.find((obj) => obj.ingredient.id === item.ingredient.id)
         .onCart === 0 &&
       i === -1
@@ -98,7 +91,7 @@ export default function GroceryComponent({
           .buyingDate.push(new Date().toISOString());
         setItems([...items]);
       }
-    }
+    }*/
   }
 
   if (item.ingredient.id < 0) {
@@ -106,13 +99,8 @@ export default function GroceryComponent({
       <>
         {modalVisible ? (
           <AddIngredientModal
-            ingredientList={ingredientList}
             modalVisible={modalVisible}
             setModalVisible={setModalVisible}
-            ingredients={ingredients}
-            groceryList={groceryList}
-            setGroceryList={setGroceryList}
-            itemList={items}
           />
         ) : null}
         <Animated.View entering={FadeIn} className="flex-1 mt-8 mb-2 px-1">

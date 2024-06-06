@@ -57,7 +57,7 @@ export default function GroceriesCarouselComponent() {
           {item.id === 0 ? (
             <MemoizedCalendarComponent />
           ) : item.id === 1 ? (
-            <>{/*<MemoizedGroceriesCard />*/}</>
+            <MemoizedGroceriesCard />
           ) : item.id === 2 ? (
             <MemoizedRecipesListComponent />
           ) : item.id === 3 ? (
