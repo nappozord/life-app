@@ -5,44 +5,36 @@ import { Divider, IconButton } from "react-native-paper";
 import MealPlanModalComponent from "./MealPlanModalComponent";
 import { calculateMealCosts } from "~/utils/calculateCostsAndCalories";
 import MealListComponent from "./MealListComponent";
+import { useSelector } from "react-redux";
 
-export default function ReservationTypeComponent({
-  meals,
-  setMeals,
-  ingredients,
-  setIngredients,
-  recipes,
-  setRecipes,
-  day,
-  type,
-}) {
+export default function ReservationTypeComponent({ day, type }) {
+  const meals = useSelector((state) => state.meals.meals);
+  const ingredients = useSelector((state) => state.ingredients.ingredients);
+  const recipes = useSelector((state) => state.recipes.recipes);
+
   const [modalVisible, setModalVisible] = useState(false);
 
   const selected = meals.find((obj) => obj.date === day)
     ? meals.find((obj) => obj.date === day)[type.type]
     : { ingredients: [], recipes: [] };
 
-  const dailyMeal = meals.find((obj) => obj.date === day)
+  const dailyMeal = meals.find((obj) => obj.date === day);
 
   return (
     <View className="flex-1">
       {modalVisible ? (
-        <MealPlanModalComponent
-          item={{
-            day,
-            icon: type.icon,
-            type: type.type,
-            selected,
-          }}
-          recipes={recipes}
-          setRecipes={setRecipes}
-          ingredients={ingredients}
-          setIngredients={setIngredients}
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-          meals={meals}
-          setMeals={setMeals}
-        />
+        <>
+          <MealPlanModalComponent
+            item={{
+              day,
+              icon: type.icon,
+              type: type.type,
+              selected,
+            }}
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+          />
+        </>
       ) : null}
       <TouchableOpacity
         style={{ backgroundColor: themeColors.secondary }}
@@ -89,28 +81,8 @@ export default function ReservationTypeComponent({
         <Divider />
         {dailyMeal ? (
           <>
-            <MealListComponent
-              meals={meals}
-              setMeals={setMeals}
-              ingredients={ingredients}
-              setIngredients={setIngredients}
-              recipes={recipes}
-              setRecipes={setRecipes}
-              day={day}
-              type={type.type}
-              recipe={true}
-            />
-            <MealListComponent
-              meals={meals}
-              setMeals={setMeals}
-              ingredients={ingredients}
-              setIngredients={setIngredients}
-              recipes={recipes}
-              setRecipes={setRecipes}
-              day={day}
-              type={type.type}
-              recipe={false}
-            />
+            <MealListComponent day={day} type={type.type} recipe={true} />
+            <MealListComponent day={day} type={type.type} recipe={false} />
           </>
         ) : null}
       </TouchableOpacity>

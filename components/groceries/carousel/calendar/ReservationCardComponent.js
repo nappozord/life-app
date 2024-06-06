@@ -2,15 +2,7 @@ import { View } from "react-native";
 import ReservationTypeComponent from "./ReservationTypeComponent";
 import Animated, { SlideInRight } from "react-native-reanimated";
 
-export default function ReservationCardComponent({
-  meals,
-  setMeals,
-  ingredients,
-  setIngredients,
-  recipes,
-  setRecipes,
-  day,
-}) {
+export default function ReservationCardComponent({ day }) {
   const types = [
     {
       type: "breakfast",
@@ -33,52 +25,16 @@ export default function ReservationCardComponent({
   return (
     <View className="flex-1 ml-4">
       <Animated.View entering={SlideInRight} className="flex-1 mb-1">
-        <ReservationTypeComponent
-          meals={meals}
-          setMeals={setMeals}
-          ingredients={ingredients}
-          setIngredients={setIngredients}
-          recipes={recipes}
-          setRecipes={setRecipes}
-          day={day}
-          type={types[0]}
-        />
+        <ReservationTypeComponent day={day} type={types[0]} />
       </Animated.View>
       <Animated.View entering={SlideInRight} className="flex-1 mb-1">
-        <ReservationTypeComponent
-          meals={meals}
-          setMeals={setMeals}
-          ingredients={ingredients}
-          setIngredients={setIngredients}
-          recipes={recipes}
-          setRecipes={setRecipes}
-          day={day}
-          type={types[1]}
-        />
+        <ReservationTypeComponent day={day} type={types[1]} />
       </Animated.View>
       <Animated.View entering={SlideInRight} className="flex-1 mb-1">
-        <ReservationTypeComponent
-          meals={meals}
-          setMeals={setMeals}
-          ingredients={ingredients}
-          setIngredients={setIngredients}
-          recipes={recipes}
-          setRecipes={setRecipes}
-          day={day}
-          type={types[2]}
-        />
+        <ReservationTypeComponent day={day} type={types[2]} />
       </Animated.View>
       <Animated.View entering={SlideInRight} className="flex-1 mb-1">
-        <ReservationTypeComponent
-          meals={meals}
-          setMeals={setMeals}
-          ingredients={ingredients}
-          setIngredients={setIngredients}
-          recipes={recipes}
-          setRecipes={setRecipes}
-          day={day}
-          type={types[3]}
-        />
+        <ReservationTypeComponent day={day} type={types[3]} />
       </Animated.View>
     </View>
   );

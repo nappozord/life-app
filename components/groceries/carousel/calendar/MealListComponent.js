@@ -3,30 +3,27 @@ import Animated, { SlideInRight, SlideOutRight } from "react-native-reanimated";
 import React from "react";
 import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteMeal } from "~/app/mealsSlice";
 
-export default function MealListComponent({
-  meals,
-  setMeals,
-  ingredients,
-  recipes,
-  day,
-  type,
-  recipe,
-}) {
+export default function MealListComponent({ day, type, recipe }) {
+  const meals = useSelector((state) => state.meals.meals);
+  const recipes = useSelector((state) => state.recipes.recipes);
+  const ingredients = useSelector((state) => state.ingredients.ingredients);
+
+  const dispatch = useDispatch();
+
   const meal = meals.find((obj) => obj.date === day);
 
-  function deleteItem(item) {
-    if (recipe) {
-      meal[type]["recipes"] = meal[type]["recipes"].filter(
-        (obj) => obj !== item.id
-      );
-    } else {
-      meal[type]["ingredients"] = meal[type]["ingredients"].filter(
-        (obj) => obj.id !== item.id
-      );
-    }
-
-    setMeals([...meals]);
+  function handleDeleteItem(item) {
+    dispatch(
+      deleteMeal({
+        recipe,
+        type,
+        day,
+        mealId: item.id,
+      })
+    );
   }
 
   return (
@@ -77,7 +74,7 @@ export default function MealListComponent({
                       borderBottomLeftRadius: 50,
                     }}
                     onPress={() => {
-                      deleteItem(item, id);
+                      handleDeleteItem(item, id);
                     }}
                   >
                     <IconButton

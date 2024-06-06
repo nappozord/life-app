@@ -54,7 +54,7 @@ export const incrementIngredient = createAsyncThunk(
 );
 
 export const decrementIngredient = createAsyncThunk(
-  "ingredients/incrementIngredient",
+  "ingredients/decrementIngredient",
   async (payload, { dispatch }) => {
     dispatch(_decrementIngredient(payload));
     updateIngredients(state.ingredients);

@@ -47,14 +47,18 @@ const defaultWeek = [
   },
 ];
 
+const currentWeek = getCurrentWeek(new Date().toISOString());
+
 const initialState = {
   meals: [],
   status: "idle",
   error: null,
   date: new Date().toISOString(),
   defaultWeek: false,
-  currentWeek: getCurrentWeek(new Date().toISOString()),
-  activeDay: 0,
+  currentWeek,
+  activeDay: currentWeek.find(
+    (day) => day.dateString === new Date().toISOString().split("T")[0]
+  ).index,
 };
 
 // Async thunk for fetching meals
@@ -62,15 +66,6 @@ export const fetchMeals = createAsyncThunk("meals/fetchMeals", async () => {
   const response = await getMeals();
   return response;
 });
-
-export const addMeal = createAsyncThunk(
-  "meals/addMeal",
-  async (payload, { dispatch, getState }) => {
-    dispatch(_addMeal(payload));
-    const state = getState().meals;
-    updateMeals(state.meals);
-  }
-);
 
 export const updateMeal = createAsyncThunk(
   "meals/updateMeal",
@@ -87,24 +82,6 @@ export const deleteMeal = createAsyncThunk(
     dispatch(_deleteMeal(payload));
     const state = getState().meals;
     updateMeals(state.meals);
-    //deleteMealFromRecipe
-    //deleteMealFromMeal
-  }
-);
-
-export const incrementMeal = createAsyncThunk(
-  "meals/incrementMeal",
-  async (payload, { dispatch }) => {
-    dispatch(_incrementMeal(payload));
-    updateMeals(state.meals);
-  }
-);
-
-export const decrementMeal = createAsyncThunk(
-  "meals/incrementMeal",
-  async (payload, { dispatch }) => {
-    dispatch(_decrementMeal(payload));
-    updateMeals(state.meals);
   }
 );
 
@@ -112,95 +89,55 @@ const mealsSlice = createSlice({
   name: "meals",
   initialState,
   reducers: {
-    _addMeal(state, action) {
-      const { cost, quantity, name, calories } = action.payload;
-
-      if (cost === "" || cost === null) cost = 0.0;
-
-      if (quantity === "" || quantity === null) quantity = 1;
-
-      if (name === "" || name === null) name = "New Meal";
-
-      if (calories === "" || calories === null) calories = 0;
-
-      const ids = state.meals.map((object) => {
-        return object.id;
-      });
-
-      const max = ids.length > 0 ? Math.max(...ids) : 0;
-
-      state.meals.push({
-        id: max + 1,
-        title: name,
-        cost: parseFloat(cost),
-        quantity: parseFloat(quantity),
-        calories: parseFloat(calories),
-        stock: 0,
-        duration: 7,
-        lastUpdate: new Date().toLocaleDateString("it-IT"),
-        history: [
-          {
-            id: 0,
-            date: new Date().toLocaleDateString("it-IT"),
-            cost: parseFloat(cost),
-          },
-        ],
-      });
-    },
     _deleteMeal(state, action) {
-      state.meals = state.meals.filter((obj) => obj.id !== action.payload);
-    },
-    _updateMeal(state, action) {
-      const { cost, quantity, name, calories, mealId } = action.payload;
+      const { recipe, type, mealId, day } = action.payload;
 
-      const meal = state.meals.find((obj) => obj.id === mealId);
+      const meal = state.meals.find((obj) => obj.date === day);
 
-      if (cost === "" || cost === null) cost = 0.0;
-
-      if (quantity === "" || quantity === null) quantity = 1;
-
-      if (name === "" || name === null) name = "New Meal";
-
-      if (calories === "" || calories === null) calories = 0;
-
-      meal.title = name;
-      meal.cost = parseFloat(cost);
-      meal.quantity = parseFloat(quantity);
-      meal.lastUpdate = new Date().toLocaleDateString("it-IT");
-      meal.calories = parseFloat(calories);
-      if (meal.history) {
-        if (meal.history.find((i) => i.id === meal.history.length - 1))
-          if (
-            meal.history.find((i) => i.id === meal.history.length - 1).cost !==
-            parseFloat(cost)
-          )
-            meal.history.push({
-              id: meal.history.length,
-              date: new Date().toLocaleDateString("it-IT"),
-              cost: parseFloat(cost),
-            });
+      if (recipe) {
+        meal[type]["recipes"] = meal[type]["recipes"].filter(
+          (obj) => obj !== mealId
+        );
       } else {
-        meal.history = [
-          {
-            id: 0,
-            date: new Date().toLocaleDateString("it-IT"),
-            cost: parseFloat(cost),
-          },
-        ];
+        meal[type]["ingredients"] = meal[type]["ingredients"].filter(
+          (obj) => obj.id !== mealId
+        );
       }
     },
-    _incrementMeal(state, action) {
-      const meal = state.meals.find((i) => action.payload === i.id);
-      meal.stock += 1;
-    },
-    _decrementMeal(state, action) {
-      const meal = state.meals.find((i) => action.payload === i.id);
-      meal.stock >= 1 ? (meal.stock -= 1) : (meal.stock = 0);
+    _updateMeal(state, action) {
+      const { selected, day, type } = action.payload;
+
+      if (!state.meals.find((obj) => obj.date === day)) {
+        state.meals.push({
+          date: day,
+          breakfast: {
+            ingredients: [],
+            recipes: [],
+          },
+          lunch: {
+            ingredients: [],
+            recipes: [],
+          },
+          dinner: {
+            ingredients: [],
+            recipes: [],
+          },
+          snack: {
+            ingredients: [],
+            recipes: [],
+          },
+        });
+      }
+
+      state.meals.find((obj) => obj.date === day)[type] = selected;
     },
     updateDate(state, action) {
       state.date = action.payload;
       state.defaultWeek = false;
       state.currentWeek = getCurrentWeek(action.payload);
+      state.activeDay = state.currentWeek.find(
+        (day) => day.dateString === action.payload.split("T")[0]
+      ).index;
     },
     updateDefault(state, action) {
       state.defaultWeek = true;
@@ -223,17 +160,7 @@ const mealsSlice = createSlice({
   },
 });
 
-export const {
-  _addMeal,
-  _deleteMeal,
-  _updateMeal,
-  _incrementMeal,
-  _decrementMeal,
-  updateDate,
-  updateDefault,
-} = mealsSlice.actions;
-
-export const getMeal = (state, id) =>
-  state.meals.meals.find((i) => i.id === id);
+export const { _deleteMeal, _updateMeal, updateDate, updateDefault } =
+  mealsSlice.actions;
 
 export default mealsSlice.reducer;

@@ -51,7 +51,7 @@ export const incrementItem = createAsyncThunk(
 );
 
 export const decrementItem = createAsyncThunk(
-  "items/incrementItem",
+  "items/decrementItem",
   async (payload, { dispatch, getState }) => {
     dispatch(_decrementItem(payload));
     const state = getState().items;

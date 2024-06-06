@@ -12,16 +12,19 @@ import { IconButton } from "react-native-paper";
 import Animated, { SlideInDown } from "react-native-reanimated";
 import SearchComponent from "~/components/groceries/searchbar/SearchComponent";
 import RecipesIngredientsListComponent from "./RecipesIngredientsListComponent";
+import { useSelector, useDispatch } from "react-redux";
+import { updateMeal } from "~/app/mealsSlice";
 
 export default function MealPlanModalComponent({
   item,
   modalVisible,
   setModalVisible,
-  recipes,
-  ingredients,
-  meals,
-  setMeals,
 }) {
+  const recipes = useSelector((state) => state.recipes.recipes);
+  const ingredients = useSelector((state) => state.ingredients.ingredients);
+
+  const dispatch = useDispatch();
+
   const [search, setSearch] = useState([...recipes, ...ingredients]);
   const [selected, setSelected] = useState({
     ingredients: [...item.selected.ingredients],
@@ -59,30 +62,13 @@ export default function MealPlanModalComponent({
   }, [useRecipes]);
 
   const saveButton = () => {
-    if (!meals.find((obj) => obj.date === item.day)) {
-      meals.push({
-        date: item.day,
-        breakfast: {
-          ingredients: [],
-          recipes: [],
-        },
-        lunch: {
-          ingredients: [],
-          recipes: [],
-        },
-        dinner: {
-          ingredients: [],
-          recipes: [],
-        },
-        snack: {
-          ingredients: [],
-          recipes: [],
-        },
-      });
-    }
-
-    meals.find((obj) => obj.date === item.day)[item.type] = selected;
-    setMeals([...meals]);
+    dispatch(
+      updateMeal({
+        selected: selected,
+        day: item.day,
+        type: item.type,
+      })
+    );
   };
 
   return (
@@ -261,7 +247,6 @@ export default function MealPlanModalComponent({
                 <View>
                   <RecipesIngredientsListComponent
                     items={search}
-                    ingredients={ingredients}
                     selected={selected}
                     setSelected={setSelected}
                   />

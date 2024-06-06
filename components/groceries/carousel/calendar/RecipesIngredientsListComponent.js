@@ -4,17 +4,17 @@ import Animated, { SlideInRight } from "react-native-reanimated";
 import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
 import { calculateRecipeCosts } from "~/utils/calculateCostsAndCalories";
-import { FlashList } from "@shopify/flash-list";
 import IngredientSelectionComponent from "~/components/groceries/searchbar/IngredientSelectionComponent";
 import { sortByName } from "~/utils/sortItems";
+import { useSelector } from "react-redux";
 
 export default function RecipesIngredientsListComponent({
-  style,
   items,
-  ingredients,
   selected,
   setSelected,
 }) {
+  const ingredients = useSelector((state) => state.ingredients.ingredients);
+
   const [selectedIngredients, setSelectedIngredients] = useState(
     selected.ingredients
   );
@@ -43,7 +43,6 @@ export default function RecipesIngredientsListComponent({
   return (
     <View style={{ height: 450 }}>
       <FlatList
-        //estimatedItemSize={50}
         keyExtractor={keyExtractor}
         showsVerticalScrollIndicator={false}
         fadingEdgeLength={100}

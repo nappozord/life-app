@@ -3,7 +3,6 @@ import { Text, View, TouchableOpacity, Dimensions } from "react-native";
 import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
 
-import { getCurrentWeek } from "~/utils/manageDate";
 import WeeklyListComponent from "./WeeklyListComponent";
 import CalendarModal from "./CalendarModal";
 import Animated, { SlideInUp, SlideOutDown } from "react-native-reanimated";
@@ -61,26 +60,7 @@ export default function CalendarComponent() {
           </Animated.View>
         </View>
       </View>
-      {/*
-        <WeeklyListComponent
-          meals={meals}
-          setMeals={setMeals}
-          ingredients={ingredients}
-          setIngredients={setIngredients}
-          recipes={recipes}
-          setRecipes={setRecipes}
-          defaultWeek={defaultWeek}
-          weekListRef={weekListRef}
-          initialIndex={
-            defaultWeek
-              ? 0
-              : currentWeek.find(
-                  (day) => day.dateString === date.toISOString().split("T")[0]
-                ).index
-          }
-          currentWeek={currentWeek}
-        />
-      */}
+      <WeeklyListComponent />
     </View>
   );
 }
