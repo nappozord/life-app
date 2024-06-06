@@ -11,6 +11,7 @@ import { IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
 import { calculateMealCostsAndCalories } from "~/utils/calculateCostsAndCalories";
 import ReservationCardComponent from "./ReservationCardComponent";
+import { FlashList } from "@shopify/flash-list";
 
 const MemoizedReservationCardComponent = React.memo(ReservationCardComponent);
 
@@ -182,20 +183,23 @@ export default function WeeklyListComponent() {
     [meals, totals, defaultWeek]
   );
 
+  const onLoadListener = useCallback(() => {
+    const wait = new Promise((resolve) => setTimeout(resolve, 10));
+    wait.then(() => {
+      weekListRef.current?.scrollToIndex({
+        index: activeDay,
+        animated: true,
+      });
+    });
+  }, []);
+
   return (
     <View className="flex-1">
-      <FlatList
+      <FlashList
         ref={weekListRef}
+        estimatedItemSize={230}
         initialScrollIndex={0}
-        onScrollToIndexFailed={(info) => {
-          const wait = new Promise((resolve) => setTimeout(resolve, 500));
-          wait.then(() => {
-            weekListRef.current?.scrollToIndex({
-              index: info.index,
-              animated: true,
-            });
-          });
-        }}
+        onLoad={onLoadListener}
         showsVerticalScrollIndicator={false}
         data={memoizedCurrentWeek}
         keyExtractor={(item) => item.date}

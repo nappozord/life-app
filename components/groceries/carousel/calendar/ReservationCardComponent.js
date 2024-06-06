@@ -1,6 +1,6 @@
 import { View } from "react-native";
 import ReservationTypeComponent from "./ReservationTypeComponent";
-import Animated, { SlideInRight } from "react-native-reanimated";
+import Animated, { FadeIn } from "react-native-reanimated";
 
 export default function ReservationCardComponent({ day }) {
   const types = [
@@ -24,16 +24,16 @@ export default function ReservationCardComponent({ day }) {
 
   return (
     <View className="flex-1 ml-4">
-      <Animated.View entering={SlideInRight} className="flex-1 mb-1">
+      <Animated.View entering={FadeIn} className="flex-1 mb-1">
         <ReservationTypeComponent day={day} type={types[0]} />
       </Animated.View>
-      <Animated.View entering={SlideInRight} className="flex-1 mb-1">
+      <Animated.View entering={FadeIn} className="flex-1 mb-1">
         <ReservationTypeComponent day={day} type={types[1]} />
       </Animated.View>
-      <Animated.View entering={SlideInRight} className="flex-1 mb-1">
+      <Animated.View entering={FadeIn} className="flex-1 mb-1">
         <ReservationTypeComponent day={day} type={types[2]} />
       </Animated.View>
-      <Animated.View entering={SlideInRight} className="flex-1 mb-1">
+      <Animated.View entering={FadeIn} className="flex-1 mb-1">
         <ReservationTypeComponent day={day} type={types[3]} />
       </Animated.View>
     </View>

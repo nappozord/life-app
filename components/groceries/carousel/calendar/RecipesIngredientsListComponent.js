@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, FlatList } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Animated, { SlideInRight } from "react-native-reanimated";
 import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
@@ -7,6 +7,7 @@ import { calculateRecipeCosts } from "~/utils/calculateCostsAndCalories";
 import IngredientSelectionComponent from "~/components/groceries/searchbar/IngredientSelectionComponent";
 import { sortByName } from "~/utils/sortItems";
 import { useSelector } from "react-redux";
+import { FlashList } from "@shopify/flash-list";
 
 export default function RecipesIngredientsListComponent({
   items,
@@ -15,6 +16,8 @@ export default function RecipesIngredientsListComponent({
 }) {
   const ingredients = useSelector((state) => state.ingredients.ingredients);
 
+  const firstRender = useRef(true);
+
   const [selectedIngredients, setSelectedIngredients] = useState(
     selected.ingredients
   );
@@ -22,8 +25,12 @@ export default function RecipesIngredientsListComponent({
   items = sortByName(items);
 
   useEffect(() => {
-    selected.ingredients = selectedIngredients;
-    setSelected({ ...selected });
+    if (!firstRender.current) {
+      selected.ingredients = selectedIngredients;
+      setSelected({ ...selected });
+    } else {
+      firstRender.current = false;
+    }
   }, [selectedIngredients]);
 
   function saveRecipe(item) {
@@ -42,10 +49,11 @@ export default function RecipesIngredientsListComponent({
 
   return (
     <View style={{ height: 450 }}>
-      <FlatList
+      <FlashList
         keyExtractor={keyExtractor}
         showsVerticalScrollIndicator={false}
         fadingEdgeLength={100}
+        estimatedItemSize={60}
         data={items}
         renderItem={({ item }) => {
           const icon = item.ingredients ? "food" : "apple";
@@ -116,6 +124,7 @@ export default function RecipesIngredientsListComponent({
             </>
           );
         }}
+        extraData={selected}
       />
     </View>
   );
