@@ -22,6 +22,7 @@ export default function GroceriesList() {
   const recipes = useSelector((state) => state.recipes.recipes);
   const items = useSelector((state) => state.items.items);
   const week = useSelector((state) => state.groceries.week);
+  const groceries = useSelector((state) => state.groceries.groceries);
 
   const dispatch = useDispatch();
 
@@ -36,7 +37,9 @@ export default function GroceriesList() {
 
   useEffect(() => {
     dispatch(updateList({ meals, ingredients, recipes, items }));
-  }, [meals, ingredients, recipes, items, week, groceryList]);
+  }, [meals, ingredients, recipes, items, week, groceryList, groceries]);
+
+  console.log(groceryList);
 
   return (
     <View className="flex-1 overflow-hidden" key={week[0].dateString}>

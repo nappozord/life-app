@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getItems, updateItems } from "~/api/apiItems";
-import { sortByDate } from "~/utils/sortItems";
+import { addLog } from "~/app/logsSlice";
 
 const initialState = {
   items: [],
@@ -45,16 +45,45 @@ export const incrementItem = createAsyncThunk(
   "items/incrementItem",
   async (payload, { dispatch, getState }) => {
     dispatch(_incrementItem(payload));
-    const state = getState().items;
-    updateItems(state.items);
-  }
-);
 
-export const decrementItem = createAsyncThunk(
-  "items/decrementItem",
-  async (payload, { dispatch, getState }) => {
-    dispatch(_decrementItem(payload));
+    const { id, added } = payload;
     const state = getState().items;
+    const item = state.items.find((i) => id === i.id);
+
+    if (added) {
+      dispatch(
+        addLog([
+          {
+            text: "ADD " + item.title,
+            description:
+              "Manual add of item " +
+              item.title +
+              " for a total of " +
+              item.stock +
+              ".",
+            icon: "plus",
+            auto: false,
+          },
+        ])
+      );
+    } else {
+      dispatch(
+        addLog([
+          {
+            text: "REMOVE " + item.title,
+            description:
+              "Manual add of item " +
+              item.title +
+              " for a total of " +
+              item.stock +
+              ".",
+            icon: "minus",
+            auto: false,
+          },
+        ])
+      );
+    }
+
     updateItems(state.items);
   }
 );
@@ -135,15 +164,10 @@ const itemsSlice = createSlice({
       }
     },
     _incrementItem(state, action) {
-      const item = state.items.find((i) => action.payload === i.id);
-      item.stock += 1;
-    },
-    _decrementItem(state, action) {
-      const item = state.items.find((i) => action.payload === i.id);
-      item.stock >= 1 ? (item.stock -= 1) : (item.stock = 0);
-      item.buyingDate.push(new Date().toISOString());
-      item.buyingDate = sortByDate(item.buyingDate);
-      item.buyingDate.splice(0, 1);
+      const { id, quantity } = action.payload;
+      const item = state.items.find((i) => id === i.id);
+      item.stock = quantity;
+      if (item.stock < 0) item.stock = 0;
     },
   },
   extraReducers: (builder) => {
@@ -162,13 +186,8 @@ const itemsSlice = createSlice({
   },
 });
 
-export const {
-  _addItem,
-  _deleteItem,
-  _updateItem,
-  _incrementItem,
-  _decrementItem,
-} = itemsSlice.actions;
+export const { _addItem, _deleteItem, _updateItem, _incrementItem } =
+  itemsSlice.actions;
 
 export const getItem = (state, id) =>
   state.items.items.find((i) => i.id === id);

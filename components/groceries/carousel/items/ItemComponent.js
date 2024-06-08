@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { themeColors } from "~/theme";
-import { Divider, IconButton } from "react-native-paper";
+import { IconButton } from "react-native-paper";
 import Animated, {
   SlideInRight,
   SlideInUp,
@@ -10,55 +10,32 @@ import Animated, {
 } from "react-native-reanimated";
 import ItemModal from "./ItemModal";
 import ItemPercentageComponent from "./ItemPercentageComponent";
-import { sortByDate } from "~/utils/sortItems";
 import { useSelector, useDispatch } from "react-redux";
-import { addLog } from "~/app/logsSlice";
-import { getItem, incrementItem, decrementItem } from "~/app/itemsSlice";
+import { getItem, incrementItem } from "~/app/itemsSlice";
 
 export default function ItemComponent({ itemId }) {
   const item = useSelector((state) => getItem(state, itemId));
 
   const dispatch = useDispatch();
 
+  const [counter, setCounter] = useState(item.stock);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const handleIncrementItem = () => {
-    dispatch(incrementItem(itemId));
-    dispatch(
-      addLog([
-        {
-          text: "ADD " + item.title,
-          description:
-            "Manual add of item " +
-            item.title +
-            " for a total of " +
-            item.stock +
-            ".",
-          icon: "plus",
-          auto: false,
-        },
-      ])
-    );
-  };
+  const firstRender = useRef(true);
 
-  const handleDecrementItem = () => {
-    dispatch(decrementItem(itemId));
-    dispatch(
-      addLog([
-        {
-          text: "REMOVE " + item.title,
-          description:
-            "Manual remove of item " +
-            item.title +
-            " for a total of " +
-            item.stock +
-            ".",
-          icon: "minus",
-          auto: false,
-        },
-      ])
-    );
-  };
+  useEffect(() => {
+    if (!firstRender.current) {
+      dispatch(
+        incrementItem({
+          id: itemId,
+          quantity: counter,
+          added: counter > item.stock,
+        })
+      );
+    } else {
+      firstRender.current = false;
+    }
+  }, [counter]);
 
   useEffect(() => {
     item.buyingDate.forEach((i) => {
@@ -66,7 +43,8 @@ export default function ItemComponent({ itemId }) {
 
       currentDate.setDate(currentDate.getDate() - item.duration * 7);
 
-      if (Date.parse(currentDate) > Date.parse(i)) handleDecrementItem();
+      if (Date.parse(currentDate) > Date.parse(i))
+        setCounter((prev) => (prev > 0 ? prev - 1 : 0));
     });
   }, []);
 
@@ -101,13 +79,13 @@ export default function ItemComponent({ itemId }) {
                     <Animated.View
                       entering={SlideInUp}
                       exiting={SlideOutDown}
-                      key={itemId + item.stock}
+                      key={itemId + counter}
                     >
                       <Text
                         className="text-lg font-semibold"
                         style={{ color: themeColors.onSecondary }}
                       >
-                        {Math.ceil(item.stock)}
+                        {Math.ceil(counter)}
                       </Text>
                     </Animated.View>
                   </View>
@@ -145,14 +123,16 @@ export default function ItemComponent({ itemId }) {
                     color={themeColors.onSecondaryContainer}
                     size={28}
                     className="m-0 p-0"
-                    onPress={() => handleDecrementItem()}
+                    onPress={() =>
+                      setCounter((prev) => (prev > 0 ? prev - 1 : 0))
+                    }
                   />
                   <IconButton
                     icon={"plus"}
                     color={themeColors.onSecondaryContainer}
                     size={28}
                     className="m-0 p-0"
-                    onPress={() => handleIncrementItem()}
+                    onPress={() => setCounter((prev) => prev + 1)}
                   />
                 </View>
               </View>

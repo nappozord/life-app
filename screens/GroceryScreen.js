@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { View, Image } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import Animated, {
@@ -7,20 +7,27 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
 } from "react-native-reanimated";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import ChipListComponent from "~/components/groceries/chip/ChipListComponent";
 import HeaderComponent from "~/components/header/HeaderComponent";
 import GroceriesCarouselComponent from "~/components/groceries/carousel/GroceriesCarouselComponent";
+import { checkMealsAndIngredients } from "~/app/groceriesSlice";
 
 export default function GroceryScreen() {
   const user = useSelector((state) => state.user.user);
+
+  const dispatch = useDispatch();
 
   const searchBarHeight = useSharedValue(76);
 
   const searchBarAnimatedStyle = useAnimatedStyle(() => ({
     height: searchBarHeight.value,
   }));
+
+  useEffect(() => {
+    dispatch(checkMealsAndIngredients());
+  }, []);
 
   return (
     <View className="flex-1">

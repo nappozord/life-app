@@ -1,8 +1,7 @@
-import { getMeals, updateMeals } from "~/api/apiMeals";
-import { getIngredients, updateIngredients } from "~/api/apiIngredients";
-import { getRecipes, updateRecipes } from "~/api/apiRecipes";
-import { useDispatch } from "react-redux";
 import { addLog } from "~/app/logsSlice";
+import { checkMeal } from "~/app/mealsSlice";
+import { updateRecipeUsage } from "~/app/recipesSlice";
+import { incrementIngredient } from "~/app/ingredientsSlice";
 
 export function getIngredientFromMeal(
   meal,
@@ -45,14 +44,7 @@ function searchIngredients(ingredient, ingredients, weeklyIngredients) {
   }
 }
 
-function calculateIngredientCheck(
-  date,
-  recipes,
-  ingredients,
-  meals,
-  setFutureIngredients,
-  dispatch
-) {
+function calculateIngredientCheck(date, recipes, ingredients, meals, dispatch) {
   if (meals) {
     let yesterday = new Date(date);
     yesterday.setDate(yesterday.getDate() - 1);
@@ -91,105 +83,31 @@ function calculateIngredientCheck(
           weeklyIngredients
         );
 
-        meal.breakfast.recipes.forEach((r) => {
-          recipes.find((obj) => obj.id === r)
-            ? (recipes.find((obj) => obj.id === r).used += 1)
-            : null;
-        });
-
-        meal.snack.recipes.forEach((r) => {
-          recipes.find((obj) => obj.id === r)
-            ? (recipes.find((obj) => obj.id === r).used += 1)
-            : null;
-        });
-
-        meal.dinner.recipes.forEach((r) => {
-          recipes.find((obj) => obj.id === r)
-            ? (recipes.find((obj) => obj.id === r).used += 1)
-            : null;
-        });
-
-        meal.lunch.recipes.forEach((r) => {
-          recipes.find((obj) => obj.id === r)
-            ? (recipes.find((obj) => obj.id === r).used += 1)
-            : null;
-        });
-
-        meals.find((o) => o.date === meal.date).checked = true;
+        dispatch(checkMeal(meal.date));
+        dispatch(updateRecipeUsage(meal.breakfast.recipes));
+        dispatch(updateRecipeUsage(meal.snack.recipes));
+        dispatch(updateRecipeUsage(meal.dinner.recipes));
+        dispatch(updateRecipeUsage(meal.lunch.recipes));
       }
     });
 
-    logs = [];
-
     weeklyIngredients.forEach((i) => {
-      ingredients.find((obj) => obj.id === i.ingredient.id).stock -= parseFloat(
-        (i.needed / i.ingredient.quantity).toFixed(3)
+      const ingredient = ingredients.find((obj) => obj.id === i.ingredient.id);
+      const quantity =
+        ingredient.stock -
+        parseFloat((i.needed / i.ingredient.quantity).toFixed(3));
+
+      dispatch(
+        incrementIngredient({ id: ingredient.id, quantity, auto: true })
       );
-
-      if (ingredients.find((obj) => obj.id === i.ingredient.id).stock < 0)
-        ingredients.find((obj) => obj.id === i.ingredient.id).stock = 0;
-
-      logs.push({
-        text:
-          "REMOVE " +
-          ingredients.find((obj) => obj.id === i.ingredient.id).title,
-        description:
-          "Automatic remove of item " +
-          ingredients.find((obj) => obj.id === i.ingredient.id).title +
-          " for a total of " +
-          ingredients.find((obj) => obj.id === i.ingredient.id).stock +
-          ".",
-        icon: "minus",
-        auto: true,
-      });
     });
-
-    if (!setFutureIngredients) {
-      dispatch(addLog(logs));
-      updateRecipes([...recipes]);
-      updateMeals([...meals]);
-      updateIngredients([...ingredients]);
-    } else {
-      setFutureIngredients([...ingredients]);
-    }
   }
 }
 
-export function checkIngredientQuantity(
-  date,
-  futureIngredients,
-  setFutureIngredients,
-  ingredients,
-  recipes,
-  meals,
-  dispatch
-) {
-  if (!futureIngredients) {
-    getIngredients().then((_ingredients) => {
-      if (_ingredients) {
-        getRecipes().then((_recipes) => {
-          if (_recipes) {
-            getMeals().then((_meals) => {
-              calculateIngredientCheck(
-                date,
-                _recipes,
-                _ingredients,
-                _meals,
-                dispatch
-              );
-            });
-          }
-        });
-      }
-    });
-  } else {
-    calculateIngredientCheck(
-      date,
-      recipes,
-      ingredients,
-      meals,
-      setFutureIngredients,
-      dispatch
-    );
-  }
+export function checkIngredientQuantity(date, state, dispatch) {
+  const ingredients = state.ingredients.ingredients;
+  const recipes = state.recipes.recipes;
+  const meals = state.meals.meals;
+
+  calculateIngredientCheck(date, recipes, ingredients, meals, dispatch);
 }

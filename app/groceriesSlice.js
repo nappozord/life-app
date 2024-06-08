@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getGroceryList, updateGroceryList } from "~/api/apiGroceries";
 import { getCurrentWeek } from "~/utils/manageDate";
 import { calculateNewList } from "~/utils/calculateGroceryList";
+import { checkIngredientQuantity } from "../utils/manageIngredients";
 
 const initialState = {
   groceries: [],
@@ -38,6 +39,13 @@ const initialState = {
   week: getCurrentWeek(new Date().toISOString()),
 };
 
+export const checkMealsAndIngredients = createAsyncThunk(
+  "groceries/checkMealsAndIngredients",
+  async (payload, { dispatch, getState }) => {
+    checkIngredientQuantity(new Date(), getState(), dispatch);
+  }
+);
+
 // Async thunk for fetching groceries
 export const fetchGroceries = createAsyncThunk(
   "groceries/fetchGroceries",
@@ -52,7 +60,25 @@ export const updateGrocery = createAsyncThunk(
   async (payload, { dispatch, getState }) => {
     dispatch(_updateGrocery(payload));
     const state = getState().groceries;
-    updateGroceryList(state.list.groceryList);
+    updateGroceryList(state.groceries);
+  }
+);
+
+export const deleteGroceryItem = createAsyncThunk(
+  "groceries/deleteGroceryItem",
+  async (payload, { dispatch, getState }) => {
+    dispatch(_deleteGroceryItem(payload));
+    const state = getState().groceries;
+    updateGroceryList(state.groceries);
+  }
+);
+
+export const addGroceryItem = createAsyncThunk(
+  "groceries/addGroceryItem",
+  async (payload, { dispatch, getState }) => {
+    dispatch(_addGroceryItem(payload));
+    const state = getState().groceries;
+    updateGroceryList(state.groceries);
   }
 );
 
@@ -72,7 +98,7 @@ const groceriesSlice = createSlice({
     updateList(state, action) {
       const { meals, ingredients, recipes, items } = action.payload;
 
-      state.list.ingredientList = calculateNewList({
+      const newList = calculateNewList({
         meals,
         ingredients,
         recipes,
@@ -81,6 +107,8 @@ const groceriesSlice = createSlice({
         groceryList: state.list.groceryList,
         groceries: state.groceries,
       });
+
+      state.list.ingredientList = newList;
     },
     _updateGrocery(state, action) {
       const selected = action.payload;
@@ -90,7 +118,6 @@ const groceriesSlice = createSlice({
       groceryList.added = [];
 
       selected.forEach((s) => {
-        console.log(s);
         groceryList.added.push(s);
 
         if (groceryList.excluded.find((e) => e.id === s.id)) {
@@ -114,6 +141,74 @@ const groceriesSlice = createSlice({
           }
         }
       });
+
+      let grocery = state.groceries.find(
+        (obj) => obj.date === groceryList.date
+      );
+
+      if (grocery) {
+        grocery.checked = groceryList.checked;
+        grocery.added = groceryList.added;
+        grocery.excluded = groceryList.excluded;
+      } else {
+        groceries.push({ ...groceryList });
+      }
+    },
+    _deleteGroceryItem(state, action) {
+      const item = action.payload;
+      const groceryList = state.list.groceryList;
+
+      state.list.ingredientList = state.list.ingredientList.filter(
+        (obj) => obj.ingredient.id !== item.ingredient.id
+      );
+
+      groceryList.excluded.push({
+        id: item.ingredient.id,
+        quantity: item.needed,
+      });
+
+      groceryList.added = groceryList.added.filter(
+        (i) => i.id !== item.ingredient.id
+      );
+
+      groceryList.checked = groceryList.checked.filter(
+        (i) => i.id !== item.ingredient.id
+      );
+
+      let grocery = state.groceries.find(
+        (obj) => obj.date === groceryList.date
+      );
+
+      if (grocery) {
+        grocery.checked = groceryList.checked;
+        grocery.added = groceryList.added;
+        grocery.excluded = groceryList.excluded;
+      } else {
+        groceries.push({ ...groceryList });
+      }
+    },
+    _addGroceryItem(state, action) {
+      const { item, quantity } = action.payload;
+      const groceryList = state.list.groceryList;
+
+      if (groceryList.checked.find((i) => i.id === item.ingredient.id)) {
+        groceryList.checked.find((i) => i.id === item.ingredient.id).quantity +=
+          quantity;
+
+        if (
+          groceryList.checked.find((i) => i.id === item.ingredient.id)
+            .quantity === 0
+        ) {
+          groceryList.checked = groceryList.checked.filter(
+            (i) => i.id !== item.ingredient.id
+          );
+        }
+      } else {
+        groceryList.checked.push({
+          id: item.ingredient.id,
+          quantity,
+        });
+      }
     },
   },
   extraReducers: (builder) => {
@@ -148,7 +243,13 @@ const groceriesSlice = createSlice({
   },
 });
 
-export const { updateActiveCategory, updateWeek, updateList, _updateGrocery } =
-  groceriesSlice.actions;
+export const {
+  updateActiveCategory,
+  updateWeek,
+  updateList,
+  _updateGrocery,
+  _addGroceryItem,
+  _deleteGroceryItem,
+} = groceriesSlice.actions;
 
 export default groceriesSlice.reducer;

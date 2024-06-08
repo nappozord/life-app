@@ -5,21 +5,6 @@ export async function getGroceryList() {
   return jsonValue ? JSON.parse(jsonValue) : null;
 }
 
-export async function updateGroceryList(grocery) {
-  let groceries = await getGroceryList();
-
-  if (groceries) {
-    let g = groceries.find((obj) => obj.date === grocery.date);
-    if (g) {
-      g.checked = grocery.checked;
-      g.added = grocery.added;
-      g.excluded = grocery.excluded;
-    } else {
-      groceries.push({ ...grocery });
-    }
-  } else {
-    groceries = [{ ...grocery }];
-  }
-
+export async function updateGroceryList(groceries) {
   await AsyncStorage.setItem("groceries", JSON.stringify(groceries));
 }

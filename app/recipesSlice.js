@@ -34,6 +34,15 @@ export const updateRecipe = createAsyncThunk(
   }
 );
 
+export const updateRecipeUsage = createAsyncThunk(
+  "recipes/updateRecipe",
+  async (payload, { dispatch, getState }) => {
+    dispatch(_updateRecipeUsage(payload));
+    const state = getState().recipes;
+    updateRecipes(state.recipes);
+  }
+);
+
 export const deleteRecipe = createAsyncThunk(
   "recipes/deleteRecipe",
   async (payload, { dispatch, getState }) => {
@@ -85,6 +94,12 @@ const recipesSlice = createSlice({
       recipe.icon = icon;
       recipe.ingredients = [...selected];
     },
+    _updateRecipeUsage(state, action) {
+      action.payload.forEach((r) => {
+        const recipe = state.recipes.find((obj) => obj.id === r);
+        recipe ? (recipe.used += 1) : null;
+      });
+    },
     _incrementRecipe(state, action) {
       const recipe = state.recipes.find((i) => action.payload === i.id);
       recipe.stock += 1;
@@ -116,6 +131,7 @@ export const {
   _updateRecipe,
   _incrementRecipe,
   _decrementRecipe,
+  _updateRecipeUsage,
 } = recipesSlice.actions;
 
 export const getRecipe = (state, id) =>

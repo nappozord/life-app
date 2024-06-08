@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getIngredients, updateIngredients } from "~/api/apiIngredients";
+import { addLog } from "~/app/logsSlice";
 
 const initialState = {
   ingredients: [],
@@ -47,16 +48,49 @@ export const deleteIngredient = createAsyncThunk(
 
 export const incrementIngredient = createAsyncThunk(
   "ingredients/incrementIngredient",
-  async (payload, { dispatch }) => {
+  async (payload, { dispatch, getState }) => {
     dispatch(_incrementIngredient(payload));
-    updateIngredients(state.ingredients);
-  }
-);
 
-export const decrementIngredient = createAsyncThunk(
-  "ingredients/decrementIngredient",
-  async (payload, { dispatch }) => {
-    dispatch(_decrementIngredient(payload));
+    const { id, added, auto } = payload;
+    const state = getState().ingredients;
+    const ingredient = state.ingredients.find((i) => id === i.id);
+
+    if (added) {
+      dispatch(
+        addLog([
+          {
+            text: "ADD " + ingredient.title,
+            description:
+              (auto ? "Automatic" : "Manual") +
+              " add of ingredient " +
+              ingredient.title +
+              " for a total of " +
+              ingredient.stock +
+              ".",
+            icon: "plus",
+            auto,
+          },
+        ])
+      );
+    } else {
+      dispatch(
+        addLog([
+          {
+            text: "REMOVE " + ingredient.title,
+            description:
+              (auto ? "Automatic" : "Manual") +
+              " add of ingredient " +
+              ingredient.title +
+              " for a total of " +
+              ingredient.stock +
+              ".",
+            icon: "minus",
+            auto,
+          },
+        ])
+      );
+    }
+
     updateIngredients(state.ingredients);
   }
 );
@@ -150,12 +184,10 @@ const ingredientsSlice = createSlice({
       }
     },
     _incrementIngredient(state, action) {
-      const ingredient = state.ingredients.find((i) => action.payload === i.id);
-      ingredient.stock += 1;
-    },
-    _decrementIngredient(state, action) {
-      const ingredient = state.ingredients.find((i) => action.payload === i.id);
-      ingredient.stock >= 1 ? (ingredient.stock -= 1) : (ingredient.stock = 0);
+      const { id, quantity } = action.payload;
+      const ingredient = state.ingredients.find((i) => id === i.id);
+      ingredient.stock = quantity;
+      if (ingredient.stock < 0) ingredient.stock = 0;
     },
   },
   extraReducers: (builder) => {
@@ -179,7 +211,6 @@ export const {
   _deleteIngredient,
   _updateIngredient,
   _incrementIngredient,
-  _decrementIngredient,
 } = ingredientsSlice.actions;
 
 export const getIngredient = (state, id) =>

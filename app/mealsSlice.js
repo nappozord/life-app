@@ -47,6 +47,43 @@ const defaultWeek = [
   },
 ];
 
+function setDefaultMeals(meals, day, defaultMeal) {
+  if (defaultMeal) {
+    meals.push({
+      date: day,
+      breakfast: {
+        ingredients: [],
+        recipes: [],
+      },
+      lunch: {
+        ingredients: [],
+        recipes: [],
+      },
+      dinner: {
+        ingredients: [],
+        recipes: [],
+      },
+      snack: {
+        ingredients: [],
+        recipes: [],
+      },
+    });
+
+    meals.find((obj) => obj.date === day)["breakfast"] = {
+      ...defaultMeal["breakfast"],
+    };
+    meals.find((obj) => obj.date === day)["lunch"] = {
+      ...defaultMeal["lunch"],
+    };
+    meals.find((obj) => obj.date === day)["dinner"] = {
+      ...defaultMeal["dinner"],
+    };
+    meals.find((obj) => obj.date === day)["snack"] = {
+      ...defaultMeal["snack"],
+    };
+  }
+}
+
 const currentWeek = getCurrentWeek(new Date().toISOString());
 
 const initialState = {
@@ -71,6 +108,15 @@ export const updateMeal = createAsyncThunk(
   "meals/updateMeal",
   async (payload, { dispatch, getState }) => {
     dispatch(_updateMeal(payload));
+    const state = getState().meals;
+    updateMeals(state.meals);
+  }
+);
+
+export const checkMeal = createAsyncThunk(
+  "meals/checkMeal",
+  async (payload, { dispatch, getState }) => {
+    dispatch(_checkMeal(payload));
     const state = getState().meals;
     updateMeals(state.meals);
   }
@@ -131,6 +177,9 @@ const mealsSlice = createSlice({
 
       state.meals.find((obj) => obj.date === day)[type] = selected;
     },
+    _checkMeal(state, action) {
+      state.meals.find((o) => o.date === action.payload).checked = true;
+    },
     updateDate(state, action) {
       state.date = action.payload;
       state.defaultWeek = false;
@@ -138,6 +187,65 @@ const mealsSlice = createSlice({
       state.activeDay = state.currentWeek.find(
         (day) => day.dateString === action.payload.split("T")[0]
       ).index;
+
+      if (
+        !state.defaultWeek &&
+        !state.meals.find(
+          (obj) => obj.date === state.currentWeek[0].dateString
+        ) &&
+        !state.meals.find(
+          (obj) => obj.date === state.currentWeek[1].dateString
+        ) &&
+        !state.meals.find(
+          (obj) => obj.date === state.currentWeek[2].dateString
+        ) &&
+        !state.meals.find(
+          (obj) => obj.date === state.currentWeek[3].dateString
+        ) &&
+        !state.meals.find(
+          (obj) => obj.date === state.currentWeek[4].dateString
+        ) &&
+        !state.meals.find(
+          (obj) => obj.date === state.currentWeek[5].dateString
+        ) &&
+        !state.meals.find((obj) => obj.date === state.currentWeek[6].dateString)
+      ) {
+        setDefaultMeals(
+          state.meals,
+          state.currentWeek[0].dateString,
+          state.meals.find((obj) => obj.date === "Default_Mon")
+        );
+        setDefaultMeals(
+          state.meals,
+          state.currentWeek[1].dateString,
+          state.meals.find((obj) => obj.date === "Default_Tue")
+        );
+        setDefaultMeals(
+          state.meals,
+          state.currentWeek[2].dateString,
+          state.meals.find((obj) => obj.date === "Default_Wed")
+        );
+        setDefaultMeals(
+          state.meals,
+          state.currentWeek[3].dateString,
+          state.meals.find((obj) => obj.date === "Default_Thu")
+        );
+        setDefaultMeals(
+          state.meals,
+          state.currentWeek[4].dateString,
+          state.meals.find((obj) => obj.date === "Default_Fri")
+        );
+        setDefaultMeals(
+          state.meals,
+          state.currentWeek[5].dateString,
+          state.meals.find((obj) => obj.date === "Default_Sat")
+        );
+        setDefaultMeals(
+          state.meals,
+          state.currentWeek[6].dateString,
+          state.meals.find((obj) => obj.date === "Default_Sun")
+        );
+      }
     },
     updateDefault(state, action) {
       state.defaultWeek = true;
@@ -160,7 +268,12 @@ const mealsSlice = createSlice({
   },
 });
 
-export const { _deleteMeal, _updateMeal, updateDate, updateDefault } =
-  mealsSlice.actions;
+export const {
+  _deleteMeal,
+  _updateMeal,
+  _checkMeal,
+  updateDate,
+  updateDefault,
+} = mealsSlice.actions;
 
 export default mealsSlice.reducer;

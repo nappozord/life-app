@@ -5,8 +5,8 @@ import React, {
   useCallback,
   useMemo,
 } from "react";
-import { View, Text, FlatList } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
+import { View, Text } from "react-native";
+import { useSelector } from "react-redux";
 import { IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
 import { calculateMealCostsAndCalories } from "~/utils/calculateCostsAndCalories";
@@ -23,12 +23,11 @@ export default function WeeklyListComponent() {
   const ingredients = useSelector((state) => state.ingredients.ingredients);
   const recipes = useSelector((state) => state.recipes.recipes);
 
-  const dispatch = useDispatch();
-
   const [totals, setTotals] = useState([]);
 
   const currentIndex = useRef(null);
   const weekListRef = useRef(null);
+  const heightOffset = useRef([]);
 
   useEffect(() => {
     if (weekListRef.current && activeDay !== currentIndex.current) {
@@ -111,7 +110,12 @@ export default function WeeklyListComponent() {
       const total = totals.find((obj) => obj.dayNumber === item.dayNumber);
 
       return (
-        <View className={"m-5 my-2 flex-row " + (index === 0 ? "mt-4" : "")}>
+        <View
+          className={"m-5 my-2 flex-row " + (index === 0 ? "mt-4" : "")}
+          onLayout={({ nativeEvent: { layout } }) => {
+            heightOffset.current.push({ layout, index });
+          }}
+        >
           <View className="items-center">
             <Text style={{ color: themeColors.onSecondaryContainer }}>
               {item.dayName}
@@ -183,13 +187,28 @@ export default function WeeklyListComponent() {
     [meals, totals, defaultWeek]
   );
 
+  function getOffsetByIndex(index) {
+    let offset = 0;
+    if (heightOffset.current.length < index)
+      index = heightOffset.current.length;
+    for (let i = 0; i < index; i++) {
+      const layout = heightOffset.current[i].layout;
+      if (layout && layout.height) {
+        offset += layout.height + 16;
+      }
+    }
+    return { offset, index };
+  }
+
   const onLoadListener = useCallback(() => {
     const wait = new Promise((resolve) => setTimeout(resolve, 10));
     wait.then(() => {
-      weekListRef.current?.scrollToIndex({
-        index: activeDay,
+      const { offset, index } = getOffsetByIndex(activeDay);
+      weekListRef.current.scrollToOffset({
+        offset,
         animated: true,
       });
+      if (index !== activeDay) onLoadListener();
     });
   }, []);
 

@@ -64,8 +64,6 @@ export default function WelcomeScreen() {
   const reset = false;
 
   useEffect(() => {
-    checkIngredientQuantity(new Date(), dispatch);
-
     setTimeout(() => {
       if (dev) {
         dispatch(
