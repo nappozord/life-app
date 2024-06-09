@@ -10,9 +10,8 @@ import { incrementIngredient } from "~/app/ingredientsSlice";
 import { incrementItem } from "~/app/itemsSlice";
 
 export default function GroceryComponent({ item }) {
-  const ingredientList = useSelector(
-    (state) => state.groceries.list.ingredientList
-  );
+  const groceryList = useSelector((state) => state.groceries.list.groceryList);
+
   const dispatch = useDispatch();
 
   const [counter, setCounter] = useState(item.onCart);
@@ -22,6 +21,10 @@ export default function GroceryComponent({ item }) {
 
   const toBuy = item.checked
     ? item.onCart
+    : groceryList.added.find((a) => a.id === item.ingredient.id)
+    ? Math.ceil(
+        item.needed / (item.ingredient.quantity ? item.ingredient.quantity : 1)
+      )
     : Math.ceil(
         item.needed /
           (item.ingredient.quantity ? item.ingredient.quantity : 1) -
@@ -33,17 +36,9 @@ export default function GroceryComponent({ item }) {
   }
 
   function saveGroceryList(quantity) {
-    if (
-      ingredientList.find((obj) => obj.ingredient.id === item.ingredient.id)
-        .onCart === 0 &&
-      quantity === -1
-    ) {
-      return;
-    } else {
-      dispatch(addGroceryItem({ item, quantity }));
-      dispatch(incrementIngredient({ id: item.ingredient.id, quantity }));
-      dispatch(incrementItem({ id: item.ingredient.id, quantity }));
-    }
+    dispatch(addGroceryItem({ item, quantity }));
+    dispatch(incrementIngredient({ id: item.ingredient.id, quantity }));
+    dispatch(incrementItem({ id: item.ingredient.id, quantity }));
   }
 
   useEffect(() => {

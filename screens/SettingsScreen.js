@@ -239,6 +239,19 @@ export default function SettingsScreen() {
                   />
                 </TouchableOpacity>
               </View>
+              <View
+                className="flex-row items-center justify-between p-3 rounded-2xl"
+                style={{ backgroundColor: themeColors.secondaryContainer }}
+              >
+                <View>
+                  <Text
+                    className="text-lg"
+                    style={{ color: themeColors.onBackground }}
+                  >
+                    Version 1.12 - 09/07/2024
+                  </Text>
+                </View>
+              </View>
             </View>
           </Animated.View>
           {finalSetup ? (

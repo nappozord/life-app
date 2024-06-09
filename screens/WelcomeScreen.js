@@ -32,7 +32,6 @@ import PassRecoveryComponent from "~/components/login/PassRecoveryComponent";
 
 import { restoreBackup } from "~/api/apiManager";
 import { ActivityIndicator } from "react-native-paper";
-import { checkIngredientQuantity } from "~/utils/manageIngredients";
 
 const height = Dimensions.get("window").height;
 
@@ -70,7 +69,7 @@ export default function WelcomeScreen() {
           updateUser({
             userId: "abc",
             username: "Nappozord",
-            balance: 2000,
+            balance: 3000,
           })
         );
         navigation.push("Home");
@@ -88,6 +87,7 @@ export default function WelcomeScreen() {
         //AsyncStorage.removeItem("lists");
         //AsyncStorage.removeItem("recipes");
         //AsyncStorage.removeItem("meals");
+        //AsyncStorage.removeItem("groceries");
       }
 
       getCurrentUser()

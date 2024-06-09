@@ -1,5 +1,5 @@
 import { View, TouchableOpacity, Text } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useMemo } from "react";
 import { IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
 import { getCurrentWeek } from "~/utils/manageDate";
@@ -7,41 +7,35 @@ import GroceriesList from "./GroceriesList";
 import { useDispatch, useSelector } from "react-redux";
 import { updateWeek } from "~/app/groceriesSlice";
 
+const MemoizedGroceriesList = React.memo(GroceriesList);
+
 export default function GroceriesCard() {
   const week = useSelector((state) => state.groceries.week);
-
   const dispatch = useDispatch();
 
-  const text =
-    week[0].dateString ===
-    getCurrentWeek(new Date().toISOString())[0].dateString
-      ? "This week"
-      : new Date(week[0].date).toLocaleString("default", {
-          month: "long",
-        }) ===
-        new Date(week[6].date).toLocaleString("default", {
-          month: "long",
-        })
-      ? "From " +
-        week[0].dayNumber +
-        " to " +
-        week[6].dayNumber +
-        ", " +
-        new Date(week[0].date).toLocaleString("default", {
-          month: "long",
-        })
-      : "From " +
-        week[0].dayNumber +
-        ", " +
-        new Date(week[0].date).toLocaleString("default", {
-          month: "short",
-        }) +
-        " to " +
-        week[6].dayNumber +
-        ", " +
-        new Date(week[6].date).toLocaleString("default", {
-          month: "short",
-        });
+  const text = useMemo(() => {
+    if (
+      week[0].dateString ===
+      getCurrentWeek(new Date().toISOString())[0].dateString
+    ) {
+      return "This week";
+    }
+
+    const startDate = new Date(week[0].date);
+    const endDate = new Date(week[6].date);
+    const startMonth = startDate.toLocaleString("default", { month: "long" });
+    const endMonth = endDate.toLocaleString("default", { month: "long" });
+
+    if (startMonth === endMonth) {
+      return `From ${week[0].dayNumber} to ${week[6].dayNumber}, ${startMonth}`;
+    } else {
+      return `From ${week[0].dayNumber}, ${startDate.toLocaleString("default", {
+        month: "short",
+      })} to ${week[6].dayNumber}, ${endDate.toLocaleString("default", {
+        month: "short",
+      })}`;
+    }
+  }, [week]);
 
   return (
     <View className="flex-1">
@@ -135,7 +129,7 @@ export default function GroceriesCard() {
           </TouchableOpacity>
         </View>
       </View>
-      <GroceriesList />
+      <MemoizedGroceriesList />
     </View>
   );
 }

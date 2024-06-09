@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getRecipes, updateRecipes } from "~/api/apiRecipes";
+import { deleteRecipeFromMeal } from "./mealsSlice";
 
 const initialState = {
   recipes: [],
@@ -49,7 +50,17 @@ export const deleteRecipe = createAsyncThunk(
     dispatch(_deleteRecipe(payload));
     const state = getState().recipes;
     updateRecipes(state.recipes);
-    //deleteRecipeFromMeal
+
+    deleteRecipeFromMeal(payload);
+  }
+);
+
+export const deleteIngredientFromRecipe = createAsyncThunk(
+  "recipes/deleteIngredientFromRecipe",
+  async (payload, { dispatch, getState }) => {
+    dispatch(_deleteIngredientFromRecipe(payload));
+    const state = getState().recipes;
+    updateRecipes(state.recipes);
   }
 );
 
@@ -100,13 +111,12 @@ const recipesSlice = createSlice({
         recipe ? (recipe.used += 1) : null;
       });
     },
-    _incrementRecipe(state, action) {
-      const recipe = state.recipes.find((i) => action.payload === i.id);
-      recipe.stock += 1;
-    },
-    _decrementRecipe(state, action) {
-      const recipe = state.recipes.find((i) => action.payload === i.id);
-      recipe.stock >= 1 ? (recipe.stock -= 1) : (recipe.stock = 0);
+    _deleteIngredientFromRecipe(state, action) {
+      const ingredientId = action.payload;
+
+      state.recipes.forEach((r) => {
+        r.ingredients = r.ingredients.filter((obj) => obj.id !== ingredientId);
+      });
     },
   },
   extraReducers: (builder) => {
@@ -129,8 +139,7 @@ export const {
   _addRecipe,
   _deleteRecipe,
   _updateRecipe,
-  _incrementRecipe,
-  _decrementRecipe,
+  _deleteIngredientFromRecipe,
   _updateRecipeUsage,
 } = recipesSlice.actions;
 

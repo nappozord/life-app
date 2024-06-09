@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateList } from "~/app/groceriesSlice";
 
 export default function GroceriesList() {
-  const { ingredientList, totalCost, groceryList } = useSelector(
+  const { ingredientList, groceryList } = useSelector(
     (state) => state.groceries.list
   );
   const meals = useSelector((state) => state.meals.meals);
@@ -26,6 +26,7 @@ export default function GroceriesList() {
 
   const dispatch = useDispatch();
 
+  const [totalCost, setTotalCost] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(() => {
@@ -39,7 +40,24 @@ export default function GroceriesList() {
     dispatch(updateList({ meals, ingredients, recipes, items }));
   }, [meals, ingredients, recipes, items, week, groceryList, groceries]);
 
-  console.log(groceryList);
+  useEffect(() => {
+    let count = 0;
+
+    ingredientList.forEach((item) => {
+      if (item.ingredient) {
+        count +=
+          parseFloat(item.ingredient.cost) *
+          Math.ceil(
+            item.needed /
+              (item.ingredient.quantity
+                ? parseFloat(item.ingredient.quantity)
+                : 1)
+          );
+      }
+    });
+
+    setTotalCost(count);
+  }, [ingredientList]);
 
   return (
     <View className="flex-1 overflow-hidden" key={week[0].dateString}>
@@ -83,14 +101,14 @@ export default function GroceriesList() {
                   { length: ingredientList.length % 2 === 0 ? 2 : 1 },
                   (_, i) => {
                     return {
-                      ingredient: { id: -i - 1, title: "Add to List" },
+                      ingredient: { id: -i - 1, title: "Update List" },
                     };
                   }
                 ),
               ]}
               keyExtractor={(item) => item.ingredient.id}
               renderItem={({ item }) => {
-                return <GroceryComponent item={item} />;
+                return <GroceryComponent item={item} key={item.onCart} />;
               }}
             />
           ) : (

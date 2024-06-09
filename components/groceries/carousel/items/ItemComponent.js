@@ -38,6 +38,10 @@ export default function ItemComponent({ itemId }) {
   }, [counter]);
 
   useEffect(() => {
+    setCounter(item.stock);
+  }, [item]);
+
+  useEffect(() => {
     item.buyingDate.forEach((i) => {
       let currentDate = new Date();
 

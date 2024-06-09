@@ -8,7 +8,6 @@ const initialState = {
   groceries: [],
   list: {
     ingredientList: [],
-    totalCost: 0,
     groceryList: [],
   },
   categories: [
@@ -115,10 +114,37 @@ const groceriesSlice = createSlice({
       const groceryList = state.list.groceryList;
       const ingredientList = state.list.ingredientList;
 
-      groceryList.added = [];
+      const ingredientListIds = new Set(
+        ingredientList.map((item) => item.ingredient.id)
+      );
+      const ingredientListQuantities = new Map(
+        ingredientList.map((item) => [
+          item.ingredient.id,
+          Math.ceil(item.needed),
+        ])
+      );
 
-      selected.forEach((s) => {
-        groceryList.added.push(s);
+      const filteredSelected = selected
+        .map((item) => {
+          if (ingredientListIds.has(item.id)) {
+            const quantityDifference =
+              item.quantity - ingredientListQuantities.get(item.id);
+            if (quantityDifference > 0) {
+              return { ...item, quantity: quantityDifference };
+            } else {
+              return null;
+            }
+          }
+          return item;
+        })
+        .filter((item) => item !== null);
+
+      filteredSelected.forEach((s) => {
+        if (groceryList.added.find((e) => e.id === s.id)) {
+          groceryList.added.find((e) => e.id === s.id).quantity += s.quantity;
+        } else {
+          groceryList.added.push(s);
+        }
 
         if (groceryList.excluded.find((e) => e.id === s.id)) {
           groceryList.excluded = groceryList.excluded.filter(
@@ -142,7 +168,7 @@ const groceriesSlice = createSlice({
         }
       });
 
-      let grocery = state.groceries.find(
+      const grocery = state.groceries.find(
         (obj) => obj.date === groceryList.date
       );
 
@@ -151,7 +177,7 @@ const groceriesSlice = createSlice({
         grocery.added = groceryList.added;
         grocery.excluded = groceryList.excluded;
       } else {
-        groceries.push({ ...groceryList });
+        state.groceries.push({ ...groceryList });
       }
     },
     _deleteGroceryItem(state, action) {
@@ -184,30 +210,42 @@ const groceriesSlice = createSlice({
         grocery.added = groceryList.added;
         grocery.excluded = groceryList.excluded;
       } else {
-        groceries.push({ ...groceryList });
+        state.groceries.push({ ...groceryList });
       }
     },
     _addGroceryItem(state, action) {
       const { item, quantity } = action.payload;
       const groceryList = state.list.groceryList;
 
-      if (groceryList.checked.find((i) => i.id === item.ingredient.id)) {
-        groceryList.checked.find((i) => i.id === item.ingredient.id).quantity +=
-          quantity;
-
-        if (
-          groceryList.checked.find((i) => i.id === item.ingredient.id)
-            .quantity === 0
-        ) {
+      if (quantity > 0) {
+        if (groceryList.checked.find((i) => i.id === item.ingredient.id)) {
+          groceryList.checked.find(
+            (i) => i.id === item.ingredient.id
+          ).quantity = quantity;
+        } else {
+          groceryList.checked.push({
+            id: item.ingredient.id,
+            quantity,
+          });
+        }
+      } else {
+        if (groceryList.checked.find((i) => i.id === item.ingredient.id)) {
           groceryList.checked = groceryList.checked.filter(
             (i) => i.id !== item.ingredient.id
           );
         }
+      }
+
+      let grocery = state.groceries.find(
+        (obj) => obj.date === groceryList.date
+      );
+
+      if (grocery) {
+        grocery.checked = groceryList.checked;
+        grocery.added = groceryList.added;
+        grocery.excluded = groceryList.excluded;
       } else {
-        groceryList.checked.push({
-          id: item.ingredient.id,
-          quantity,
-        });
+        state.groceries.push({ ...groceryList });
       }
     },
   },

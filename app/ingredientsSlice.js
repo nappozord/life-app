@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getIngredients, updateIngredients } from "~/api/apiIngredients";
 import { addLog } from "~/app/logsSlice";
+import { deleteIngredientFromRecipe } from "./recipesSlice";
+import { deleteIngredientFromMeal } from "./mealsSlice";
 
 const initialState = {
   ingredients: [],
@@ -41,8 +43,9 @@ export const deleteIngredient = createAsyncThunk(
     dispatch(_deleteIngredient(payload));
     const state = getState().ingredients;
     updateIngredients(state.ingredients);
-    //deleteIngredientFromRecipe
-    //deleteIngredientFromMeal
+
+    deleteIngredientFromRecipe(payload);
+    deleteIngredientFromMeal(payload);
   }
 );
 

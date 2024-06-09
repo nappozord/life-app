@@ -131,6 +131,24 @@ export const deleteMeal = createAsyncThunk(
   }
 );
 
+export const deleteIngredientFromMeal = createAsyncThunk(
+  "meals/deleteIngredientFromMeal",
+  async (payload, { dispatch, getState }) => {
+    dispatch(_deleteIngredientFromMeal(payload));
+    const state = getState().meals;
+    updateMeals(state.meals);
+  }
+);
+
+export const deleteRecipeFromMeal = createAsyncThunk(
+  "meals/deleteRecipeFromMeal",
+  async (payload, { dispatch, getState }) => {
+    dispatch(_deleteRecipeFromMeal(payload));
+    const state = getState().meals;
+    updateMeals(state.meals);
+  }
+);
+
 const mealsSlice = createSlice({
   name: "meals",
   initialState,
@@ -251,6 +269,26 @@ const mealsSlice = createSlice({
       state.defaultWeek = true;
       state.currentWeek = defaultWeek;
     },
+    _deleteIngredientFromMeal(state, action) {
+      state.meals.forEach((m) => {
+        const ingredientId = action.payload;
+
+        m["breakfast"].ingredients.filter((obj) => obj.id !== ingredientId);
+        m["lunch"].ingredients.filter((obj) => obj.id !== ingredientId);
+        m["dinner"].ingredients.filter((obj) => obj.id !== ingredientId);
+        m["snack"].ingredients.filter((obj) => obj.id !== ingredientId);
+      });
+    },
+    _deleteRecipeFromMeal(state, action) {
+      const recipeId = action.payload;
+
+      state.meals.forEach((m) => {
+        m["breakfast"].recipes.filter((obj) => obj !== recipeId);
+        m["lunch"].recipes.filter((obj) => obj !== recipeId);
+        m["dinner"].recipes.filter((obj) => obj !== recipeId);
+        m["snack"].recipes.filter((obj) => obj !== recipeId);
+      });
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -274,6 +312,8 @@ export const {
   _checkMeal,
   updateDate,
   updateDefault,
+  _deleteIngredientFromMeal,
+  _deleteRecipeFromMeal,
 } = mealsSlice.actions;
 
 export default mealsSlice.reducer;

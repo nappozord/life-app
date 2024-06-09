@@ -1,4 +1,3 @@
-import { addLog } from "~/app/logsSlice";
 import { checkMeal } from "~/app/mealsSlice";
 import { updateRecipeUsage } from "~/app/recipesSlice";
 import { incrementIngredient } from "~/app/ingredientsSlice";

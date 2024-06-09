@@ -49,7 +49,11 @@ export const calculateNewList = ({
   }
 
   weeklyList = weeklyList.filter((obj) => {
-    if (groceryList.added.find((a) => a.id === obj.ingredient.id)) return true;
+    if (
+      groceryList.added.find((a) => a.id === obj.ingredient.id) ||
+      obj.checked
+    )
+      return true;
     return (
       obj.needed > obj.ingredient.stock * obj.ingredient.quantity || obj.checked
     );
@@ -69,10 +73,17 @@ const calculateWeeklyList = (
 ) => {
   let ingredientList = [];
 
+  const defaultMeals = calculateDefaultMeal(meals, week);
+
+  console.log(defaultMeals);
+
   const filteredWeek = week.filter((day) => new Date(day.date) > new Date());
 
   filteredWeek.forEach((day) => {
-    const meal = meals.find((obj) => obj.date === day.dateString);
+    const meal =
+      defaultMeals.length === 0
+        ? meals.find((obj) => obj.date === day.dateString)
+        : defaultMeals.find((obj) => obj.date === day.dateString);
     if (meal) {
       getIngredientFromMeal(
         meal,
@@ -147,7 +158,7 @@ function setAdded(ingredientList, list, ingredients, items) {
   total = [...ingredients, ...items];
   list.added.forEach((obj) => {
     if (ingredientList.find((i) => i.ingredient.id === obj.id)) {
-      ingredientList.find((i) => i.ingredient.id === obj.id).needed =
+      ingredientList.find((i) => i.ingredient.id === obj.id).needed +=
         obj.quantity;
     } else if (total.find((i) => i.id === obj.id)) {
       ingredientList.push({
@@ -180,18 +191,11 @@ function setExcluded(ingredientList, list) {
 function setChecked(ingredientList, list, ingredients, items) {
   total = [...ingredients, ...items];
   list.checked.forEach((obj) => {
-    if (ingredientList.find((i) => i.ingredient.id === obj.id)) {
-      ingredientList.find((i) => i.ingredient.id === obj.id).onCart =
-        obj.quantity;
-      ingredientList.find((i) => i.ingredient.id === obj.id).checked = true;
-    } else {
-      const ing = total.find((i) => i.id === obj.id);
-      ingredientList.push({
-        ingredient: ing,
-        needed: obj.quantity,
-        onCart: obj.quantity,
-        checked: true,
-      });
+    const ingredient = ingredientList.find((i) => i.ingredient.id === obj.id);
+    if (ingredient) {
+      ingredient.onCart = obj.quantity;
+      if (obj.quantity * ingredient.ingredient.quantity >= ingredient.needed)
+        ingredient.checked = true;
     }
   });
 
@@ -200,7 +204,7 @@ function setChecked(ingredientList, list, ingredients, items) {
 
 function setPreviousWeekIngredients(list, futureIngredients) {
   list.forEach((i) => {
-    const total = (
+    const totalRemaining = (
       Math.ceil(
         i.needed / (i.ingredient.quantity ? i.ingredient.quantity : 1) -
           i.ingredient.stock
@@ -209,7 +213,7 @@ function setPreviousWeekIngredients(list, futureIngredients) {
 
     const stock = (
       futureIngredients.find((obj) => obj.id === i.ingredient.id).stock +
-      parseFloat(total)
+      parseFloat(totalRemaining)
     ).toFixed(4);
 
     futureIngredients.find((obj) => obj.id === i.ingredient.id).stock =
@@ -218,3 +222,68 @@ function setPreviousWeekIngredients(list, futureIngredients) {
 
   return futureIngredients;
 }
+
+const checkDefaultMeal = (meals, week) => {
+  if (
+    !meals.find((obj) => obj.date === week[0].dateString) &&
+    !meals.find((obj) => obj.date === week[1].dateString) &&
+    !meals.find((obj) => obj.date === week[2].dateString) &&
+    !meals.find((obj) => obj.date === week[3].dateString) &&
+    !meals.find((obj) => obj.date === week[4].dateString) &&
+    !meals.find((obj) => obj.date === week[5].dateString) &&
+    !meals.find((obj) => obj.date === week[6].dateString)
+  )
+    return true;
+};
+
+const calculateDefaultMeal = (meals, week) => {
+  let defaultMeals = [];
+
+  if (checkDefaultMeal(meals, week)) {
+    const filteredMeals = meals.filter((obj) => obj.date.includes("Default"));
+    filteredMeals.find((obj) => obj.date === "Default_Mon")
+      ? defaultMeals.push({
+          ...filteredMeals.find((obj) => obj.date === "Default_Mon"),
+          date: week[0].dateString,
+        })
+      : null;
+    filteredMeals.find((obj) => obj.date === "Default_Tue")
+      ? defaultMeals.push({
+          ...filteredMeals.find((obj) => obj.date === "Default_Tue"),
+          date: week[1].dateString,
+        })
+      : null;
+    filteredMeals.find((obj) => obj.date === "Default_Wed")
+      ? defaultMeals.push({
+          ...filteredMeals.find((obj) => obj.date === "Default_Wed"),
+          date: week[2].dateString,
+        })
+      : null;
+    filteredMeals.find((obj) => obj.date === "Default_Thu")
+      ? defaultMeals.push({
+          ...filteredMeals.find((obj) => obj.date === "Default_Thu"),
+          date: week[3].dateString,
+        })
+      : null;
+    filteredMeals.find((obj) => obj.date === "Default_Fry")
+      ? defaultMeals.push({
+          ...filteredMeals.find((obj) => obj.date === "Default_Fry"),
+          date: week[4].dateString,
+        })
+      : null;
+    filteredMeals.find((obj) => obj.date === "Default_Sat")
+      ? defaultMeals.push({
+          ...filteredMeals.find((obj) => obj.date === "Default_Sat"),
+          date: week[5].dateString,
+        })
+      : null;
+    filteredMeals.find((obj) => obj.date === "Default_Sun")
+      ? defaultMeals.push({
+          ...filteredMeals.find((obj) => obj.date === "Default_Sun"),
+          date: week[6].dateString,
+        })
+      : null;
+  }
+
+  return defaultMeals;
+};

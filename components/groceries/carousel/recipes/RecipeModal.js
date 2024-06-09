@@ -7,7 +7,7 @@ import {
   Pressable,
   TouchableOpacity,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
 import Animated, { SlideInDown } from "react-native-reanimated";

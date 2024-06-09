@@ -18,7 +18,7 @@ export default function IngredientComponent({ ingredientId }) {
 
   const dispatch = useDispatch();
 
-  const [counter, setCounter] = useState(ingredient.stock);
+  const [counter, setCounter] = useState(ingredient ? ingredient.stock : 0);
   const [modalVisible, setModalVisible] = useState(false);
 
   const firstRender = useRef(true);
@@ -36,6 +36,10 @@ export default function IngredientComponent({ ingredientId }) {
       firstRender.current = false;
     }
   }, [counter]);
+
+  useEffect(() => {
+    setCounter(ingredient ? ingredient.stock : 0);
+  }, [ingredient]);
 
   return (
     <>
