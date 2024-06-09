@@ -12,15 +12,21 @@ export const fetchUser = createAsyncThunk("user/fetchUser", async () => {
   return response;
 });
 
+export const updateUser = createAsyncThunk(
+  "user/updateUser",
+  async (payload, { dispatch, getState }) => {
+    dispatch(_updateUser(payload));
+    const user = getState().user;
+    updateUserFromAPI(user.user);
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    updateUser: {
-      reducer(state, action) {
-        state.user = action.payload;
-        updateUserFromAPI(action.payload);
-      },
+    _updateUser(state, action) {
+      state.user = action.payload;
     },
   },
   extraReducers(builder) {
@@ -39,6 +45,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { updateUser } = userSlice.actions;
+export const { _updateUser } = userSlice.actions;
 
 export default userSlice.reducer;

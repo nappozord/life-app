@@ -37,6 +37,7 @@ const height = Dimensions.get("window").height;
 
 export default function WelcomeScreen() {
   const user = useSelector((state) => state.user.user);
+  const status = useSelector((state) => state.user.status);
   const dispatch = useDispatch();
 
   const navigation = useNavigation();
@@ -63,52 +64,56 @@ export default function WelcomeScreen() {
   const reset = false;
 
   useEffect(() => {
-    setTimeout(() => {
-      if (dev) {
-        dispatch(
-          updateUser({
-            userId: "abc",
-            username: "Nappozord",
-            balance: 3000,
-          })
-        );
-        navigation.push("Home");
-        AsyncStorage.getAllKeys().then((r) => console.log(r));
-      }
+    if (status === "succeeded") {
+      setTimeout(() => {
+        if (dev) {
+          if (!user) {
+            dispatch(
+              updateUser({
+                userId: "abc",
+                username: "Nappozord",
+                balance: 3000,
+              })
+            );
+          }
+          navigation.push("Home");
+          AsyncStorage.getAllKeys().then((r) => console.log(r));
+        }
 
-      if (reset) {
-        //updateUser(defaultUser);
-        //restoreBackup("January, 2024");
-        //restoreBackup("December, 2023");
-        //AsyncStorage.clear();
-        //AsyncStorage.removeItem("logs");
-        //AsyncStorage.removeItem("defaultCategories");
-        //AsyncStorage.removeItem("categories");
-        //AsyncStorage.removeItem("lists");
-        //AsyncStorage.removeItem("recipes");
-        //AsyncStorage.removeItem("meals");
-        //AsyncStorage.removeItem("groceries");
-      }
+        if (reset) {
+          //updateUser(defaultUser);
+          //restoreBackup("January, 2024");
+          //restoreBackup("December, 2023");
+          //AsyncStorage.clear();
+          //AsyncStorage.removeItem("logs");
+          //AsyncStorage.removeItem("defaultCategories");
+          //AsyncStorage.removeItem("categories");
+          //AsyncStorage.removeItem("lists");
+          //AsyncStorage.removeItem("recipes");
+          //AsyncStorage.removeItem("meals");
+          //AsyncStorage.removeItem("groceries");
+        }
 
-      getCurrentUser()
-        .then((r) => {
-          if (r && r.userId) {
-            if (user && user.userId === r.userId) {
-              navigation.push("Home");
+        getCurrentUser()
+          .then((r) => {
+            if (r && r.userId) {
+              if (user && user.userId === r.userId) {
+                navigation.push("Home");
+              } else {
+                setLoading(false);
+                dispatch(updateUser({ ...user, userId: r.userId }));
+                setFinalSetup(true);
+              }
             } else {
               setLoading(false);
-              dispatch(updateUser({ ...user, userId: r.userId }));
-              setFinalSetup(true);
             }
-          } else {
+          })
+          .catch(() => {
             setLoading(false);
-          }
-        })
-        .catch(() => {
-          setLoading(false);
-        });
-    }, 700);
-  }, []);
+          });
+      }, 700);
+    }
+  }, [status]);
 
   return (
     <View className="flex-1">

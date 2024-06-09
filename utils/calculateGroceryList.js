@@ -75,8 +75,6 @@ const calculateWeeklyList = (
 
   const defaultMeals = calculateDefaultMeal(meals, week);
 
-  console.log(defaultMeals);
-
   const filteredWeek = week.filter((day) => new Date(day.date) > new Date());
 
   filteredWeek.forEach((day) => {

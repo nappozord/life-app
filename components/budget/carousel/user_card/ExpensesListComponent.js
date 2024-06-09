@@ -34,11 +34,13 @@ export default function ExpensesListComponent({ categoryId }) {
           fadingEdgeLength={30}
         >
           {sortedList.map((item) => {
-            <ExpenseComponent
-              key={item.id + "_" + item.title}
-              expenseId={item.id}
-              categoryId={categoryId}
-            />;
+            return (
+              <ExpenseComponent
+                key={item.id + "_" + item.title}
+                expenseId={item.id}
+                categoryId={categoryId}
+              />
+            );
           })}
         </ScrollView>
       </View>

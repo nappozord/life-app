@@ -33,6 +33,8 @@ export default function SettingsScreen() {
   const searchBarHeight = useSharedValue(76);
   const navigation = useNavigation();
 
+  const version = "Version 1.15 - 09/07/2024";
+
   const searchBarAnimatedStyle = useAnimatedStyle(() => ({
     height: searchBarHeight.value,
   }));
@@ -248,7 +250,7 @@ export default function SettingsScreen() {
                     className="text-lg"
                     style={{ color: themeColors.onBackground }}
                   >
-                    Version 1.12 - 09/07/2024
+                    {version}
                   </Text>
                 </View>
               </View>
