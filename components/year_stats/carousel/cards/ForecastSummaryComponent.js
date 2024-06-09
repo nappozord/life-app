@@ -9,8 +9,11 @@ import Animated, {
   StretchOutY,
 } from "react-native-reanimated";
 import ForecastChartComponent from "~/components/year_stats/charts/ForecastChartComponent";
+import { useSelector } from "react-redux";
 
-export default function ForecastSummaryComponent({ loading, yearCategories }) {
+export default function ForecastSummaryComponent() {
+  const loading = useSelector((state) => state.stats.status !== "succeeded");
+
   const [showTip, setShowTip] = useState(true);
 
   return (
@@ -22,7 +25,7 @@ export default function ForecastSummaryComponent({ loading, yearCategories }) {
           </Animated.View>
         ) : (
           <Animated.View entering={FadeIn} exiting={FadeOut}>
-            <ForecastChartComponent items={yearCategories} />
+            <ForecastChartComponent />
           </Animated.View>
         )}
       </View>

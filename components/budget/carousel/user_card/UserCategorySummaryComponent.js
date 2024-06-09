@@ -4,16 +4,18 @@ import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
 import { calculatePercentage } from "~/utils/calculatePercentage";
 import EditExpenseButtonComponent from "./EditExpenseButtonComponent";
+import { useDispatch, useSelector } from "react-redux";
+import { getCategory } from "~/app/categoriesSlice";
 
-export default function UserCategorySummaryComponent({
-  item,
-  categories,
-  setCategories,
-  user,
-  setUser,
-  date,
-}) {
-  const percentage = calculatePercentage([item.real], item.forecast);
+export default function UserCategorySummaryComponent({ categoryId }) {
+  const category = useSelector((state) => getCategory(state, categoryId));
+
+  const totalExpenses = category.expenses.reduce(
+    (total, e) => total + e.total,
+    0
+  );
+
+  const percentage = calculatePercentage([totalExpenses], category.forecast);
 
   return (
     <View className="px-5 mt-2 space-y-3">
@@ -22,9 +24,9 @@ export default function UserCategorySummaryComponent({
           className="text-3xl font-semibold z-10"
           style={{ color: themeColors.onSecondaryContainer }}
         >
-          {item.title}
+          {category.title}
         </Text>
-        <IconButton icon={item.icon} color={themeColors.primary} />
+        <IconButton icon={category.icon} color={themeColors.primary} />
       </View>
       <View
         style={{ backgroundColor: themeColors.primary }}
@@ -49,7 +51,7 @@ export default function UserCategorySummaryComponent({
           className="text-base font-semibold"
           style={{ color: themeColors.primary }}
         >
-          €{Math.abs(item.forecast).toFixed(2)}
+          €{Math.abs(category.forecast).toFixed(2)}
         </Text>
       </View>
       <View className="flex-row justify-between items-center">
@@ -58,24 +60,16 @@ export default function UserCategorySummaryComponent({
             className="text-base "
             style={{ color: themeColors.onSecondaryContainer }}
           >
-            {"Total " + (item.id === 1 ? "income" : "expenses") + ":"}
+            {"Total " + (category.id === 1 ? "income" : "expenses") + ":"}
           </Text>
           <Text
             className="text-3xl font-semibold"
             style={{ color: themeColors.primary }}
           >
-            €{Math.abs(item.real).toFixed(2)}
+            €{Math.abs(totalExpenses).toFixed(2)}
           </Text>
         </View>
-        <EditExpenseButtonComponent
-          icon={item.icon}
-          category={item.title}
-          categories={categories}
-          setCategories={setCategories}
-          user={user}
-          setUser={setUser}
-          date={date}
-        />
+        <EditExpenseButtonComponent categoryId={categoryId} />
       </View>
     </View>
   );

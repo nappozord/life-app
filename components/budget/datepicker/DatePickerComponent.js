@@ -10,8 +10,13 @@ import { IconButton } from "react-native-paper";
 import { formatDate } from "~/utils/manageDate";
 import { themeColors } from "~/theme";
 import DatePickerModalComponent from "./DatePickerModalComponent";
+import { useDispatch, useSelector } from "react-redux";
+import { updateDate } from "~/app/categoriesSlice";
 
-export default function DatePickerComponent({ date, setDate }) {
+export default function DatePickerComponent() {
+  const date = useSelector((state) => state.categories.date);
+  const dispatch = useDispatch();
+
   const [animation, setAnimation] = useState("left");
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -26,18 +31,14 @@ export default function DatePickerComponent({ date, setDate }) {
           setModalVisible(false);
         }}
       >
-        <DatePickerModalComponent
-          setModalVisible={setModalVisible}
-          date={date}
-          setDate={setDate}
-        />
+        <DatePickerModalComponent setModalVisible={setModalVisible} />
       </Modal>
       <TouchableOpacity
         onPress={() => {
           setAnimation("left");
           const dateCopy = new Date(date.date);
           dateCopy.setMonth(dateCopy.getMonth() - 1);
-          setDate(formatDate(dateCopy));
+          dispatch(updateDate(formatDate(dateCopy)));
         }}
       >
         <IconButton
@@ -73,7 +74,7 @@ export default function DatePickerComponent({ date, setDate }) {
           setAnimation("right");
           const dateCopy = new Date(date.date);
           dateCopy.setMonth(dateCopy.getMonth() + 1);
-          setDate(formatDate(dateCopy));
+          dispatch(updateDate(formatDate(dateCopy)));
         }}
       >
         <IconButton

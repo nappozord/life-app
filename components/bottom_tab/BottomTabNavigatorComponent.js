@@ -1,33 +1,28 @@
 import { View } from "react-native";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import BudgetScreen from "~/screens/BudgetScreen";
 import GroceryScreen from "~/screens/GroceryScreen";
 import SettingsScreen from "~/screens/SettingsScreen";
 import CustomBottomTabComponent from "./CustomBottomTabComponent";
-import { getUser, updateUser } from "~/api/apiManager";
 import YearStatsScreen from "~/screens/YearStatsScreen";
 import ListScreen from "~/screens/ListScreen";
 
 const Tab = createBottomTabNavigator();
 
+const MemoizedBudgetScreen = React.memo(BudgetScreen);
+const MemoizedYearStatsScreen = React.memo(YearStatsScreen);
+const MemoizedGroceryScreen = React.memo(GroceryScreen);
+const MemoizedListScreen = React.memo(ListScreen);
+const MemoizedSettingsScreen = React.memo(SettingsScreen);
+
+const Budget = () => <MemoizedBudgetScreen />;
+const Year = () => <MemoizedYearStatsScreen />;
+const Grocery = () => <MemoizedGroceryScreen />;
+const List = () => <MemoizedListScreen />;
+const Settings = () => <MemoizedSettingsScreen />;
+
 export default function BottomTabNavigatorComponent() {
-  const [user, setUser] = useState({});
-
-  useEffect(() => {
-    !user.userId ? getUser().then((r) => setUser(r)) : updateUser(user);
-  }, [user]);
-
-  const Budget = () => <BudgetScreen user={user} setUser={setUser} />;
-
-  const Year = () => <YearStatsScreen user={user} setUser={setUser} />;
-
-  const Grocery = () => <GroceryScreen user={user} setUser={setUser} />;
-
-  const List = () => <ListScreen user={user} setUser={setUser} />;
-
-  const Settings = () => <SettingsScreen user={user} setUser={setUser} />;
-
   return (
     <Tab.Navigator
       screenOptions={{ headerShown: false, tabBarHideOnKeyboard: true }}

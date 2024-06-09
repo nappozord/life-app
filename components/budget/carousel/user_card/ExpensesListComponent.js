@@ -4,24 +4,14 @@ import { IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
 import ExpenseComponent from "./ExpenseComponent";
 import EditExpenseButtonComponent from "./EditExpenseButtonComponent";
-import ItemComponent from "~/components/list/list_card/ItemComponent";
-import { sortByBought, sortByName } from "~/utils/sortItems";
+import { sortByName } from "~/utils/sortItems";
+import { getCategory } from "~/app/categoriesSlice";
+import { useSelector } from "react-redux";
 
-export default function UserCategoryExpensesComponent({
-  item,
-  categories,
-  setCategories,
-  user,
-  setUser,
-  date,
-  isList,
-}) {
-  const icon = item.icon;
-  const category = item.title;
+export default function ExpensesListComponent({ categoryId }) {
+  const category = useSelector((state) => getCategory(state, categoryId));
 
-  if (isList) {
-    item.expenses = sortByBought(item.expenses);
-  }
+  let sortedList = sortByName([...category.expenses]);
 
   return (
     <View className="px-5 mt-2 space-y-3">
@@ -31,51 +21,24 @@ export default function UserCategoryExpensesComponent({
             className="text-3xl font-semibold z-10"
             style={{ color: themeColors.onSecondaryContainer }}
           >
-            {item.title}
+            {category.title}
           </Text>
-          <IconButton icon={item.icon} color={themeColors.primary} />
+          <IconButton icon={category.icon} color={themeColors.primary} />
         </View>
-        <EditExpenseButtonComponent
-          date={date}
-          icon={item.icon}
-          category={item.title}
-          categories={categories}
-          setCategories={setCategories}
-          user={user}
-          setUser={setUser}
-          isList={isList}
-        />
+        <EditExpenseButtonComponent categoryId={categoryId} />
       </View>
-      <View style={{ height: isList ? 324 : 336 }}>
+      <View style={{ height: 336 }}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           className="mt-3"
           fadingEdgeLength={30}
         >
-          {sortByBought(sortByName(item.expenses)).map((item) => {
-            return !isList ? (
+          {sortedList.map((item) => {
+            return (
               <ExpenseComponent
                 key={item.id + "_" + item.title}
-                categories={categories}
-                setCategories={setCategories}
-                item={item}
-                itemIcon={icon}
-                itemCategory={category}
-                user={user}
-                setUser={setUser}
-                date={date}
-              />
-            ) : (
-              <ItemComponent
-                key={item.id + "_" + item.title}
-                categories={categories}
-                setCategories={setCategories}
-                item={item}
-                itemIcon={icon}
-                itemCategory={category}
-                user={user}
-                setUser={setUser}
-                date={date}
+                expenseId={item.id}
+                categoryId={categoryId}
               />
             );
           })}

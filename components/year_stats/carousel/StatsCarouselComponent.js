@@ -7,10 +7,7 @@ import IncomeSummaryComponent from "~/components/year_stats/carousel/cards/Incom
 import { IconButton } from "react-native-paper";
 import ForecastSummaryComponent from "./cards/ForecastSummaryComponent";
 
-export default function StatsCarouselComponent({
-  loading,
-  yearCategories,
-}) {
+export default function StatsCarouselComponent() {
   const dimensions = useWindowDimensions();
 
   return (
@@ -56,15 +53,9 @@ export default function StatsCarouselComponent({
           return (
             <View className="mt-10">
               {item.index === 0 ? (
-                <IncomeSummaryComponent
-                  loading={loading}
-                  yearCategories={yearCategories}
-                />
+                <IncomeSummaryComponent />
               ) : (
-                <ForecastSummaryComponent
-                  loading={loading}
-                  yearCategories={yearCategories}
-                />
+                <ForecastSummaryComponent />
               )}
             </View>
           );

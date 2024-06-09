@@ -12,16 +12,23 @@ import { IconButton } from "react-native-paper";
 import Animated, { SlideInDown } from "react-native-reanimated";
 import SearchComponent from "~/components/groceries/searchbar/SearchComponent";
 import RecipesIngredientsListComponent from "./RecipesIngredientsListComponent";
+import { useSelector, useDispatch } from "react-redux";
+import { updateMeal } from "~/app/mealsSlice";
+
+const MemoizedRecipesIngredientsListComponent = React.memo(
+  RecipesIngredientsListComponent
+);
 
 export default function MealPlanModalComponent({
   item,
   modalVisible,
   setModalVisible,
-  recipes,
-  ingredients,
-  meals,
-  setMeals,
 }) {
+  const recipes = useSelector((state) => state.recipes.recipes);
+  const ingredients = useSelector((state) => state.ingredients.ingredients);
+
+  const dispatch = useDispatch();
+
   const [search, setSearch] = useState([...recipes, ...ingredients]);
   const [selected, setSelected] = useState({
     ingredients: [...item.selected.ingredients],
@@ -30,59 +37,53 @@ export default function MealPlanModalComponent({
   const [onlySelected, setOnlySelected] = useState(false);
   const [useRecipes, setUseRecipes] = useState(0);
 
+  const firstRenderOnlySelected = useRef(true);
+  const firstRenderUseRecipes = useRef(true);
+
   useEffect(() => {
-    if (onlySelected) {
-      const itemsToShow = [];
+    if (!firstRenderOnlySelected.current) {
+      if (onlySelected) {
+        const itemsToShow = [];
 
-      selected.ingredients.forEach((sel) => {
-        itemsToShow.push(ingredients.find((obj) => obj.id === sel.id));
-      });
+        selected.ingredients.forEach((sel) => {
+          itemsToShow.push(ingredients.find((obj) => obj.id === sel.id));
+        });
 
-      selected.recipes.forEach((sel) => {
-        itemsToShow.push(recipes.find((obj) => obj.id === sel));
-      });
+        selected.recipes.forEach((sel) => {
+          itemsToShow.push(recipes.find((obj) => obj.id === sel));
+        });
 
-      setSearch(itemsToShow);
+        setSearch(itemsToShow);
+      } else {
+        setSearch([...recipes, ...ingredients]);
+      }
     } else {
-      setSearch([...recipes, ...ingredients]);
+      firstRenderOnlySelected.current = false;
     }
   }, [onlySelected]);
 
   useEffect(() => {
-    if (useRecipes === 0) {
-      setSearch([...recipes, ...ingredients]);
-    } else if (useRecipes === 1) {
-      setSearch([...ingredients]);
-    } else if (useRecipes === 2) {
-      setSearch([...recipes]);
+    if (!firstRenderUseRecipes.current) {
+      if (useRecipes === 0) {
+        setSearch([...recipes, ...ingredients]);
+      } else if (useRecipes === 1) {
+        setSearch([...ingredients]);
+      } else if (useRecipes === 2) {
+        setSearch([...recipes]);
+      }
+    } else {
+      firstRenderUseRecipes.current = false;
     }
   }, [useRecipes]);
 
   const saveButton = () => {
-    if (!meals.find((obj) => obj.date === item.day)) {
-      meals.push({
-        date: item.day,
-        breakfast: {
-          ingredients: [],
-          recipes: [],
-        },
-        lunch: {
-          ingredients: [],
-          recipes: [],
-        },
-        dinner: {
-          ingredients: [],
-          recipes: [],
-        },
-        snack: {
-          ingredients: [],
-          recipes: [],
-        },
-      });
-    }
-
-    meals.find((obj) => obj.date === item.day)[item.type] = selected;
-    setMeals([...meals]);
+    dispatch(
+      updateMeal({
+        selected: selected,
+        day: item.day,
+        type: item.type,
+      })
+    );
   };
 
   return (
@@ -98,7 +99,6 @@ export default function MealPlanModalComponent({
       <Image
         className="absolute h-full w-full"
         source={require("~/assets/splash.png")}
-        //blurRadius={80}
         style={{ opacity: 0.9 }}
       />
       <Pressable
@@ -259,9 +259,8 @@ export default function MealPlanModalComponent({
                   </View>
                 </View>
                 <View>
-                  <RecipesIngredientsListComponent
+                  <MemoizedRecipesIngredientsListComponent
                     items={search}
-                    ingredients={ingredients}
                     selected={selected}
                     setSelected={setSelected}
                   />

@@ -10,37 +10,35 @@ import Animated, {
   SlideInUp,
   SlideOutUp,
 } from "react-native-reanimated";
-import { getPreviousWeeks } from "~/utils/manageDate";
-import { sortByChecked } from "~/utils/sortItems";
+import { useDispatch, useSelector } from "react-redux";
+import { updateList } from "~/app/groceriesSlice";
 
-export default function GroceriesList({
-  meals,
-  ingredients,
-  setIngredients,
-  recipes,
-  week,
-  groceryList,
-  setGroceryList,
-  items,
-  setItems,
-  totalGroceryList,
-}) {
-  const [refreshing, setRefreshing] = useState(false);
-  const [ingredientList, setIngredientList] = useState([]);
+export default function GroceriesList() {
+  const { ingredientList, groceryList } = useSelector(
+    (state) => state.groceries.list
+  );
+  const meals = useSelector((state) => state.meals.meals);
+  const ingredients = useSelector((state) => state.ingredients.ingredients);
+  const recipes = useSelector((state) => state.recipes.recipes);
+  const items = useSelector((state) => state.items.items);
+  const week = useSelector((state) => state.groceries.week);
+  const groceries = useSelector((state) => state.groceries.groceries);
+
+  const dispatch = useDispatch();
+
   const [totalCost, setTotalCost] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
     }, 500);
-    setIngredientList(calculateNewList);
-  }, [meals, ingredients, recipes, week, groceryList, items]);
+  }, []);
 
   useEffect(() => {
-    setIngredientList([]);
-    setIngredientList(calculateNewList);
-  }, [meals, ingredients, recipes, week, groceryList, items]);
+    dispatch(updateList({ meals, ingredients, recipes, items }));
+  }, [meals, ingredients, recipes, items, week, groceryList, groceries]);
 
   useEffect(() => {
     let count = 0;
@@ -60,196 +58,6 @@ export default function GroceriesList({
 
     setTotalCost(count);
   }, [ingredientList]);
-
-  const calculateNewList = () => {
-    const weeks = getPreviousWeeks(week[0].dateString);
-
-    let futureIngredients = JSON.parse(JSON.stringify(ingredients));
-
-    futureIngredients.push([...JSON.parse(JSON.stringify(items))]);
-
-    let weeklyList = [];
-
-    for (let w = 0; w < weeks.length; w++) {
-      if (w != weeks.length - 1)
-        futureIngredients = setPreviousWeekIngredients(
-          [...calculateWeeklyList(weeks[w], futureIngredients)],
-          futureIngredients,
-          w
-        );
-      else {
-        weeklyList = calculateWeeklyList(weeks[w], futureIngredients);
-      }
-    }
-
-    //console.log(groceryList.added);
-
-    weeklyList = weeklyList.filter((obj) => {
-      if (groceryList.added.find((a) => a.id === obj.ingredient.id))
-        //console.log(obj.ingredient.title);
-        return true;
-      return (
-        obj.needed > obj.ingredient.stock * obj.ingredient.quantity ||
-        obj.checked
-      );
-    });
-
-    return sortByChecked(weeklyList);
-  };
-
-  const calculateWeeklyList = (thisWeek, futureIngredients) => {
-    let ingredientList = [];
-
-    const filteredWeek = thisWeek.filter((day) => day.date > new Date());
-
-    filteredWeek.forEach((day) => {
-      const meal = meals.find((obj) => obj.date === day.dateString);
-      if (meal) {
-        getIngredientFromMeal(
-          meal,
-          "breakfast",
-          futureIngredients,
-          recipes,
-          ingredientList
-        );
-        getIngredientFromMeal(
-          meal,
-          "snack",
-          futureIngredients,
-          recipes,
-          ingredientList
-        );
-        getIngredientFromMeal(
-          meal,
-          "lunch",
-          futureIngredients,
-          recipes,
-          ingredientList
-        );
-        getIngredientFromMeal(
-          meal,
-          "dinner",
-          futureIngredients,
-          recipes,
-          ingredientList
-        );
-      }
-    });
-
-    ingredientList = mergeLists(ingredientList, thisWeek);
-
-    ingredientList.forEach((i) => (i.reallyNeeded = i.needed));
-
-    return ingredientList.sort((a, b) =>
-      a.ingredient.title > b.ingredient.title
-        ? 1
-        : b.ingredient.title > a.ingredient.title
-        ? -1
-        : 0
-    );
-  };
-
-  function mergeLists(ingredientList, thisWeek) {
-    let gList = {
-      date: thisWeek[0].dateString,
-      checked: [],
-      added: [],
-      excluded: [],
-    };
-
-    if (
-      totalGroceryList &&
-      totalGroceryList.find((obj) => obj.date === thisWeek[0].dateString)
-    ) {
-      gList = totalGroceryList.find(
-        (obj) => obj.date === thisWeek[0].dateString
-      );
-    }
-
-    ingredientList = setAdded(ingredientList, gList);
-    ingredientList = setExcluded(ingredientList, gList);
-    ingredientList = setChecked(ingredientList, gList);
-
-    return ingredientList;
-  }
-
-  function setAdded(ingredientList, gList) {
-    total = [...ingredients, ...items];
-    gList.added.forEach((obj) => {
-      if (ingredientList.find((i) => i.ingredient.id === obj.id)) {
-        ingredientList.find((i) => i.ingredient.id === obj.id).needed =
-          obj.quantity;
-      } else if (total.find((i) => i.id === obj.id)) {
-        ingredientList.push({
-          ingredient: total.find((i) => i.id === obj.id),
-          needed: obj.quantity,
-          onCart: 0,
-        });
-      }
-    });
-
-    return ingredientList;
-  }
-
-  function setExcluded(ingredientList, gList) {
-    gList.excluded.forEach((obj) => {
-      if (ingredientList.find((i) => i.ingredient.id === obj.id)) {
-        ingredientList.find((i) => i.ingredient.id === obj.id).needed -=
-          obj.quantity;
-        if (
-          ingredientList.find((i) => i.ingredient.id === obj.id).needed <= 0
-        ) {
-          ingredientList = ingredientList.filter(
-            (i) => i.ingredient.id !== obj.id
-          );
-        }
-      }
-    });
-
-    return ingredientList;
-  }
-
-  function setChecked(ingredientList, gList) {
-    total = [...ingredients, ...items];
-    gList.checked.forEach((obj) => {
-      if (ingredientList.find((i) => i.ingredient.id === obj.id)) {
-        ingredientList.find((i) => i.ingredient.id === obj.id).onCart =
-          obj.quantity;
-        ingredientList.find((i) => i.ingredient.id === obj.id).checked = true;
-      } else {
-        const ing = total.find((i) => i.id === obj.id);
-        ingredientList.push({
-          ingredient: ing,
-          needed: obj.quantity,
-          onCart: obj.quantity,
-          checked: true,
-        });
-      }
-    });
-
-    return ingredientList;
-  }
-
-  function setPreviousWeekIngredients(list, futureIngredients, w) {
-    list.forEach((i) => {
-      const total = (
-        Math.ceil(
-          i.needed / (i.ingredient.quantity ? i.ingredient.quantity : 1) -
-            i.ingredient.stock
-        ) - parseFloat(i.reallyNeeded / i.ingredient.quantity)
-      ).toFixed(4);
-
-      const stock = (
-        futureIngredients.find((obj) => obj.id === i.ingredient.id).stock +
-        parseFloat(total)
-      ).toFixed(4);
-
-      futureIngredients.find((obj) => obj.id === i.ingredient.id).stock =
-        parseFloat(stock);
-    });
-
-    return futureIngredients;
-  }
 
   return (
     <View className="flex-1 overflow-hidden" key={week[0].dateString}>
@@ -293,26 +101,14 @@ export default function GroceriesList({
                   { length: ingredientList.length % 2 === 0 ? 2 : 1 },
                   (_, i) => {
                     return {
-                      ingredient: { id: -i - 1, title: "Add to List" },
+                      ingredient: { id: -i - 1, title: "Update List" },
                     };
                   }
                 ),
               ]}
               keyExtractor={(item) => item.ingredient.id}
               renderItem={({ item }) => {
-                return (
-                  <GroceryComponent
-                    item={item}
-                    ingredientList={ingredientList}
-                    setIngredientList={setIngredientList}
-                    groceryList={groceryList}
-                    setGroceryList={setGroceryList}
-                    ingredients={ingredients}
-                    setIngredients={setIngredients}
-                    items={items}
-                    setItems={setItems}
-                  />
-                );
+                return <GroceryComponent item={item} key={item.onCart} />;
               }}
             />
           ) : (

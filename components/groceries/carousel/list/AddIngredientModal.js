@@ -11,17 +11,18 @@ import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
 import Animated, { SlideInDown } from "react-native-reanimated";
 import IngredientSearchComponent from "~/components/groceries/searchbar/IngredientSearchComponent";
+import { useDispatch, useSelector } from "react-redux";
+import { updateGrocery } from "~/app/groceriesSlice";
 
-export default function AddIngredientModal({
-  ingredientList,
-  modalVisible,
-  setModalVisible,
-  ingredients,
-  setIngredients,
-  groceryList,
-  setGroceryList,
-  itemList,
-}) {
+export default function AddIngredientModal({ modalVisible, setModalVisible }) {
+  const ingredients = useSelector((state) => state.ingredients.ingredients);
+  const items = useSelector((state) => state.items.items);
+  const ingredientList = useSelector(
+    (state) => state.groceries.list.ingredientList
+  );
+
+  const dispatch = useDispatch();
+
   const [selected, setSelected] = useState(getItemList);
 
   function getItemList() {
@@ -38,29 +39,7 @@ export default function AddIngredientModal({
   }
 
   const updateItemList = () => {
-    groceryList.added = [];
-
-    selected.forEach((s) => {
-      groceryList.added.push(s);
-
-      if (groceryList.excluded.find((e) => e.id === s.id)) {
-        groceryList.excluded = groceryList.excluded.filter(
-          (e) => e.id !== s.id
-        );
-      }
-    });
-
-    ingredientList.forEach((i) => {
-      if (!selected.find((s) => i.ingredient.id === s.id)) {
-        groceryList.excluded.push({ id: i.ingredient.id, quantity: i.needed });
-
-        if (groceryList.added.find((a) => a.id === i.id)) {
-          groceryList.added = groceryList.added.filter((a) => a.id !== i.id);
-        }
-      }
-    });
-
-    setGroceryList({ ...groceryList });
+    dispatch(updateGrocery([...selected]));
   };
 
   return (
@@ -76,7 +55,6 @@ export default function AddIngredientModal({
       <Image
         className="absolute h-full w-full"
         source={require("~/assets/splash.png")}
-        //blurRadius={80}
         style={{ opacity: 0.9 }}
       />
       <Pressable
@@ -130,7 +108,7 @@ export default function AddIngredientModal({
             <View className="-mt-7 pt-10">
               <IngredientSearchComponent
                 ingredients={ingredients}
-                items={itemList}
+                items={items}
                 selected={selected}
                 setSelected={setSelected}
               />
@@ -153,7 +131,7 @@ export default function AddIngredientModal({
                     className="font-bold text-center text-xl"
                     style={{ color: themeColors.onPrimary }}
                   >
-                    Add to List
+                    Update Grocery List
                   </Text>
                 </TouchableOpacity>
               </View>

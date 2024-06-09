@@ -1,9 +1,9 @@
 import { View, Image, BackHandler, Alert } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import React, { useState, useRef, useEffect } from "react";
-import ChipCategoryListComponent from "~/components/budget/chip/ChipCategoryListComponent";
-import BudgetCarouselComponent from "~/components/budget/carousel/BudgetCarouselComponent";
-import DatePickerComponent from "~/components/budget/datepicker/DatePickerComponent";
+import React, { useEffect, useMemo, useCallback } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { signOut } from "aws-amplify/auth";
+import { useSelector } from "react-redux";
 import Animated, {
   withTiming,
   FadeIn,
@@ -11,24 +11,32 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
 } from "react-native-reanimated";
-import { formatDate } from "~/utils/manageDate";
-import {
-  getCategories,
-  saveCategories,
-} from "~/api/apiManager";
+
+import ChipCategoryListComponent from "~/components/budget/chip/ChipCategoryListComponent";
+import BudgetCarouselComponent from "~/components/budget/carousel/BudgetCarouselComponent";
+import DatePickerComponent from "~/components/budget/datepicker/DatePickerComponent";
 import HeaderComponent from "~/components/header/HeaderComponent";
-import { useNavigation } from "@react-navigation/native";
-import { signOut } from "aws-amplify/auth";
 
-export default function BudgetScreen({ user, setUser }) {
+const MemoizedHeaderComponent = React.memo(HeaderComponent);
+const MemoizedDatePickerComponent = React.memo(DatePickerComponent);
+const MemoizedChipCategoryListComponent = React.memo(ChipCategoryListComponent);
+const MemoizedBudgetCarouselComponent = React.memo(BudgetCarouselComponent);
+
+export default function BudgetScreen() {
+  const user = useSelector((state) => state.user.user);
+  const cardPressed = useSelector((state) => state.categories.cardPressed);
+
   const navigation = useNavigation();
-  const [date, setDate] = useState(() => formatDate(new Date()));
-  const [categories, setCategories] = useState([]);
-  const [activeCategory, setActiveCategory] = useState(0);
-  const [cardPressed, setCardPressed] = useState(false);
-  const categoryListRef = useRef(null);
-
   const searchBarHeight = useSharedValue(76);
+  const searchBarAnimatedStyle = useAnimatedStyle(() => ({
+    height: searchBarHeight.value,
+  }));
+
+  useEffect(() => {
+    cardPressed
+      ? (searchBarHeight.value = withTiming(0, { duration: 500 }))
+      : (searchBarHeight.value = withTiming(76, { duration: 500 }));
+  }, [cardPressed]);
 
   useEffect(() => {
     const backAction = () => {
@@ -43,7 +51,7 @@ export default function BudgetScreen({ user, setUser }) {
           onPress: () => {
             signOut()
               .then(() => navigation.push("Welcome"))
-              .catch((e) => navigation.push("Welcome"));
+              .catch(() => navigation.push("Welcome"));
           },
         },
       ]);
@@ -56,33 +64,11 @@ export default function BudgetScreen({ user, setUser }) {
     );
 
     return () => backHandler.remove();
-  }, []);
+  }, [navigation]);
 
-  useEffect(() => {
-    cardPressed
-      ? (searchBarHeight.value = withTiming(0, { duration: 500 }))
-      : (searchBarHeight.value = withTiming(76, { duration: 500 }));
+  const renderHeader = useMemo(() => {
+    return cardPressed ? <View></View> : <MemoizedHeaderComponent />;
   }, [cardPressed]);
-
-  useEffect(() => {
-    if (!categories.find((obj) => obj.index === activeCategory))
-      setActiveCategory(0);
-    if (categories.length > 0) saveCategories(categories, date);
-  }, [categories]);
-
-  const searchBarAnimatedStyle = useAnimatedStyle(() => ({
-    height: searchBarHeight.value,
-  }));
-
-  useEffect(() => {
-    getCategories(date).then((r) => {
-      setCategories(r.categories);
-    });
-  }, [date]);
-
-  useEffect(() => {
-    if (activeCategory === 0) setCardPressed(false);
-  }, [activeCategory]);
 
   return (
     <View className="flex-1 relative">
@@ -90,47 +76,24 @@ export default function BudgetScreen({ user, setUser }) {
       <Image
         className="absolute h-full w-full"
         source={require("~/assets/splash.png")}
-        //blurRadius={80}
       />
       {user.userId ? (
         <View className="mt-16">
           <Animated.View style={searchBarAnimatedStyle} className="mx-5">
-            {cardPressed ? (
-              <View></View>
-            ) : (
-              <HeaderComponent user={user} setUser={setUser} />
-            )}
+            {renderHeader}
           </Animated.View>
           <View className="mb-3 -mt-4">
-            <DatePickerComponent date={date} setDate={setDate} />
+            <MemoizedDatePickerComponent />
           </View>
           <View>
-            <ChipCategoryListComponent
-              categories={categories}
-              setCategories={setCategories}
-              activeCategory={activeCategory}
-              setActiveCategory={setActiveCategory}
-              categoryListRef={categoryListRef}
-            />
+            <MemoizedChipCategoryListComponent />
           </View>
           <Animated.View
             className="mt-1 py-2"
-            key={date.date}
             entering={FadeIn}
             exiting={FadeOut}
           >
-            <BudgetCarouselComponent
-              date={date}
-              categories={categories}
-              setCategories={setCategories}
-              activeCategory={activeCategory}
-              setActiveCategory={setActiveCategory}
-              categoryListRef={categoryListRef}
-              cardPressed={cardPressed}
-              setCardPressed={setCardPressed}
-              user={user}
-              setUser={setUser}
-            />
+            <MemoizedBudgetCarouselComponent />
           </Animated.View>
         </View>
       ) : (

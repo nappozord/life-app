@@ -3,23 +3,21 @@ import React from "react";
 import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
 import { calculatePercentage } from "~/utils/calculatePercentage";
-import EditExpenseButtonComponent from "~/components/budget/carousel/user_card/EditExpenseButtonComponent";
+import { useSelector } from "react-redux";
+import { getList } from "~/app/listsSlice";
+import EditItemButtonComponent from "./EditItemButtonComponent";
 
-export default function ListCategorySummaryComponent({
-  item,
-  categories,
-  setCategories,
-  user,
-  setUser,
-  date,
-}) {
-  const totalToBuy = item.real ? item.real - item.realBought : 0;
+export default function ListCategorySummaryComponent({ listId }) {
+  const user = useSelector((state) => state.user.user);
+  const list = useSelector((state) => getList(state, listId));
 
+  const total = list.expenses.reduce((total, e) => total + e.total, 0);
+  const bought = list.expenses.reduce((total, e) => {
+    return e.dateBought ? total + e.total : total;
+  }, 0);
+  const totalToBuy = total ? total - bought : 0;
   const percentage = calculatePercentage([totalToBuy], user.balance);
-
-  const itemBought = item.expenses.filter((obj) => obj.bought);
-
-  const itemToBuy = item.expenses.filter((obj) => !obj.bought);
+  const itemBought = list.expenses.filter((obj) => obj.dateBought);
 
   return (
     <View className="px-5 mt-2 space-y-3">
@@ -28,11 +26,11 @@ export default function ListCategorySummaryComponent({
           className="text-3xl font-semibold z-10"
           style={{ color: themeColors.onSecondaryContainer }}
         >
-          {item.title}
+          {list.title}
         </Text>
-        <IconButton icon={item.icon} color={themeColors.primary} />
+        <IconButton icon={list.icon} color={themeColors.primary} />
       </View>
-      {item.expenses.length > 0 ? (
+      {list.expenses.length > 0 ? (
         <View
           style={{ backgroundColor: themeColors.primary }}
           className="flex-row space-x-1 items-center justify-center rounded-3xl p-1 px-2 mb-1"
@@ -49,7 +47,7 @@ export default function ListCategorySummaryComponent({
             numberOfLines={1}
             style={{ color: themeColors.onPrimary }}
           >
-            {itemBought.length + "/" + item.expenses.length}
+            {itemBought.length + "/" + list.expenses.length}
           </Text>
           <Text
             className="text-base font-semibold"
@@ -99,19 +97,10 @@ export default function ListCategorySummaryComponent({
             className="text-3xl font-semibold"
             style={{ color: themeColors.primary }}
           >
-            €{Math.abs(item.real).toFixed(2)}
+            €{Math.abs(total).toFixed(2)}
           </Text>
         </View>
-        <EditExpenseButtonComponent
-          icon={item.icon}
-          category={item.title}
-          categories={categories}
-          setCategories={setCategories}
-          user={user}
-          setUser={setUser}
-          date={date}
-          isList={true}
-        />
+        <EditItemButtonComponent listId={listId} />
       </View>
     </View>
   );

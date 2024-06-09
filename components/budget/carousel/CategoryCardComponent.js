@@ -11,27 +11,21 @@ import Animated, {
 import { themeColors } from "~/theme";
 import UserCategoryComponent from "./user_card/UserCategoryComponent";
 import OverallCategoryComponent from "./overall_card/OverallCategoryComponent";
-import OverallListCategoryComponent from "~/components/list/overall_card/OverallListCategoryComponent";
-import ListCategoryComponent from "~/components/list/list_card/ListCategoryComponent";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  updateCardPressed,
+  updateFinishedAnimation,
+} from "~/app/categoriesSlice";
 
 const HEIGHT = 400;
 const OUTER_HEIGHT = 150;
 const WIDTH = 300;
 
-export default function CategoryCardComponent({
-  item,
-  date,
-  categories,
-  setCategories,
-  activeCategory,
-  cardPressed,
-  setCardPressed,
-  finishedAnimation,
-  setFinishedAnimation,
-  user,
-  setUser,
-  isList,
-}) {
+export default function CategoryCardComponent({ categoryId, isActive }) {
+  const cardPressed = useSelector((state) => state.categories.cardPressed);
+
+  const dispatch = useDispatch();
+
   const dimensions = useWindowDimensions();
   const [loading, setLoading] = useState(false);
 
@@ -40,14 +34,14 @@ export default function CategoryCardComponent({
 
   useEffect(() => {
     if (loading) {
-      setCardPressed(true);
+      dispatch(updateCardPressed(true));
       startAnimation(500);
     }
   }, [loading]);
 
   const finishAnimationCallback = (finished) => {
-    if (activeCategory == item.id) {
-      setFinishedAnimation(finished);
+    if (isActive) {
+      dispatch(updateFinishedAnimation(finished));
       setLoading(false);
     }
   };
@@ -60,9 +54,9 @@ export default function CategoryCardComponent({
   };
 
   useEffect(() => {
-    if (item.id !== 0) {
+    if (categoryId !== 0) {
       if (!cardPressed) {
-        if (activeCategory !== item.id) {
+        if (!isActive) {
           width.value = WIDTH;
           height.value = HEIGHT;
         } else {
@@ -70,7 +64,7 @@ export default function CategoryCardComponent({
           height.value = withTiming(HEIGHT, { duration: 500 });
         }
       } else {
-        if (activeCategory !== item.id) {
+        if (!isActive) {
           width.value = dimensions.width;
           height.value = dimensions.height;
         } else {
@@ -119,45 +113,10 @@ export default function CategoryCardComponent({
             },
           ]}
         >
-          {item.id === 0 ? (
-            !isList ? <OverallCategoryComponent
-              date={date}
-              item={item}
-              categories={categories}
-              setCategories={setCategories}
-            /> : <OverallListCategoryComponent
-            date={date}
-              item={item}
-              categories={categories}
-              setCategories={setCategories}
-              user={user}
-            />
+          {categoryId === 0 ? (
+            <OverallCategoryComponent />
           ) : (
-            !isList ? <UserCategoryComponent
-              item={item}
-              date={date}
-              loading={loading}
-              categories={categories}
-              setCategories={setCategories}
-              cardPressed={cardPressed}
-              setCardPressed={setCardPressed}
-              finishedAnimation={finishedAnimation}
-              setFinishedAnimation={setFinishedAnimation}
-              user={user}
-              setUser={setUser}
-            /> : <ListCategoryComponent
-              item={item}
-              date={date}
-              loading={loading}
-              categories={categories}
-              setCategories={setCategories}
-              cardPressed={cardPressed}
-              setCardPressed={setCardPressed}
-              finishedAnimation={finishedAnimation}
-              setFinishedAnimation={setFinishedAnimation}
-              user={user}
-              setUser={setUser}
-            />
+            <UserCategoryComponent categoryId={categoryId} loading={loading} />
           )}
         </Animated.View>
       </Animated.View>

@@ -18,6 +18,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useNavigation } from "@react-navigation/native";
 import { themeColors } from "~/theme";
+import { useSelector, useDispatch } from "react-redux";
 
 import LoginComponent from "~/components/login/LoginComponent";
 import SignUpComponent from "~/components/login/SignUpComponent";
@@ -25,18 +26,20 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { getCurrentUser } from "@aws-amplify/auth";
 import ConfirmCodeComponent from "~/components/login/ConfirmCodeComponent";
-import { getUser } from "~/api/apiManager";
+import { updateUser } from "~/app/userSlice";
 import FinalSetupComponent from "~/components/login/FinalSetupComponent";
 import PassRecoveryComponent from "~/components/login/PassRecoveryComponent";
 
 import { restoreBackup } from "~/api/apiManager";
-import { updateUser } from "~/api/apiManager";
 import { ActivityIndicator } from "react-native-paper";
-import { checkIngredientQuantity } from "~/utils/manageIngredients";
 
 const height = Dimensions.get("window").height;
 
 export default function WelcomeScreen() {
+  const user = useSelector((state) => state.user.user);
+  const status = useSelector((state) => state.user.status);
+  const dispatch = useDispatch();
+
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
   const [login, setLogin] = useState(false);
@@ -44,7 +47,6 @@ export default function WelcomeScreen() {
   const [confirmCode, setConfirmCode] = useState(false);
   const [finalSetup, setFinalSetup] = useState(false);
   const [passRecovery, setPassRecovery] = useState(false);
-  const user = useRef({});
   const email = useRef("");
   const pageTitle = login
     ? "Login"
@@ -62,52 +64,56 @@ export default function WelcomeScreen() {
   const reset = false;
 
   useEffect(() => {
-    checkIngredientQuantity(new Date());
+    if (status === "succeeded") {
+      setTimeout(() => {
+        if (dev) {
+          if (!user) {
+            dispatch(
+              updateUser({
+                userId: "abc",
+                username: "Nappozord",
+                balance: 3000,
+              })
+            );
+          }
+          navigation.push("Home");
+          AsyncStorage.getAllKeys().then((r) => console.log(r));
+        }
 
-    setTimeout(() => {
-      if (dev) {
-        updateUser({
-          userId: "abc",
-          username: "Nappozord",
-          balance: 2000,
-        }).then(() => navigation.push("Home"));
-        AsyncStorage.getAllKeys().then((r) => console.log(r));
-      }
+        if (reset) {
+          //updateUser(defaultUser);
+          //restoreBackup("January, 2024");
+          //restoreBackup("December, 2023");
+          //AsyncStorage.clear();
+          //AsyncStorage.removeItem("logs");
+          //AsyncStorage.removeItem("defaultCategories");
+          //AsyncStorage.removeItem("categories");
+          //AsyncStorage.removeItem("lists");
+          //AsyncStorage.removeItem("recipes");
+          //AsyncStorage.removeItem("meals");
+          //AsyncStorage.removeItem("groceries");
+        }
 
-      if (reset) {
-        /*updateUser(defaultUser);
-        restoreBackup("January, 2024");
-        restoreBackup("December, 2023");
-        AsyncStorage.clear();
-        AsyncStorage.removeItem("logs");
-        AsyncStorage.removeItem("defaultCategories");
-        AsyncStorage.removeItem("categories");*/
-        AsyncStorage.removeItem("lists");
-      }
-
-      getCurrentUser()
-        .then((r) => {
-          if (r && r.userId) {
-            getUser().then((u) => {
-              if (u && u.userId === r.userId) {
+        getCurrentUser()
+          .then((r) => {
+            if (r && r.userId) {
+              if (user && user.userId === r.userId) {
                 navigation.push("Home");
               } else {
                 setLoading(false);
-                user.current = {
-                  userId: r.userId,
-                };
+                dispatch(updateUser({ ...user, userId: r.userId }));
                 setFinalSetup(true);
               }
-            });
-          } else {
+            } else {
+              setLoading(false);
+            }
+          })
+          .catch(() => {
             setLoading(false);
-          }
-        })
-        .catch(() => {
-          setLoading(false);
-        });
-    }, 700);
-  }, []);
+          });
+      }, 700);
+    }
+  }, [status]);
 
   return (
     <View className="flex-1">
@@ -115,7 +121,6 @@ export default function WelcomeScreen() {
       <Image
         className="absolute h-full w-full"
         source={require("~/assets/splash.png")}
-        //blurRadius={80}
       />
       {loading ? (
         <View className="flex-1 justify-center items-center">
@@ -129,7 +134,6 @@ export default function WelcomeScreen() {
           <Image
             className="absolute h-52 w-52"
             source={require("~/assets/adaptive-icon.png")}
-            //blurRadius={80}
           />
         </View>
       ) : (
@@ -228,7 +232,6 @@ export default function WelcomeScreen() {
           ) : null}
           {finalSetup ? (
             <FinalSetupComponent
-              user={user}
               setFinalSetup={setFinalSetup}
               setLogin={setLogin}
             />

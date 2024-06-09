@@ -1,25 +1,30 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
 import Animated, { FadeIn, SlideInUp } from "react-native-reanimated";
 import AddIngredientModal from "./AddIngredientModal";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteGroceryItem, addGroceryItem } from "~/app/groceriesSlice";
+import { incrementIngredient } from "~/app/ingredientsSlice";
+import { incrementItem } from "~/app/itemsSlice";
 
-export default function GroceryComponent({
-  item,
-  ingredientList,
-  setIngredientList,
-  groceryList,
-  setGroceryList,
-  ingredients,
-  setIngredients,
-  items,
-  setItems,
-}) {
+export default function GroceryComponent({ item }) {
+  const groceryList = useSelector((state) => state.groceries.list.groceryList);
+
+  const dispatch = useDispatch();
+
+  const [counter, setCounter] = useState(item.onCart);
   const [modalVisible, setModalVisible] = useState(false);
+
+  const firstRender = useRef(true);
 
   const toBuy = item.checked
     ? item.onCart
+    : groceryList.added.find((a) => a.id === item.ingredient.id)
+    ? Math.ceil(
+        item.needed / (item.ingredient.quantity ? item.ingredient.quantity : 1)
+      )
     : Math.ceil(
         item.needed /
           (item.ingredient.quantity ? item.ingredient.quantity : 1) -
@@ -27,92 +32,30 @@ export default function GroceryComponent({
       );
 
   function deleteFromGroceryList() {
-    ingredientList = ingredientList.filter(
-      (obj) => obj.ingredient.id !== item.ingredient.id
-    );
-
-    setIngredientList([...ingredientList]);
-
-    groceryList.excluded.push({
-      id: item.ingredient.id,
-      quantity: item.needed,
-    });
-
-    groceryList.added = groceryList.added.filter(
-      (i) => i.id !== item.ingredient.id
-    );
-
-    groceryList.checked = groceryList.checked.filter(
-      (i) => i.id !== item.ingredient.id
-    );
-
-    setGroceryList({ ...groceryList });
+    dispatch(deleteGroceryItem(item));
   }
 
-  function saveGroceryList(i) {
-    if (
-      ingredientList.find((obj) => obj.ingredient.id === item.ingredient.id)
-        .onCart === 0 &&
-      i === -1
-    ) {
-      return;
+  function saveGroceryList(quantity) {
+    dispatch(addGroceryItem({ item, quantity }));
+    dispatch(incrementIngredient({ id: item.ingredient.id, quantity }));
+    dispatch(incrementItem({ id: item.ingredient.id, quantity }));
+  }
+
+  useEffect(() => {
+    if (!firstRender.current) {
+      saveGroceryList(counter);
     } else {
-      ingredientList.find(
-        (obj) => obj.ingredient.id === item.ingredient.id
-      ).onCart += i;
-
-      setIngredientList([...ingredientList]);
-
-      if (groceryList.checked.find((i) => i.id === item.ingredient.id)) {
-        groceryList.checked.find((i) => i.id === item.ingredient.id).quantity +=
-          i;
-
-        if (
-          groceryList.checked.find((i) => i.id === item.ingredient.id)
-            .quantity === 0
-        ) {
-          groceryList.checked = groceryList.checked.filter(
-            (i) => i.id !== item.ingredient.id
-          );
-        }
-      } else {
-        groceryList.checked.push({
-          id: item.ingredient.id,
-          quantity: i,
-        });
-      }
-
-      setGroceryList({ ...groceryList });
-
-      if (item.ingredient.quantity) {
-        ingredients.find((i) => i.id === item.ingredient.id).stock += i;
-        if (ingredients.find((i) => i.id === item.ingredient.id).stock < 0)
-          ingredients.find((i) => i.id === item.ingredient.id).stock = 0;
-        setIngredients([...ingredients]);
-      } else {
-        items.find((i) => i.id === item.ingredient.id).stock += i;
-        if (items.find((i) => i.id === item.ingredient.id).stock < 0)
-          items.find((i) => i.id === item.ingredient.id).stock = 0;
-        items
-          .find((i) => i.id === item.ingredient.id)
-          .buyingDate.push(new Date().toISOString());
-        setItems([...items]);
-      }
+      firstRender.current = false;
     }
-  }
+  }, [counter]);
 
   if (item.ingredient.id < 0) {
     return (
       <>
         {modalVisible ? (
           <AddIngredientModal
-            ingredientList={ingredientList}
             modalVisible={modalVisible}
             setModalVisible={setModalVisible}
-            ingredients={ingredients}
-            groceryList={groceryList}
-            setGroceryList={setGroceryList}
-            itemList={items}
           />
         ) : null}
         <Animated.View entering={FadeIn} className="flex-1 mt-8 mb-2 px-1">
@@ -176,14 +119,14 @@ export default function GroceryComponent({
             <View className="flex-row overflow-hidden">
               <Animated.View
                 entering={SlideInUp}
-                key={item.ingredient.id + item.onCart}
+                key={item.ingredient.id + counter}
               >
                 <Text
                   className="text-sm"
                   style={{ color: "transparent" }}
                   numberOfLines={1}
                 >
-                  {item.onCart}
+                  {counter}
                 </Text>
               </Animated.View>
               <Text
@@ -205,8 +148,7 @@ export default function GroceryComponent({
             >
               {"€" +
                 (
-                  parseFloat(item.ingredient.cost) *
-                  (item.onCart > 0 ? item.onCart : 1)
+                  parseFloat(item.ingredient.cost) * (counter > 0 ? counter : 1)
                 ).toFixed(2)}
             </Text>
           </View>
@@ -221,14 +163,14 @@ export default function GroceryComponent({
             <View className="flex-row overflow-hidden">
               <Animated.View
                 entering={SlideInUp}
-                key={item.ingredient.id + item.onCart}
+                key={item.ingredient.id + counter}
               >
                 <Text
                   className="text-sm"
                   style={{ color: themeColors.onBackground }}
                   numberOfLines={1}
                 >
-                  {item.onCart}
+                  {counter}
                 </Text>
               </Animated.View>
 
@@ -248,7 +190,7 @@ export default function GroceryComponent({
         className="-mt-4 rounded-2xl p-2"
         style={{
           backgroundColor:
-            item.onCart >= toBuy
+            counter >= toBuy
               ? themeColors.success
               : themeColors.secondaryContainer,
         }}
@@ -273,7 +215,7 @@ export default function GroceryComponent({
                   borderTopColor: themeColors.onSecondaryContainer,
                 }}
                 onPress={() => {
-                  saveGroceryList(1);
+                  setCounter((prev) => prev + 1);
                 }}
               >
                 <IconButton
@@ -293,7 +235,7 @@ export default function GroceryComponent({
                   borderTopColor: themeColors.onSecondaryContainer,
                 }}
                 onPress={() => {
-                  saveGroceryList(-1);
+                  setCounter((prev) => (prev > 0 ? prev - 1 : 0));
                 }}
                 onLongPress={() => {
                   deleteFromGroceryList();

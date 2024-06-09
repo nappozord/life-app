@@ -21,11 +21,11 @@ export function sortByDate(item) {
 export function sortByBought(item) {
   return item.sort((a, b) => {
     // If a is bought and b is not, a should come after b
-    if (a.bought && !b.bought) {
+    if (a.dateBought && !b.dateBought) {
       return 1;
     }
     // If b is bought and a is not, a should come before b
-    else if (!a.bought && b.bought) {
+    else if (!a.dateBought && b.dateBought) {
       return -1;
     }
     // If both have the same value of 'bought', no change in order

@@ -4,8 +4,11 @@ import { BarChart } from "react-native-chart-kit";
 import { hexToRGBA, themeColors } from "~/theme";
 import { months } from "~/utils/manageDate";
 import { calculateMonthlyInOut } from "~/utils/calculateMoneyFlow";
+import { useSelector } from "react-redux";
 
-export default function ForecastChartComponent({ items }) {
+export default function ForecastChartComponent() {
+  const categories = useSelector((state) => state.stats.categories);
+
   let [labels, setLabels] = useState([]);
   let [datasets, setDatasets] = useState([]);
 
@@ -13,9 +16,9 @@ export default function ForecastChartComponent({ items }) {
     labels = [];
     datasets = [];
 
-    const short = items.length > 4;
+    const short = categories.length > 4;
 
-    items.forEach((i) => {
+    categories.forEach((i) => {
       calculateMonthlyInOut(i.categories).then((inOut) => {
         const differenceReal = inOut.real.in - inOut.real.out;
         const differenceForecast = inOut.forecast.in - inOut.forecast.out;
@@ -31,14 +34,14 @@ export default function ForecastChartComponent({ items }) {
         setLabels([...labels]);
       });
     });
-  }, [items]);
+  }, [categories]);
 
   return (
     <View className="mr-5">
       {labels.length > 0 && datasets.length > 0 ? (
         <View>
           <BarChart
-          fromZero={true}
+            fromZero={true}
             data={{
               labels: [...labels],
               datasets: [

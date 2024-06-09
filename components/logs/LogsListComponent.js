@@ -1,49 +1,33 @@
 import { View, Text } from "react-native";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FlashList } from "@shopify/flash-list";
-import { getLogs } from "~/api/apiManager";
 import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
+import { useSelector } from "react-redux";
+import { getLogs } from "~/app/logsSlice";
 
 export default function LogsListComponent({ date }) {
-  const [logs, setLogs] = useState([]);
-  const [filteredLogs, setFilteredLogs] = useState([]);
+  const logs = useSelector((state) => state.logs.logs);
 
-  useEffect(() => {
-    getLogs().then((r) => {
-      setLogs(r);
-      setFilteredLogs(
-        r
-          .filter((item) => (item.date === date.toISOString().split("T")[0]))
-          .reverse()
-      );
-    });
-  }, []);
-
-  useEffect(() => {
-    if (logs.length > 0)
-      setFilteredLogs(
-        logs
-          .filter((item) => (item.date === date.toISOString().split("T")[0]))
-          .reverse()
-      );
-  }, [date]);
+  const filteredLog = logs
+    .filter((item) => item.date === date.toISOString().split("T")[0])
+    .reverse();
 
   return (
-    <View className="overflow-hidden" style={{height: 540}}>
+    <View className="overflow-hidden" style={{ height: 540 }}>
       <FlashList
         estimatedItemSize={60}
         keyExtractor={(item) => "log_" + item.id}
         fadingEdgeLength={50}
         removeClippedSubviews={false}
         showsVerticalScrollIndicator={false}
-        data={filteredLogs}
+        data={filteredLog}
         renderItem={({ index, item }) => {
           return (
             <View
               className={
                 (index === 0 ? "mt-3 " : "") +
-                (index === filteredLogs.length - 1 ? "mb-2 " : "mb-1")
+                (index === filteredLog.length - 1 ? "mb-2 " : "mb-1")
               }
             >
               <View
@@ -54,7 +38,6 @@ export default function LogsListComponent({ date }) {
                   <IconButton
                     icon={item.icon}
                     color={themeColors.onBackground}
-                    onPress={() => setLogs(false)}
                   />
                   <View>
                     <Text
@@ -74,13 +57,11 @@ export default function LogsListComponent({ date }) {
                         : "alpha-m-circle-outline"
                     }
                     color={themeColors.primary}
-                    onPress={() => setLogs(false)}
                   />
                   <IconButton
                     className="pl-0 ml-0"
                     icon={"information-outline"}
                     color={themeColors.onBackground}
-                    onPress={() => setLogs(false)}
                   />
                 </View>
               </View>

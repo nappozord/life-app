@@ -17,86 +17,63 @@ import {
   addDefaultCategory,
   deleteDefaultCategory,
   updateDeafultCategory,
-} from "~/api/apiManager";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+} from "~/api/apiCategories";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  updateCategory,
+  addCategory,
+  deleteCategory,
+  getCategory,
+  updateActiveCategory,
+} from "~/app/categoriesSlice";
 
 export default function EditCategoryModalComponent({
-  item,
-  categories,
-  setCategories,
+  categoryId,
   modalVisible,
   setModalVisible,
-  isList,
 }) {
-  const description = useRef(item ? item.title.toString() : null);
+  const categories = useSelector((state) => state.categories.categories);
+
+  const category = useSelector((state) => getCategory(state, categoryId));
+
+  const dispatch = useDispatch();
+
+  const description = useRef(category ? category.title.toString() : null);
   const [icon, setIcon] = useState(
-    item ? item.icon.toString() : "card-outline"
+    category ? category.icon.toString() : "card-outline"
   );
   const inputRef = useRef(null);
 
   const [checked, setChecked] = useState(false);
 
-  const addCategory = () => {
-    if (!isList) {
-      AsyncStorage.getItem("defaultCategories").then((r) => {
-        const result = JSON.parse(r);
-        const index = result[result.length - 1].id + 1;
+  const handleAddCategory = () => {
+    const category = {
+      id: categories.length,
+      title: description.current,
+      real: 0,
+      forecast: 0,
+      icon: icon,
+      expenses: [],
+      income: false,
+    };
 
-        const category = {
-          id: index > categories.length ? index : categories.length,
-          title: description.current,
-          real: 0,
-          forecast: 0,
-          icon: icon,
-          expenses: [],
-          income: false,
-          index: categories.length,
-        };
+    if (checked) addDefaultCategory(category);
 
-        categories.push(category);
-
-        if (checked) {
-          addDefaultCategory(category);
-        }
-
-        setCategories([...categories]);
-      });
-    } else {
-      const category = {
-        id: categories.length,
-        title: description.current,
-        real: 0,
-        realBought: 0,
-        icon: icon,
-        expenses: [],
-        income: false,
-        index: categories.length,
-      };
-
-      categories.push(category);
-
-      setCategories([...categories]);
-    }
+    dispatch(addCategory(category));
   };
 
-  const deleteCategory = () => {
-    categories = categories.filter((obj) => obj.id !== item.id);
+  const handleDeleteCategory = () => {
+    if (checked && category.id !== 1) deleteDefaultCategory(category);
 
-    if (checked) {
-      deleteDefaultCategory(item);
-    }
-
-    setCategories([...categories]);
+    dispatch(deleteCategory(category.id));
   };
 
-  const updateCategory = () => {
-    categories.find((obj) => obj.id === item.id).title = description.current;
-    categories.find((obj) => obj.id === item.id).icon = icon;
+  const handleUpdateCategories = () => {
+    updateDeafultCategory(category);
 
-    if(!isList)
-      updateDeafultCategory(categories.find((obj) => obj.id === item.id));
-
-    setCategories([...categories]);
+    dispatch(
+      updateCategory({ id: category.id, title: description.current, icon })
+    );
   };
 
   return (
@@ -118,11 +95,9 @@ export default function EditCategoryModalComponent({
       <Image
         className="absolute h-full w-full"
         source={require("~/assets/splash.png")}
-        //blurRadius={80}
         style={{ opacity: 0.9 }}
       />
       <KeyboardAvoidingView
-        //keyboardVerticalOffset={-50}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
@@ -151,7 +126,7 @@ export default function EditCategoryModalComponent({
                 >
                   <View className="flex-row">
                     <IconButton
-                      icon={item ? "pencil" : "plus"}
+                      icon={category ? "pencil" : "plus"}
                       color={themeColors.onBackground}
                       size={30}
                       className="-mr-2"
@@ -167,7 +142,7 @@ export default function EditCategoryModalComponent({
                     className="text-xl font-semibold -mt-4 mb-4"
                     style={{ color: themeColors.onBackground }}
                   >
-                    {isList ? "List" : "Category"}
+                    {"Category"}
                   </Text>
                 </View>
                 <View />
@@ -187,7 +162,7 @@ export default function EditCategoryModalComponent({
                       backgroundColor: themeColors.onSecondaryContainer,
                       color: themeColors.background,
                     }}
-                    placeholder={"E.g. New Awesome " + (isList ? "List" : "Category") + "!"}
+                    placeholder={"E.g. New Awesome Category!"}
                     selectionColor={themeColors.background}
                     defaultValue={description.current}
                     onChangeText={(text) => {
@@ -228,34 +203,32 @@ export default function EditCategoryModalComponent({
                       />
                     </Pressable>
                   </View>
-                  {isList ? null : (
-                    <View className="flex-row justify-between items-center">
-                      <View className="flex-1">
-                        <Text
-                          className="text-lg font-semibold ml-2 "
-                          style={{ color: themeColors.onSecondaryContainer }}
-                        >
-                          Set as monthly default
-                        </Text>
-                      </View>
-                      <View
-                        className="mr-2 rounded-3xl"
-                        style={{
-                          backgroundColor: themeColors.onSecondaryContainer,
-                        }}
+                  <View className="flex-row justify-between items-center">
+                    <View className="flex-1">
+                      <Text
+                        className="text-lg font-semibold ml-2 "
+                        style={{ color: themeColors.onSecondaryContainer }}
                       >
-                        <Checkbox
-                          color={themeColors.secondaryContainer}
-                          status={checked ? "checked" : "unchecked"}
-                          onPress={() => {
-                            setChecked(!checked);
-                          }}
-                        />
-                      </View>
+                        Set as monthly default
+                      </Text>
                     </View>
-                  )}
+                    <View
+                      className="mr-2 rounded-3xl"
+                      style={{
+                        backgroundColor: themeColors.onSecondaryContainer,
+                      }}
+                    >
+                      <Checkbox
+                        color={themeColors.secondaryContainer}
+                        status={checked ? "checked" : "unchecked"}
+                        onPress={() => {
+                          setChecked(!checked);
+                        }}
+                      />
+                    </View>
+                  </View>
                 </View>
-                {item ? (
+                {category ? (
                   <View className="flex-row justify-between items-center">
                     <View className="flex-1">
                       <TouchableOpacity
@@ -267,7 +240,7 @@ export default function EditCategoryModalComponent({
                           borderTopLeftRadius: 24,
                         }}
                         onPress={() => {
-                          updateCategory();
+                          handleUpdateCategories();
                           setModalVisible(false);
                         }}
                       >
@@ -289,7 +262,7 @@ export default function EditCategoryModalComponent({
                           borderTopRightRadius: 24,
                         }}
                         onPress={() => {
-                          deleteCategory();
+                          handleDeleteCategory();
                           setModalVisible(false);
                         }}
                       >
@@ -311,7 +284,7 @@ export default function EditCategoryModalComponent({
                       borderTopLeftRadius: 24,
                     }}
                     onPress={() => {
-                      addCategory();
+                      handleAddCategory();
                       setModalVisible(false);
                     }}
                   >

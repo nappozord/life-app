@@ -7,85 +7,58 @@ import {
   Pressable,
   TouchableOpacity,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
 import Animated, { SlideInDown } from "react-native-reanimated";
 import IngredientSearchComponent from "~/components/groceries/searchbar/IngredientSearchComponent";
+import { useDispatch, useSelector } from "react-redux";
+import { getRecipe } from "~/app/recipesSlice";
+import { addRecipe, deleteRecipe, updateRecipe } from "~/app/recipesSlice";
 
 export default function RecipeModal({
-  item,
+  recipeId,
   modalVisible,
   setModalVisible,
-  ingredients,
-  setIngredients,
-  recipes,
-  setRecipes,
-  search,
-  setSearch,
-  meals,
-  setMeals,
 }) {
+  const recipe = useSelector((state) => getRecipe(state, recipeId));
+  const ingredients = useSelector((state) => state.ingredients.ingredients);
+
+  const dispatch = useDispatch();
+
   const inputRef = useRef(null);
 
-  const name = useRef(item ? item.title.toString() : null);
-  const [icon, setIcon] = useState(item ? item.icon.toString() : "food");
-  const [selected, setSelected] = useState(item ? [...item.ingredients] : []);
+  const name = useRef(recipe ? recipe.title.toString() : null);
+  const [icon, setIcon] = useState(recipe ? recipe.icon.toString() : "food");
+  const [selected, setSelected] = useState(
+    recipe ? [...recipe.ingredients] : []
+  );
 
-  function addRecipe() {
-    if (name.current === "" || name.current === null)
-      name.current = "New Recipe";
-
-    if (icon === "" || icon === null) icon = "food";
-
-    const ids = recipes.map((object) => {
-      return object.id;
-    });
-
-    const max = ids.length > 0 ? Math.max(...ids) : 0;
-
-    recipes.push({
-      id: max + 1,
-      title: name.current,
-      icon: icon,
-      used: 0,
-      ingredients: [...selected],
-    });
-
-    if (search.length === recipes.length - 1) setSearch([...recipes]);
-
-    setRecipes([...recipes]);
+  function handleAddRecipe() {
+    dispatch(addRecipe({ name: name.current, icon, selected: [...selected] }));
   }
 
-  function updateRecipe() {
-    if (name.current === "" || name.current === null)
-      name.current = "New Recipe";
-
-    if (icon === "" || icon === null) icon = "food";
-
-    const recipe = recipes.find((obj) => obj.id === item.id);
-
-    recipe.title = name.current;
-    recipe.icon = icon;
-    recipe.ingredients = [...selected];
-
-    setRecipes([...recipes]);
+  function handleUpdateRecipe() {
+    dispatch(
+      updateRecipe({
+        name: name.current,
+        icon,
+        selected: [...selected],
+        recipeId,
+      })
+    );
   }
 
-  function deleteRecipe() {
-    recipes = recipes.filter((obj) => obj.id !== item.id);
-    search = search.filter((obj) => obj.id !== item.id);
-    setSearch([...search]);
-    setRecipes([...recipes]);
-    deleteRecipeFromMeals();
+  function handleDeleteRecipe() {
+    dispatch(deleteRecipe(recipeId));
   }
 
   function deleteRecipeFromMeals() {
     meals.forEach((m) => {
-      m["breakfast"].recipes.filter((obj) => obj !== item.id);
-      m["lunch"].recipes.filter((obj) => obj !== item.id);
-      m["dinner"].recipes.filter((obj) => obj !== item.id);
-      m["snack"].recipes.filter((obj) => obj !== item.id);
+      m["breakfast"].recipes.filter((obj) => obj !== recipe.id);
+      m["lunch"].recipes.filter((obj) => obj !== recipe.id);
+      m["dinner"].recipes.filter((obj) => obj !== recipe.id);
+      m["snack"].recipes.filter((obj) => obj !== recipe.id);
     });
 
     setMeals([...meals]);
@@ -104,7 +77,6 @@ export default function RecipeModal({
       <Image
         className="absolute h-full w-full"
         source={require("~/assets/splash.png")}
-        //blurRadius={80}
         style={{ opacity: 0.9 }}
       />
       <Pressable
@@ -130,7 +102,7 @@ export default function RecipeModal({
                   borderWidth: 5,
                 }}
               >
-                {item ? (
+                {recipe ? (
                   <>
                     <Text
                       className="text-sm mb-1 "
@@ -142,13 +114,13 @@ export default function RecipeModal({
                       className=" text-5xl font-semibold "
                       style={{ color: themeColors.onBackground }}
                     >
-                      {item.used}
+                      {recipe.used}
                     </Text>
                     <Text
                       className="text-xl font-semibold -mt-2 "
                       style={{ color: themeColors.onBackground }}
                     >
-                      {item.title}
+                      {recipe.title}
                     </Text>
                   </>
                 ) : (
@@ -246,12 +218,13 @@ export default function RecipeModal({
                 </View>
               </View>
               <IngredientSearchComponent
-                ingredients={ingredients}
+                ingredients={[...ingredients]}
                 selected={selected}
                 setSelected={setSelected}
+                recipes={[]}
                 items={[]}
               />
-              {item ? (
+              {recipe ? (
                 <View className="flex-row justify-between items-center">
                   <View className="flex-1">
                     <TouchableOpacity
@@ -263,7 +236,7 @@ export default function RecipeModal({
                         borderTopLeftRadius: 24,
                       }}
                       onPress={() => {
-                        updateRecipe();
+                        handleUpdateRecipe();
                         setModalVisible(false);
                       }}
                     >
@@ -285,7 +258,7 @@ export default function RecipeModal({
                         borderTopRightRadius: 24,
                       }}
                       onPress={() => {
-                        deleteRecipe();
+                        handleDeleteRecipe();
                         setModalVisible(false);
                       }}
                     >
@@ -307,7 +280,7 @@ export default function RecipeModal({
                     borderTopLeftRadius: 24,
                   }}
                   onPress={() => {
-                    addRecipe();
+                    handleAddRecipe();
                     setModalVisible(false);
                   }}
                 >

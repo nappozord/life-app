@@ -4,12 +4,13 @@ import { themeColors } from "~/theme";
 import Animated from "react-native-reanimated";
 import { IconButton } from "react-native-paper";
 import { formatDate } from "~/utils/manageDate";
+import { useDispatch, useSelector } from "react-redux";
+import { updateDate } from "~/app/categoriesSlice";
 
-export default function DatePickerModalComponent({
-  setModalVisible,
-  date,
-  setDate,
-}) {
+export default function DatePickerModalComponent({ setModalVisible }) {
+  const date = useSelector((state) => state.categories.date);
+  const dispatch = useDispatch();
+
   const [animation, setAnimation] = useState("left");
   const [year, setYear] = useState(date.year);
 
@@ -31,11 +32,11 @@ export default function DatePickerModalComponent({
               borderTopLeftRadius: 20,
               borderTopRightRadius: 20,
               backgroundColor: themeColors.onSecondary,
-              elevation:10,
+              elevation: 10,
             }}
             onPress={() => {
               setModalVisible(false);
-              setDate(formatDate(new Date()));
+              dispatch(updateDate(formatDate(new Date())));
             }}
           >
             <Text
@@ -98,11 +99,13 @@ export default function DatePickerModalComponent({
                     key={index}
                     onPress={() => {
                       setModalVisible(false);
-                      setDate(formatDate(new Date(year, index, 1)));
+                      dispatch(
+                        updateDate(formatDate(new Date(year, index, 1)))
+                      );
                     }}
                     className="px-3 py-1 rounded-full"
                     style={
-                      (date.month === index + 1 && date.year === year)
+                      date.month === index + 1 && date.year === year
                         ? {
                             backgroundColor: themeColors.onSecondaryContainer,
                           }
@@ -113,7 +116,7 @@ export default function DatePickerModalComponent({
                       className="text-base font-semibold"
                       style={{
                         color:
-                          (date.month === index + 1 && date.year === year)
+                          date.month === index + 1 && date.year === year
                             ? themeColors.secondaryContainer
                             : themeColors.onSecondaryContainer,
                       }}
@@ -137,11 +140,13 @@ export default function DatePickerModalComponent({
                     key={index}
                     onPress={() => {
                       setModalVisible(false);
-                      setDate(formatDate(new Date(year, index, 1)));
+                      dispatch(
+                        updateDate(formatDate(new Date(year, index, 1)))
+                      );
                     }}
                     className="px-3 py-1 rounded-full"
                     style={
-                      (date.month === index + 1 && date.year === year)
+                      date.month === index + 1 && date.year === year
                         ? {
                             backgroundColor: themeColors.onSecondaryContainer,
                           }
@@ -152,7 +157,7 @@ export default function DatePickerModalComponent({
                       className="text-base font-semibold"
                       style={{
                         color:
-                          (date.month === index + 1 && date.year === year)
+                          date.month === index + 1 && date.year === year
                             ? themeColors.secondaryContainer
                             : themeColors.onSecondaryContainer,
                       }}

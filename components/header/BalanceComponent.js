@@ -8,10 +8,10 @@ import {
 } from "react-native-reanimated";
 import { Canvas, Text, useFont } from "@shopify/react-native-skia";
 
-export default function BalanceComponent({ user }) {
+export default function BalanceComponent({ balance }) {
   const totalValue = useSharedValue(0);
 
-  totalValue.value = withTiming(user.balance, { duration: 1000 });
+  totalValue.value = withTiming(balance, { duration: 1000 });
 
   const targetText = useDerivedValue(
     () => `€${totalValue.value.toFixed(2)}`,
@@ -19,7 +19,7 @@ export default function BalanceComponent({ user }) {
   );
 
   const font = useFont(require("~/assets/fonts/Roboto-Bold.ttf"), 20);
-  const fontSize = font ? font.getTextWidth(`€${user.balance.toFixed(2)}`) : 0;
+  const fontSize = font ? font.getTextWidth(`€${balance.toFixed(2)}`) : 0;
 
   return (
     <View>

@@ -1,80 +1,33 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { View, Image } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import {
-  getItems,
-  updateItems,
-  getMeals,
-  updateMeals,
-  getIngredients,
-  updateIngredients,
-  getRecipes,
-  updateRecipes,
-} from "~/api/apiManager";
 import Animated, {
   FadeIn,
   FadeOut,
   useSharedValue,
   useAnimatedStyle,
 } from "react-native-reanimated";
+import { useDispatch, useSelector } from "react-redux";
+
 import ChipListComponent from "~/components/groceries/chip/ChipListComponent";
 import HeaderComponent from "~/components/header/HeaderComponent";
 import GroceriesCarouselComponent from "~/components/groceries/carousel/GroceriesCarouselComponent";
+import { checkMealsAndIngredients } from "~/app/groceriesSlice";
 
-export default function GroceryScreen({ user, setUser }) {
-  const [meals, setMeals] = useState();
-  const [ingredients, setIngredients] = useState();
-  const [items, setItems] = useState();
-  const [recipes, setRecipes] = useState();
-  const [activeChip, setActiveChip] = useState(0);
-  const chipListRef = useRef(null);
+export default function GroceryScreen() {
+  const user = useSelector((state) => state.user.user);
 
-  const categories = [
-    {
-      index: 0,
-      title: "Meal Plan",
-    },
-    {
-      index: 1,
-      title: "Groceries",
-    },
-    {
-      index: 2,
-      title: "Recipes",
-    },
-    {
-      index: 3,
-      title: "Ingredients",
-    },
-    {
-      index: 4,
-      title: "General",
-    },
-  ];
+  const dispatch = useDispatch();
 
   const searchBarHeight = useSharedValue(76);
-
-  useEffect(() => {
-    !meals ? getMeals().then((r) => setMeals(r)) : updateMeals(meals);
-  }, [meals]);
-
-  useEffect(() => {
-    !items ? getItems().then((r) => setItems(r)) : updateItems(items);
-  }, [items]);
-
-  useEffect(() => {
-    !ingredients
-      ? getIngredients().then((r) => setIngredients(r))
-      : updateIngredients(ingredients);
-  }, [ingredients]);
-
-  useEffect(() => {
-    !recipes ? getRecipes().then((r) => setRecipes(r)) : updateRecipes(recipes);
-  }, [recipes]);
 
   const searchBarAnimatedStyle = useAnimatedStyle(() => ({
     height: searchBarHeight.value,
   }));
+
+  useEffect(() => {
+    dispatch(checkMealsAndIngredients());
+  }, []);
 
   return (
     <View className="flex-1">
@@ -82,45 +35,24 @@ export default function GroceryScreen({ user, setUser }) {
       <Image
         className="absolute h-full w-full"
         source={require("~/assets/splash.png")}
-        //blurRadius={80}
       />
       {user.userId ? (
         <>
           <View className="mt-16 flex-1">
             <Animated.View style={searchBarAnimatedStyle} className="mx-5">
-              <HeaderComponent user={user} setUser={setUser} />
+              <HeaderComponent />
             </Animated.View>
             <View className="mb-4 -mt-1">
-              <ChipListComponent
-                categories={categories}
-                activeChip={activeChip}
-                setActiveChip={setActiveChip}
-                chipListRef={chipListRef}
-              />
+              <ChipListComponent />
             </View>
-            {meals && ingredients && recipes ? (
+            {user ? (
               <Animated.View
                 className="justify-end flex-1"
                 entering={FadeIn}
                 exiting={FadeOut}
               >
                 <View className="pb-24">
-                  <GroceriesCarouselComponent
-                    categories={categories}
-                    meals={meals}
-                    setMeals={setMeals}
-                    ingredients={ingredients}
-                    setIngredients={setIngredients}
-                    recipes={recipes}
-                    setRecipes={setRecipes}
-                    activeChip={activeChip}
-                    setActiveChip={setActiveChip}
-                    user={user}
-                    setUser={setUser}
-                    chipListRef={chipListRef}
-                    items={items}
-                    setItems={setItems}
-                  />
+                  <GroceriesCarouselComponent />
                 </View>
               </Animated.View>
             ) : (

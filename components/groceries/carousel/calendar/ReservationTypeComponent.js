@@ -1,53 +1,57 @@
-import { useState } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { Text, View, TouchableOpacity } from "react-native";
 import { themeColors } from "~/theme";
 import { Divider, IconButton } from "react-native-paper";
 import MealPlanModalComponent from "./MealPlanModalComponent";
 import { calculateMealCosts } from "~/utils/calculateCostsAndCalories";
 import MealListComponent from "./MealListComponent";
+import { useSelector } from "react-redux";
 
-export default function ReservationTypeComponent({
-  meals,
-  setMeals,
-  ingredients,
-  setIngredients,
-  recipes,
-  setRecipes,
-  day,
-  type,
-}) {
+const MemoizedMealPlanModalComponent = React.memo(MealPlanModalComponent);
+
+export default function ReservationTypeComponent({ day, type }) {
+  const meals = useSelector((state) => state.meals.meals);
+  const ingredients = useSelector((state) => state.ingredients.ingredients);
+  const recipes = useSelector((state) => state.recipes.recipes);
+
   const [modalVisible, setModalVisible] = useState(false);
 
-  const selected = meals.find((obj) => obj.date === day)
-    ? meals.find((obj) => obj.date === day)[type.type]
-    : { ingredients: [], recipes: [] };
+  const dailyMeal = useMemo(
+    () => meals.find((obj) => obj.date === day),
+    [meals, day]
+  );
+  const selected = useMemo(() => {
+    return dailyMeal ? dailyMeal[type.type] : { ingredients: [], recipes: [] };
+  }, [dailyMeal, type.type]);
 
-  const dailyMeal = meals.find((obj) => obj.date === day)
+  const handlePress = useCallback(() => {
+    setModalVisible((prev) => !prev);
+  }, []);
+
+  const mealCost = useMemo(() => {
+    return dailyMeal
+      ? calculateMealCosts(dailyMeal, type.type, ingredients, recipes)
+      : "0.00";
+  }, [dailyMeal, type.type, ingredients, recipes]);
 
   return (
     <View className="flex-1">
-      {modalVisible ? (
-        <MealPlanModalComponent
+      {modalVisible && (
+        <MemoizedMealPlanModalComponent
           item={{
             day,
             icon: type.icon,
             type: type.type,
             selected,
           }}
-          recipes={recipes}
-          setRecipes={setRecipes}
-          ingredients={ingredients}
-          setIngredients={setIngredients}
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
-          meals={meals}
-          setMeals={setMeals}
         />
-      ) : null}
+      )}
       <TouchableOpacity
         style={{ backgroundColor: themeColors.secondary }}
         className="flex-1 rounded-2xl p-3"
-        onPress={() => setModalVisible(!modalVisible)}
+        onPress={handlePress}
       >
         <View className="flex-row justify-between -mt-2">
           <View className="flex-row items-center">
@@ -73,46 +77,18 @@ export default function ReservationTypeComponent({
                 className="text-base font-semibold"
                 style={{ color: themeColors.onPrimary }}
               >
-                {"€" +
-                  (dailyMeal
-                    ? calculateMealCosts(
-                        dailyMeal,
-                        type.type,
-                        ingredients,
-                        recipes
-                      )
-                    : "0.00")}
+                {"€" + mealCost}
               </Text>
             </View>
           </View>
         </View>
         <Divider />
-        {dailyMeal ? (
+        {dailyMeal && (
           <>
-            <MealListComponent
-              meals={meals}
-              setMeals={setMeals}
-              ingredients={ingredients}
-              setIngredients={setIngredients}
-              recipes={recipes}
-              setRecipes={setRecipes}
-              day={day}
-              type={type.type}
-              recipe={true}
-            />
-            <MealListComponent
-              meals={meals}
-              setMeals={setMeals}
-              ingredients={ingredients}
-              setIngredients={setIngredients}
-              recipes={recipes}
-              setRecipes={setRecipes}
-              day={day}
-              type={type.type}
-              recipe={false}
-            />
+            <MealListComponent day={day} type={type.type} recipe={true} />
+            <MealListComponent day={day} type={type.type} recipe={false} />
           </>
-        ) : null}
+        )}
       </TouchableOpacity>
     </View>
   );

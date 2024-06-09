@@ -1,77 +1,40 @@
-import { View, TouchableOpacity, Text, FlatList } from "react-native";
-import React, { useEffect, useState } from "react";
+import { View, TouchableOpacity, Text } from "react-native";
+import React, { useMemo } from "react";
 import { IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
-import { FlashList } from "@shopify/flash-list";
-import Animated, { FadeIn } from "react-native-reanimated";
 import { getCurrentWeek } from "~/utils/manageDate";
 import GroceriesList from "./GroceriesList";
-import { getGroceryList, updateGroceryList } from "~/api/apiManager";
+import { useDispatch, useSelector } from "react-redux";
+import { updateWeek } from "~/app/groceriesSlice";
 
-export default function GroceriesCard({
-  meals,
-  setMeals,
-  ingredients,
-  setIngredients,
-  recipes,
-  setRecipes,
-  items,
-  setItems,
-}) {
-  const [week, setWeek] = useState(getCurrentWeek(new Date()));
-  const [groceryList, setGroceryList] = useState(null);
-  const [totalGroceryList, setTotalGroceryList] = useState([]);
+const MemoizedGroceriesList = React.memo(GroceriesList);
 
-  function offsetDate(offset) {
-    const currentDate = new Date(week[0].date);
-    currentDate.setDate(currentDate.getDate() + offset);
+export default function GroceriesCard() {
+  const week = useSelector((state) => state.groceries.week);
+  const dispatch = useDispatch();
 
-    setWeek(getCurrentWeek(currentDate));
-  }
-
-  useEffect(() => {
+  const text = useMemo(() => {
     if (
-      groceryList &&
-      (groceryList.added.length > 0 ||
-        groceryList.checked.length > 0 ||
-        groceryList.excluded.length > 0)
+      week[0].dateString ===
+      getCurrentWeek(new Date().toISOString())[0].dateString
     ) {
-      updateGroceryList(groceryList);
-      if (
-        totalGroceryList &&
-        totalGroceryList.find((obj) => obj.date === week[0].dateString)
-      ) {
-        totalGroceryList.find((obj) => obj.date === week[0].dateString).added =
-          groceryList.added;
-        totalGroceryList.find(
-          (obj) => obj.date === week[0].dateString
-        ).excluded = groceryList.excluded;
-        totalGroceryList.find(
-          (obj) => obj.date === week[0].dateString
-        ).checked = groceryList.checked;
-        setTotalGroceryList([...totalGroceryList]);
-      }
+      return "This week";
     }
-  }, [groceryList]);
 
-  useEffect(() => {
-    setGroceryList(null);
-    getGroceryList().then((r) => {
-      if (r) {
-        setTotalGroceryList([...r]);
-      }
-      if (r && r.find((obj) => obj.date === week[0].dateString)) {
-        setGroceryList(r.find((obj) => obj.date === week[0].dateString));
-      } else {
-        const item = {
-          date: week[0].dateString,
-          checked: [],
-          added: [],
-          excluded: [],
-        };
-        setGroceryList(item);
-      }
-    });
+    const startDate = new Date(week[0].date);
+    const endDate = new Date(week[6].date);
+    const startMonth = startDate.toLocaleString("default", { month: "long" });
+    const endMonth = endDate.toLocaleString("default", { month: "long" });
+
+    if (startMonth === endMonth) {
+      return `From ${week[0].dayNumber} to ${week[6].dayNumber}, ${startMonth}`;
+    } else {
+      return `From ${week[0].dayNumber}, ${startDate.toLocaleString("default", {
+        month: "short",
+      })} to ${week[6].dayNumber}, ${endDate.toLocaleString("default", {
+        month: "short",
+      })}`;
+    }
   }, [week]);
 
   return (
@@ -131,32 +94,7 @@ export default function GroceriesCard({
                 className="text-sm"
                 style={{ color: themeColors.secondary }}
               >
-                {week[0].dateString === getCurrentWeek(new Date())[0].dateString
-                  ? "This week"
-                  : week[0].date.toLocaleString("default", {
-                      month: "long",
-                    }) ===
-                    week[6].date.toLocaleString("default", { month: "long" })
-                  ? "From " +
-                    week[0].dayNumber +
-                    " to " +
-                    week[6].dayNumber +
-                    ", " +
-                    week[0].date.toLocaleString("default", {
-                      month: "long",
-                    })
-                  : "From " +
-                    week[0].dayNumber +
-                    ", " +
-                    week[0].date.toLocaleString("default", {
-                      month: "short",
-                    }) +
-                    " to " +
-                    week[6].dayNumber +
-                    ", " +
-                    week[6].date.toLocaleString("default", {
-                      month: "short",
-                    })}
+                {text}
               </Text>
             </View>
           </View>
@@ -170,7 +108,7 @@ export default function GroceriesCard({
               borderBottomRightRadius: 0,
             }}
             onPress={() => {
-              offsetDate(-7);
+              dispatch(updateWeek(-7));
             }}
           >
             <IconButton size={24} icon="menu-left" />
@@ -184,29 +122,14 @@ export default function GroceriesCard({
               borderLeftWidth: 1,
             }}
             onPress={() => {
-              offsetDate(7);
+              dispatch(updateWeek(7));
             }}
           >
             <IconButton size={24} icon="menu-right" />
           </TouchableOpacity>
         </View>
       </View>
-      {groceryList ? (
-        <GroceriesList
-          meals={meals}
-          setMeals={setMeals}
-          ingredients={ingredients}
-          setIngredients={setIngredients}
-          recipes={recipes}
-          setRecipes={setRecipes}
-          groceryList={groceryList}
-          setGroceryList={setGroceryList}
-          week={week}
-          items={items}
-          setItems={setItems}
-          totalGroceryList={totalGroceryList}
-        />
-      ) : null}
+      <MemoizedGroceriesList />
     </View>
   );
 }

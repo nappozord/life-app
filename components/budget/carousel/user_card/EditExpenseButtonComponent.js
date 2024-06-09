@@ -3,46 +3,17 @@ import React, { useState } from "react";
 import { IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
 import EditExpenseModalComponent from "./EditExpenseModalComponent";
-import EditItemModalComponent from "~/components/list/list_card/EditItemModalComponent";
 
-export default function EditExpenseButtonComponent({
-  categories,
-  setCategories,
-  icon,
-  category,
-  user,
-  setUser,
-  date,
-  isList,
-}) {
+export default function EditExpenseButtonComponent({ categoryId }) {
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
     <>
-      {modalVisible ? 
-      isList ? (
-        <EditItemModalComponent
-          categories={categories}
-          setCategories={setCategories}
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-          itemIcon={icon}
-          itemCategory={category}
-          user={user}
-          setUser={setUser}
-          date={date}
-        />
-      ) : (
+      {modalVisible ? (
         <EditExpenseModalComponent
-          categories={categories}
-          setCategories={setCategories}
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
-          itemIcon={icon}
-          itemCategory={category}
-          user={user}
-          setUser={setUser}
-          date={date}
+          categoryId={categoryId}
         />
       ) : null}
       <TouchableOpacity

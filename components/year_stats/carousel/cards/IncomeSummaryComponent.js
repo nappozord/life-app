@@ -9,8 +9,11 @@ import Animated, {
   StretchInY,
   StretchOutY,
 } from "react-native-reanimated";
+import { useSelector } from "react-redux";
 
-export default function IncomeSummaryComponent({ loading, yearCategories }) {
+export default function IncomeSummaryComponent() {
+  const loading = useSelector((state) => state.stats.status !== "succeeded");
+
   const [showTip, setShowTip] = useState(true);
 
   return (
@@ -22,7 +25,7 @@ export default function IncomeSummaryComponent({ loading, yearCategories }) {
           </Animated.View>
         ) : (
           <Animated.View entering={FadeIn} exiting={FadeOut}>
-            <BezierChartComponent items={yearCategories} />
+            <BezierChartComponent />
           </Animated.View>
         )}
       </View>

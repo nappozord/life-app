@@ -16,9 +16,9 @@ export default function IngredientQuantityComponent({
     if (text === null || text === "") quantity = 0;
     else quantity = parseFloat(text);
 
-    selected.find((obj) => obj.id === item.id).quantity = quantity;
+    const s = selected.filter((obj) => obj.id !== item.id);
 
-    setSelected([...selected]);
+    setSelected([...s, { id: item.id, quantity }]);
   }
 
   return (
@@ -32,7 +32,10 @@ export default function IngredientQuantityComponent({
         className="m-0 p-0"
         color={themeColors.onSecondaryContainer}
       />
-      <Text className="font-semibold text-lg mr-4" style={{color: themeColors.onSecondaryContainer}}>
+      <Text
+        className="font-semibold text-lg mr-4"
+        style={{ color: themeColors.onSecondaryContainer }}
+      >
         {total == 1 || total > 50 ? "How much:" : "How many:"}
       </Text>
       <View className="flex-1">
@@ -46,7 +49,7 @@ export default function IngredientQuantityComponent({
             keyboardType="numeric"
             placeholder="E.g. 1"
             className="flex-1 text-xl px-2"
-            style={{color: themeColors.background}}
+            style={{ color: themeColors.background }}
             selectionColor={themeColors.background}
             defaultValue={item.quantity.toString()}
             onChangeText={(text) => {
@@ -57,7 +60,10 @@ export default function IngredientQuantityComponent({
             className="rounded-2xl pr-2 pl-3 py-1"
             style={{ backgroundColor: themeColors.background }}
           >
-            <Text className="font-semibold text-xl -mt-0.5" style={{color: themeColors.onBackground}}>
+            <Text
+              className="font-semibold text-xl -mt-0.5"
+              style={{ color: themeColors.onBackground }}
+            >
               {"/ " + total}
             </Text>
           </Pressable>

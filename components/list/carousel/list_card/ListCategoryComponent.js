@@ -3,24 +3,24 @@ import React, { useState } from "react";
 import DonutChartComponent from "~/components/budget/charts/DonutChartComponent";
 import ListCategorySummaryComponent from "./ListCategorySummaryComponent";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
-import ExpensesListComponent from "~/components/budget/carousel/user_card/ExpensesListComponent";
 import { ActivityIndicator, IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
-import EditCategoryModalComponent from "~/components/budget/chip/EditCategoryModalComponent";
+import EditCategoryListModalComponent from "~/components/list/chip/EditCategoryListModalComponent";
+import { useDispatch, useSelector } from "react-redux";
+import { getList, updateCardPressed } from "~/app/listsSlice";
+import ItemsListComponent from "./ItemsListComponent";
 
-export default function ListCategoryComponent({
-  item,
-  loading,
-  categories,
-  setCategories,
-  cardPressed,
-  setCardPressed,
-  finishedAnimation,
-  setFinishedAnimation,
-  user,
-  setUser,
-  date,
-}) {
+export default function ListCategoryComponent({ listId, loading }) {
+  const dispatch = useDispatch();
+
+  const finishedAnimation = useSelector(
+    (state) => state.lists.finishedAnimation
+  );
+
+  const cardPressed = useSelector((state) => state.lists.cardPressed);
+
+  const list = useSelector((state) => getList(state, listId));
+
   const [modalCategoryVisible, setModalCategoryVisible] = useState(false);
 
   return (
@@ -31,13 +31,10 @@ export default function ListCategoryComponent({
             entering={FadeIn.duration(300)}
             exiting={FadeOut.duration(200)}
           >
-            <EditCategoryModalComponent
-              item={item}
+            <EditCategoryListModalComponent
+              listId={listId}
               modalVisible={modalCategoryVisible}
               setModalVisible={setModalCategoryVisible}
-              categories={categories}
-              setCategories={setCategories}
-              isList={true}
             />
             <TouchableOpacity
               className="p-5 rounded-full"
@@ -53,17 +50,15 @@ export default function ListCategoryComponent({
         ) : (
           <View></View>
         )}
-        <Pressable
-          className="-mt-12"
-        >
+        <Pressable className="-mt-12">
           <DonutChartComponent
             item={{
-              ...item,
-              real: item.realBought,
-              forecast: item.real, 
+              id: listId,
+              real: list.expenses.reduce((total, e) => {
+                return e.dateBought ? total + e.total : total;
+              }, 0),
+              forecast: list.expenses.reduce((total, e) => total + e.total, 0),
             }}
-            categories={categories}
-            setCategories={setCategories}
             showTotal={false}
           />
         </Pressable>
@@ -75,8 +70,7 @@ export default function ListCategoryComponent({
             <TouchableOpacity
               className="p-5 rounded-full"
               onPress={() => {
-                setFinishedAnimation(false);
-                setCardPressed(false);
+                dispatch(updateCardPressed(false));
               }}
             >
               <IconButton
@@ -103,33 +97,18 @@ export default function ListCategoryComponent({
         </Animated.View>
       ) : !cardPressed ? (
         <Animated.View
-          key={item.id + cardPressed}
+          key={listId + cardPressed}
           entering={FadeIn.duration(500)}
           exiting={FadeOut.duration(500)}
         >
-          <ListCategorySummaryComponent
-            categories={categories}
-            setCategories={setCategories}
-            item={item}
-            user={user}
-            setUser={setUser}
-            date={date}
-          />
+          <ListCategorySummaryComponent listId={listId} />
         </Animated.View>
       ) : (
         <Animated.View
-          key={item.id + cardPressed}
+          key={listId + cardPressed}
           entering={FadeIn.duration(500)}
         >
-          <ExpensesListComponent
-            item={item}
-            categories={categories}
-            setCategories={setCategories}
-            user={user}
-            setUser={setUser}
-            date={date}
-            isList={true}
-          />
+          <ItemsListComponent listId={listId} />
         </Animated.View>
       )}
     </View>

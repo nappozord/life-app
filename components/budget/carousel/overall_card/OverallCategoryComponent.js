@@ -6,19 +6,26 @@ import { IconButton } from "react-native-paper";
 import BarChartComponent from "~/components/budget/charts/BarChartComponent";
 import { getRemainingDaysInMonth } from "~/utils/manageDate";
 import { calculateMonthlyInOut } from "~/utils/calculateMoneyFlow";
+import { useSelector } from "react-redux";
 
-export default function OverallCategoryComponent({ date, item, categories }) {
+export default function OverallCategoryComponent() {
+  const categories = useSelector((state) => state.categories.categories);
+
+  const date = useSelector((state) => state.categories.date);
+
+  const category = categories[0];
+
   const [total, setTotal] = useState(() => getOverall());
-
-  useEffect(() => {
-    getOverall();
-  }, [categories]);
 
   function getOverall() {
     calculateMonthlyInOut(categories).then((inOut) => {
       setTotal(inOut);
     });
   }
+
+  useEffect(() => {
+    getOverall();
+  }, [categories]);
 
   return (
     <Pressable>
@@ -27,8 +34,7 @@ export default function OverallCategoryComponent({ date, item, categories }) {
           <View className="flex-row justify-center -mt-12">
             <DonutChartComponent
               item={{
-                id: item.id,
-                title: item.title,
+                id: 0,
                 real: total.real.out,
                 forecast: total.real.in,
               }}
@@ -40,13 +46,13 @@ export default function OverallCategoryComponent({ date, item, categories }) {
                 className="text-3xl font-semibold z-10"
                 style={{ color: themeColors.onSecondaryContainer }}
               >
-                {item.title}
+                {category.title}
               </Text>
-              <IconButton icon={item.icon} color={themeColors.primary} />
+              <IconButton icon={category.icon} color={themeColors.primary} />
             </View>
             <View className="flex-row">
               <View className="space-y-1">
-              <View className="flex-row items-center space-x-1">
+                <View className="flex-row items-center space-x-1">
                   <Text
                     className="text-base"
                     style={{ color: themeColors.onSecondaryContainer }}

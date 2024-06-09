@@ -12,8 +12,11 @@ import Svg, {
   Defs,
   ClipPath,
 } from "react-native-svg";
+import { useSelector } from "react-redux";
 
-export default function HeaderComponent({ user, setUser }) {
+export default function HeaderComponent() {
+  const user = useSelector((state) => state.user.user);
+
   function SvgComponent() {
     return (
       <Svg width={80} height={80} viewBox="0 0 1024 1024" fill="none">
@@ -81,7 +84,7 @@ export default function HeaderComponent({ user, setUser }) {
                 : themeColors.errorContainer,
           }}
         >
-          <BalanceComponent user={user} setUser={setUser} />
+          <BalanceComponent balance={user.balance} />
         </TouchableOpacity>
       </View>
     </Animated.View>

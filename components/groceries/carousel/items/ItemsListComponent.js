@@ -1,32 +1,33 @@
 import { View, TouchableOpacity, Text, RefreshControl } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
 import ItemComponent from "./ItemComponent";
 import ItemModal from "./ItemModal";
 import { FlashList } from "@shopify/flash-list";
-import { getItems } from "~/api/apiManager";
 import SearchComponent from "~/components/groceries/searchbar/SearchComponent";
 import { sortByName, sortByStock } from "~/utils/sortItems";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchItems } from "~/app/itemsSlice";
 
-export default function ItemsListComponent({ items, setItems }) {
+export default function ItemsListComponent() {
+  const items = useSelector((state) => state.items.items);
+  const dispatch = useDispatch();
+
   const [sort, setSort] = useState("alphabetical");
   const [modalVisible, setModalVisible] = useState(false);
-  const [refreshing, setRefreshing] = React.useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState(items);
 
-  const onRefresh = React.useCallback(() => {
+  const onRefresh = useCallback(() => {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
     }, 500);
-    getItems().then((r) => {
-      setItems([...r]);
-    });
   }, []);
 
   useEffect(() => {
-    setSearch([...search]);
+    setSearch([...items]);
   }, [items]);
 
   return (
@@ -35,10 +36,6 @@ export default function ItemsListComponent({ items, setItems }) {
         <ItemModal
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
-          items={items}
-          setItems={setItems}
-          search={search}
-          setSearch={setSearch}
         />
       ) : null}
       <View className="absolute w-full -mt-10">
@@ -173,23 +170,19 @@ export default function ItemsListComponent({ items, setItems }) {
           removeClippedSubviews={false}
           showsVerticalScrollIndicator={false}
           data={
-            sort === "alphabetical" ? sortByName(search) : sortByStock(search)
+            sort === "alphabetical"
+              ? sortByName([...search])
+              : sortByStock([...search])
           }
           renderItem={({ index, item }) => {
             return (
               <View
                 className={
                   (index === 0 ? "mt-3 " : "") +
-                  (index === items.length - 1 ? "mb-2 " : "")
+                  (index === search.length - 1 ? "mb-2 " : "")
                 }
               >
-                <ItemComponent
-                  item={item}
-                  items={items}
-                  setItems={setItems}
-                  search={search}
-                  setSearch={setSearch}
-                />
+                <ItemComponent itemId={item.id} />
               </View>
             );
           }}

@@ -17,18 +17,17 @@ import Animated, {
 import { IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
 import { useNavigation } from "@react-navigation/native";
-
+import { useDispatch, useSelector } from "react-redux";
 import { signOut, getCurrentUser } from "aws-amplify/auth";
-import { updateUser, getUser } from "~/api/apiManager";
+
+import { updateUser } from "~/app/userSlice";
 
 const height = Dimensions.get("window").height;
 
-export default function FinalSetupComponent({
-  user,
-  setFinalSetup,
-  setLogin,
-  setUser,
-}) {
+export default function FinalSetupComponent({ setFinalSetup, setLogin }) {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user);
+
   const navigation = useNavigation();
   const username = useRef(setLogin ? null : user.username);
   const balance = useRef(setLogin ? null : user.balance.toFixed(2));
@@ -38,16 +37,12 @@ export default function FinalSetupComponent({
       getCurrentUser()
         .then((r) => {
           if (r && r.userId) {
-            getUser().then((u) => {
-              if (u && u.userId === r.userId) {
-                navigation.push("Home");
-              } else {
-                user.current = {
-                  userId: r.userId,
-                };
-                setFinalSetup(true);
-              }
-            });
+            if (user && user.userId === r.userId) {
+              navigation.push("Home");
+            } else {
+              dispatch(updateUser({ ...user, userId: r.userId }));
+              setFinalSetup(true);
+            }
           }
         })
         .catch(() => {
@@ -62,12 +57,12 @@ export default function FinalSetupComponent({
     if (!balance.current || balance.current === "") balance.current = "0";
 
     const u = {
-      userId: setLogin ? user.current.userId : user.userId,
+      userId: user.userId,
       username: username.current,
       balance: parseFloat(parseFloat(balance.current).toFixed(2)),
     };
 
-    setLogin ? updateUser(u) : setUser({ ...u });
+    dispatch(updateUser(u));
 
     setLogin ? navigation.push("Home") : setFinalSetup(false);
   }
@@ -112,7 +107,6 @@ export default function FinalSetupComponent({
       <Image
         className="absolute w-full mt-16"
         source={require("~/assets/splash.png")}
-        //blurRadius={80}
         style={{
           borderTopLeftRadius: 50,
           borderTopRightRadius: 50,

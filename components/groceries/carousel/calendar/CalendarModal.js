@@ -2,14 +2,14 @@ import { View, Modal, Pressable, TouchableOpacity, Text } from "react-native";
 import React from "react";
 import { Calendar } from "react-native-calendars";
 import { themeColors } from "~/theme";
+import { useDispatch, useSelector } from "react-redux";
+import { updateDate, updateDefault } from "~/app/mealsSlice";
 
-export default function CalendarModal({
-  currentDate,
-  setDate,
-  modalVisible,
-  setModalVisible,
-  setDefault,
-}) {
+export default function CalendarModal({ modalVisible, setModalVisible }) {
+  const currentDate = useSelector((state) => state.meals.date);
+
+  const dispatch = useDispatch();
+
   return (
     <Modal
       animationType="fade"
@@ -29,14 +29,13 @@ export default function CalendarModal({
           <View className="mx-5 rounded-3xl overflow-hidden">
             <Calendar
               onDayPress={(day) => {
-                setDate(new Date(day.timestamp));
-                setDefault(false);
+                dispatch(updateDate(new Date(day.timestamp).toISOString()));
                 setModalVisible(false);
               }}
               firstDay={1}
-              current={currentDate.toISOString().split("T")[0]}
+              current={currentDate.split("T")[0]}
               markedDates={{
-                [currentDate.toISOString().split("T")[0]]: {
+                [currentDate.split("T")[0]]: {
                   selected: true,
                   selectedColor: themeColors.primary,
                   selectedTextColor: themeColors.onPrimary,
@@ -62,8 +61,8 @@ export default function CalendarModal({
                   elevation: 10,
                 }}
                 onPress={() => {
+                  dispatch(updateDefault());
                   setModalVisible(false);
-                  setDefault(true);
                 }}
               >
                 <Text

@@ -22,14 +22,18 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import FinalSetupComponent from "~/components/login/FinalSetupComponent";
 import LogsModal from "~/components/logs/LogsModal";
+import { useSelector } from "react-redux";
 
-export default function SettingsScreen({ user, setUser }) {
+export default function SettingsScreen() {
   const dimensions = useWindowDimensions();
+  const user = useSelector((state) => state.user.user);
 
   const [finalSetup, setFinalSetup] = useState(false);
   const [logs, setLogs] = useState(false);
   const searchBarHeight = useSharedValue(76);
   const navigation = useNavigation();
+
+  const version = "Version 1.20 - 09/07/2024";
 
   const searchBarAnimatedStyle = useAnimatedStyle(() => ({
     height: searchBarHeight.value,
@@ -68,12 +72,11 @@ export default function SettingsScreen({ user, setUser }) {
       <Image
         className="absolute h-full w-full"
         source={require("~/assets/splash.png")}
-        //blurRadius={80}
       />
       {user.userId ? (
         <View className="mt-16 flex-1">
           <Animated.View style={searchBarAnimatedStyle} className="mx-5 mb-10">
-            <HeaderComponent user={user} setUser={setUser} />
+            <HeaderComponent />
           </Animated.View>
 
           <Animated.View
@@ -238,14 +241,23 @@ export default function SettingsScreen({ user, setUser }) {
                   />
                 </TouchableOpacity>
               </View>
+              <View
+                className="flex-row items-center justify-between p-3 rounded-2xl"
+                style={{ backgroundColor: themeColors.secondaryContainer }}
+              >
+                <View>
+                  <Text
+                    className="text-lg"
+                    style={{ color: themeColors.onBackground }}
+                  >
+                    {version}
+                  </Text>
+                </View>
+              </View>
             </View>
           </Animated.View>
           {finalSetup ? (
-            <FinalSetupComponent
-              user={user}
-              setFinalSetup={setFinalSetup}
-              setUser={setUser}
-            />
+            <FinalSetupComponent setFinalSetup={setFinalSetup} />
           ) : logs ? (
             <LogsModal setLogs={setLogs} />
           ) : null}

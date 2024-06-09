@@ -3,12 +3,15 @@ import React, { useEffect, useState } from "react";
 import StatsChipComponent from "./StatsChipComponent";
 import { themeColors } from "~/theme";
 import { calculateYearlyInOut } from "~/utils/calculateMoneyFlow";
+import { useSelector } from "react-redux";
 
-export default function StatsChipListComponent({ items }) {
+export default function StatsChipListComponent() {
+  const categories = useSelector((state) => state.stats.categories);
+
   let [data, setData] = useState([]);
 
   useEffect(() => {
-    calculateYearlyInOut(items).then((r) => {
+    calculateYearlyInOut(categories).then((r) => {
       setData([
         {
           title: "Income",
@@ -30,7 +33,7 @@ export default function StatsChipListComponent({ items }) {
         },
       ]);
     });
-  }, [items]);
+  }, [categories]);
 
   return (
     <View className="flex-row justify-between mx-5 space-x-3">
