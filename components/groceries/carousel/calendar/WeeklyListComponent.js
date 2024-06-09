@@ -208,7 +208,7 @@ export default function WeeklyListComponent() {
         offset,
         animated: true,
       });
-      if (index !== activeDay) onLoadListener();
+      //if (index !== activeDay) onLoadListener();
     });
   }, []);
 
