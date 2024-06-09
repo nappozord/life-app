@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import Animated, { SlideInRight, SlideOutRight } from "react-native-reanimated";
 import React from "react";
 import { themeColors } from "~/theme";
@@ -26,21 +26,19 @@ export default function MealListComponent({ day, type, recipe }) {
     );
   }
 
+  const data = meal[type][recipe ? "recipes" : "ingredients"];
+
   return (
     <View className="flex-1 overflow-hidden">
-      <FlatList
-        keyExtractor={(item) =>
-          day + "_" + type + "_" + item ? (item.id ? item.id : item) : "_"
-        }
-        showsVerticalScrollIndicator={false}
-        data={meal[type][recipe ? "recipes" : "ingredients"]}
-        renderItem={(id) => {
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {data.map((id) => {
           const item = recipe
-            ? recipes.find((obj) => obj.id === id.item)
-            : ingredients.find((obj) => obj.id === id.item.id);
+            ? recipes.find((obj) => obj.id === id)
+            : ingredients.find((obj) => obj.id === id.id);
 
           return item ? (
             <Animated.View
+              key={day + "_" + type + "_" + (item.id ? item.id : item)}
               className="flex-1"
               entering={SlideInRight}
               exiting={SlideOutRight}
@@ -74,7 +72,7 @@ export default function MealListComponent({ day, type, recipe }) {
                       borderBottomLeftRadius: 50,
                     }}
                     onPress={() => {
-                      handleDeleteItem(item, id);
+                      handleDeleteItem(item);
                     }}
                   >
                     <IconButton
@@ -88,8 +86,8 @@ export default function MealListComponent({ day, type, recipe }) {
               </TouchableOpacity>
             </Animated.View>
           ) : null;
-        }}
-      />
+        })}
+      </ScrollView>
     </View>
   );
 }
