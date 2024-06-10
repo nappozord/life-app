@@ -4,7 +4,7 @@ import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
 import { calculatePercentage } from "~/utils/calculatePercentage";
 import EditExpenseButtonComponent from "./EditExpenseButtonComponent";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { getCategory } from "~/app/categoriesSlice";
 
 export default function UserCategorySummaryComponent({ categoryId }) {
@@ -15,7 +15,10 @@ export default function UserCategorySummaryComponent({ categoryId }) {
     0
   );
 
-  const percentage = calculatePercentage([totalExpenses], category.forecast);
+  const percentage = calculatePercentage(
+    [totalExpenses],
+    category.income ? -category.forecast : category.forecast
+  );
 
   return (
     <View className="px-5 mt-2 space-y-3">

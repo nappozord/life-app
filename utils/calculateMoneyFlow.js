@@ -6,7 +6,7 @@ export async function calculateMonthlyInOut(categories) {
     if (c.id !== 0) {
       if (c.income) {
         real.in += c.expenses.reduce((total, e) => total + e.total, 0);
-        forecast.in += c.forecast;
+        forecast.in -= c.forecast;
       } else {
         real.out += c.expenses.reduce((total, e) => total + e.total, 0);
         forecast.out += c.forecast;

@@ -105,8 +105,6 @@ const ingredientsSlice = createSlice({
     _addIngredient(state, action) {
       let { cost, quantity, name, calories } = action.payload;
 
-      console.log(action.payload);
-
       if (cost === "" || cost === null) cost = 0.0;
 
       if (quantity === "" || quantity === null) quantity = 1;
