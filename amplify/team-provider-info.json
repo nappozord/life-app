@@ -1,19 +1,19 @@
 {
   "dev": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-lifeapp-dev-201944-authRole",
-      "UnauthRoleArn": "arn:aws:iam::052333222730:role/amplify-lifeapp-dev-201944-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::052333222730:role/amplify-lifeapp-dev-201944-authRole",
+      "AuthRoleName": "amplify-lifeapp-dev-59560-authRole",
+      "UnauthRoleArn": "arn:aws:iam::052333222730:role/amplify-lifeapp-dev-59560-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::052333222730:role/amplify-lifeapp-dev-59560-authRole",
       "Region": "eu-north-1",
-      "DeploymentBucketName": "amplify-lifeapp-dev-201944-deployment",
-      "UnauthRoleName": "amplify-lifeapp-dev-201944-unauthRole",
-      "StackName": "amplify-lifeapp-dev-201944",
-      "StackId": "arn:aws:cloudformation:eu-north-1:052333222730:stack/amplify-lifeapp-dev-201944/dec5c7f0-b7c8-11ee-91e6-0696245e666c",
-      "AmplifyAppId": "d1c0h7r28annzj"
+      "DeploymentBucketName": "amplify-lifeapp-dev-59560-deployment",
+      "UnauthRoleName": "amplify-lifeapp-dev-59560-unauthRole",
+      "StackName": "amplify-lifeapp-dev-59560",
+      "StackId": "arn:aws:cloudformation:eu-north-1:052333222730:stack/amplify-lifeapp-dev-59560/b79d96d0-272b-11ef-833b-0a19d08ab100",
+      "AmplifyAppId": "dfuw3yjkv68q7"
     },
     "categories": {
       "auth": {
-        "lifeapp60a782ff": {}
+        "lifeappa37b31c7": {}
       }
     }
   }
