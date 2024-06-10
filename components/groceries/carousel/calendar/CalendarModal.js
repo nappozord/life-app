@@ -7,6 +7,7 @@ import { updateDate, updateDefault } from "~/app/mealsSlice";
 
 export default function CalendarModal({ modalVisible, setModalVisible }) {
   const currentDate = useSelector((state) => state.meals.date);
+  const defaultWeek = useSelector((state) => state.meals.defaultWeek);
 
   const dispatch = useDispatch();
 
@@ -34,13 +35,17 @@ export default function CalendarModal({ modalVisible, setModalVisible }) {
               }}
               firstDay={1}
               current={currentDate.split("T")[0]}
-              markedDates={{
-                [currentDate.split("T")[0]]: {
-                  selected: true,
-                  selectedColor: themeColors.primary,
-                  selectedTextColor: themeColors.onPrimary,
-                },
-              }}
+              markedDates={
+                defaultWeek
+                  ? {}
+                  : {
+                      [currentDate.split("T")[0]]: {
+                        selected: true,
+                        selectedColor: themeColors.primary,
+                        selectedTextColor: themeColors.onPrimary,
+                      },
+                    }
+              }
               theme={{
                 calendarBackground: themeColors.secondaryContainer,
                 dayTextColor: themeColors.onPrimaryContainer,

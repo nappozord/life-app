@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { Text, TouchableOpacity, Dimensions } from "react-native";
 import { themeColors } from "~/theme";
 import { useDispatch, useSelector } from "react-redux";
@@ -40,6 +40,12 @@ export default function CalendarHeaderComponent() {
   const defaultWeek = useSelector((state) => state.meals.defaultWeek);
   const date = useSelector((state) => state.meals.date);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!defaultWeek) {
+      dispatch(updateDate(new Date().toISOString()));
+    }
+  }, []);
 
   const handlePress = useCallback(
     (day) => {

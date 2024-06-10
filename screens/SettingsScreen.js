@@ -33,7 +33,7 @@ export default function SettingsScreen() {
   const searchBarHeight = useSharedValue(76);
   const navigation = useNavigation();
 
-  const version = "Version 1.24 - 10/07/2024";
+  const version = "Version 1.25 - 10/07/2024";
 
   const searchBarAnimatedStyle = useAnimatedStyle(() => ({
     height: searchBarHeight.value,
