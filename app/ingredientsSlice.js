@@ -103,7 +103,9 @@ const ingredientsSlice = createSlice({
   initialState,
   reducers: {
     _addIngredient(state, action) {
-      const { cost, quantity, name, calories } = action.payload;
+      let { cost, quantity, name, calories } = action.payload;
+
+      console.log(action.payload);
 
       if (cost === "" || cost === null) cost = 0.0;
 

@@ -93,7 +93,7 @@ const itemsSlice = createSlice({
   initialState,
   reducers: {
     _addItem(state, action) {
-      const { cost, duration, name } = action.payload;
+      let { cost, duration, name } = action.payload;
 
       if (cost === "" || cost === null) cost = 0.0;
 

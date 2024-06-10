@@ -69,7 +69,7 @@ const recipesSlice = createSlice({
   initialState,
   reducers: {
     _addRecipe(state, action) {
-      const { name, icon, selected } = action.payload;
+      let { name, icon, selected } = action.payload;
 
       if (name === "" || name === null) name = "New Recipe";
 

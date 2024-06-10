@@ -33,6 +33,7 @@ export default function LoginComponent({
   const [error, setError] = useState(null);
 
   function handleSignIn() {
+    console.log(email.current, password.current);
     setError(null);
     setLoading(true);
     signIn({
