@@ -1,5 +1,5 @@
+import React, { useEffect, useState, useCallback } from "react";
 import { Pressable, useWindowDimensions } from "react-native";
-import React, { useEffect, useState } from "react";
 import Animated, {
   FadeIn,
   FadeOut,
@@ -9,17 +9,20 @@ import Animated, {
   runOnJS,
 } from "react-native-reanimated";
 import { themeColors } from "~/theme";
-import UserCategoryComponent from "./user_card/UserCategoryComponent";
-import OverallCategoryComponent from "./overall_card/OverallCategoryComponent";
 import { useDispatch, useSelector } from "react-redux";
 import {
   updateCardPressed,
   updateFinishedAnimation,
 } from "~/app/categoriesSlice";
+import OverallCategoryComponent from "./overall_card/OverallCategoryComponent";
+import UserCategoryComponent from "./user_card/UserCategoryComponent";
 
 const HEIGHT = 400;
 const OUTER_HEIGHT = 150;
 const WIDTH = 300;
+
+const MemoizedOverallCategoryComponent = React.memo(OverallCategoryComponent);
+const MemoizedUserCategoryComponent = React.memo(UserCategoryComponent);
 
 export default function CategoryCardComponent({ categoryId, isActive }) {
   const cardPressed = useSelector((state) => state.categories.cardPressed);
@@ -32,26 +35,32 @@ export default function CategoryCardComponent({ categoryId, isActive }) {
   const height = useSharedValue(HEIGHT);
   const width = useSharedValue(WIDTH);
 
+  const finishAnimationCallback = useCallback(
+    (finished) => {
+      if (isActive) {
+        dispatch(updateFinishedAnimation(finished));
+        setLoading(false);
+      }
+    },
+    [dispatch, isActive]
+  );
+
+  const startAnimation = useCallback(
+    (duration) => {
+      width.value = withTiming(dimensions.width, { duration });
+      height.value = withTiming(dimensions.height, { duration }, (finished) =>
+        finished ? runOnJS(finishAnimationCallback)(finished) : null
+      );
+    },
+    [dimensions, finishAnimationCallback]
+  );
+
   useEffect(() => {
     if (loading) {
       dispatch(updateCardPressed(true));
       startAnimation(500);
     }
-  }, [loading]);
-
-  const finishAnimationCallback = (finished) => {
-    if (isActive) {
-      dispatch(updateFinishedAnimation(finished));
-      setLoading(false);
-    }
-  };
-
-  const startAnimation = (duration) => {
-    width.value = withTiming(dimensions.width, { duration });
-    height.value = withTiming(dimensions.height, { duration }, (finished) =>
-      finished ? runOnJS(finishAnimationCallback)(finished, false) : null
-    );
-  };
+  }, [loading, dispatch, startAnimation]);
 
   useEffect(() => {
     if (categoryId !== 0) {
@@ -72,7 +81,7 @@ export default function CategoryCardComponent({ categoryId, isActive }) {
         }
       }
     }
-  }, [cardPressed]);
+  }, [cardPressed, categoryId, isActive, dimensions, startAnimation]);
 
   const animatedStyleOuter = useAnimatedStyle(() => ({
     height: height.value + OUTER_HEIGHT,
@@ -87,7 +96,7 @@ export default function CategoryCardComponent({ categoryId, isActive }) {
   return (
     <Pressable
       onPress={() => {
-        cardPressed ? null : setLoading(true);
+        if (!cardPressed) setLoading(true);
       }}
     >
       <Animated.View
@@ -107,16 +116,17 @@ export default function CategoryCardComponent({ categoryId, isActive }) {
             {
               borderRadius: 40,
               backgroundColor: themeColors.onSecondary,
-              height: height,
-              width: width,
               elevation: 5,
             },
           ]}
         >
           {categoryId === 0 ? (
-            <OverallCategoryComponent />
+            <MemoizedOverallCategoryComponent />
           ) : (
-            <UserCategoryComponent categoryId={categoryId} loading={loading} />
+            <MemoizedUserCategoryComponent
+              categoryId={categoryId}
+              loading={loading}
+            />
           )}
         </Animated.View>
       </Animated.View>

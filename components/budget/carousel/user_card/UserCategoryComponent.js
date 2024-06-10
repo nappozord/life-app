@@ -71,7 +71,10 @@ export default function UserCategoryComponent({ categoryId, loading }) {
                     (total, e) => total + e.total,
                     0
                   ),
-                  forecast: category.forecast,
+                  forecast: category.income
+                    ? -category.forecast
+                    : category.forecast,
+                  income: category.income,
                 }}
                 showTotal={cardPressed ? true : false}
               />
