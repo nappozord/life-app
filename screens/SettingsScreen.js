@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Image,
@@ -8,21 +8,21 @@ import {
   Alert,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { getUser, updateUser } from "~/api/apiManager";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   FadeIn,
 } from "react-native-reanimated";
-import HeaderComponent from "~/components/header/HeaderComponent";
-import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
 import { signOut } from "aws-amplify/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+import { useSelector } from "react-redux";
+
+import { themeColors } from "~/theme";
+import HeaderComponent from "~/components/header/HeaderComponent";
 import FinalSetupComponent from "~/components/login/FinalSetupComponent";
 import LogsModal from "~/components/logs/LogsModal";
-import { useSelector } from "react-redux";
 
 export default function SettingsScreen() {
   const dimensions = useWindowDimensions();
@@ -33,7 +33,7 @@ export default function SettingsScreen() {
   const searchBarHeight = useSharedValue(76);
   const navigation = useNavigation();
 
-  const version = "Version 1.26 - 10/07/2024";
+  const version = "Version 1.28 - 10/07/2024";
 
   const searchBarAnimatedStyle = useAnimatedStyle(() => ({
     height: searchBarHeight.value,
