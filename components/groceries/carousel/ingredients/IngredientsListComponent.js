@@ -1,14 +1,14 @@
 import { View, TouchableOpacity, Text, RefreshControl } from "react-native";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { IconButton } from "react-native-paper";
+import { useSelector } from "react-redux";
+import { FlashList } from "@shopify/flash-list";
+
 import { themeColors } from "~/theme";
+import { sortByName, sortByStock } from "~/utils/sortItems";
+import SearchComponent from "~/components/groceries/searchbar/SearchComponent";
 import IngredientComponent from "./IngredientComponent";
 import IngredientModal from "./IngredientModal";
-import { FlashList } from "@shopify/flash-list";
-import { getIngredients } from "~/api/apiManager";
-import SearchComponent from "~/components/groceries/searchbar/SearchComponent";
-import { sortByName, sortByStock } from "~/utils/sortItems";
-import { useSelector } from "react-redux";
 
 export default function IngredientsListComponent() {
   const ingredients = useSelector((state) => state.ingredients.ingredients);
@@ -16,7 +16,7 @@ export default function IngredientsListComponent() {
   const [sort, setSort] = useState("alphabetical");
   const [modalVisible, setModalVisible] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const [search, setSearch] = useState(ingredients);
+  const [search, setSearch] = useState([...ingredients]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -26,7 +26,24 @@ export default function IngredientsListComponent() {
   }, []);
 
   useEffect(() => {
-    setSearch([...ingredients]);
+    if (search.length < ingredients.length) {
+      for (const i of search) {
+        const ingredient = ingredients.find((obj) => obj.id === i.id);
+        if (
+          ingredient.quantity === i.quantity &&
+          ingredient.stock !== i.stock
+        ) {
+          const updatedSearch = search.map((obj) =>
+            obj.id === i.id ? { ...obj, stock: ingredient.stock } : obj
+          );
+          setSearch(updatedSearch);
+          return;
+        }
+      }
+      setSearch([...ingredients]);
+    } else {
+      setSearch([...ingredients]);
+    }
   }, [ingredients]);
 
   return (
@@ -144,7 +161,7 @@ export default function IngredientsListComponent() {
         <View className="mt-2">
           <SearchComponent
             items={[]}
-            ingredients={ingredients}
+            ingredients={[...ingredients]}
             setSearch={setSearch}
             onlyIngredients={false}
             setOnlySelected={() => {}}
