@@ -1,18 +1,17 @@
 import { View, TouchableOpacity, Text, RefreshControl } from "react-native";
 import React, { useState, useEffect, useCallback } from "react";
 import { IconButton } from "react-native-paper";
+import { FlashList } from "@shopify/flash-list";
+import { useSelector } from "react-redux";
+
 import { themeColors } from "~/theme";
 import ItemComponent from "./ItemComponent";
 import ItemModal from "./ItemModal";
-import { FlashList } from "@shopify/flash-list";
 import SearchComponent from "~/components/groceries/searchbar/SearchComponent";
 import { sortByName, sortByStock } from "~/utils/sortItems";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchItems } from "~/app/itemsSlice";
 
 export default function ItemsListComponent() {
   const items = useSelector((state) => state.items.items);
-  const dispatch = useDispatch();
 
   const [sort, setSort] = useState("alphabetical");
   const [modalVisible, setModalVisible] = useState(false);
@@ -27,7 +26,21 @@ export default function ItemsListComponent() {
   }, []);
 
   useEffect(() => {
-    setSearch([...items]);
+    if (search.length < items.length) {
+      for (const i of search) {
+        const item = items.find((obj) => obj.id === i.id);
+        if (item.quantity === i.quantity && item.stock !== i.stock) {
+          const updatedSearch = search.map((obj) =>
+            obj.id === i.id ? { ...obj, stock: item.stock } : obj
+          );
+          setSearch(updatedSearch);
+          return;
+        }
+      }
+      setSearch([...items]);
+    } else {
+      setSearch([...items]);
+    }
   }, [items]);
 
   return (
