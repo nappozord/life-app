@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+
 import { getMeals, updateMeals } from "~/api/apiMeals";
-import { getCurrentWeek } from "../utils/manageDate";
+import { getCurrentWeek } from "~/utils/manageDate";
 
 const defaultWeek = [
   {

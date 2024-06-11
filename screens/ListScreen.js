@@ -1,8 +1,6 @@
 import { View, Image } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import React, { useState, useRef, useEffect, useMemo } from "react";
-import ChipCategoryListComponent from "~/components/list/chip/ChipListCategoryListComponent";
-import ListCarouselComponent from "~/components/list/carousel/ListCarouselComponent";
+import React, { useEffect, useMemo } from "react";
 import Animated, {
   withTiming,
   FadeIn,
@@ -10,9 +8,12 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
 } from "react-native-reanimated";
+import { useDispatch, useSelector } from "react-redux";
+
 import HeaderComponent from "~/components/header/HeaderComponent";
 import SearchComponent from "~/components/groceries/searchbar/SearchComponent";
-import { useDispatch, useSelector } from "react-redux";
+import ChipCategoryListComponent from "~/components/list/chip/ChipListCategoryListComponent";
+import ListCarouselComponent from "~/components/list/carousel/ListCarouselComponent";
 import { updateActiveCategory, updateCardPressed } from "~/app/listsSlice";
 
 const MemoizedChipCategoryListComponent = React.memo(ChipCategoryListComponent);

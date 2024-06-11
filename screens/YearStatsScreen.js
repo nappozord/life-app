@@ -1,17 +1,16 @@
 import { View, Image } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import React, { useState, useEffect } from "react";
-import YearPickerComponent from "~/components/year_stats/datepicker/YearPickerComponent";
+import React, { useEffect } from "react";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
 } from "react-native-reanimated";
+import { useDispatch, useSelector } from "react-redux";
+
+import YearPickerComponent from "~/components/year_stats/datepicker/YearPickerComponent";
 import HeaderComponent from "~/components/header/HeaderComponent";
-import { getYTDMonths } from "~/utils/manageDate";
-import { getCategories } from "~/api/apiManager";
 import StatsChipListComponent from "~/components/year_stats/chip/StatsChipListComponent";
 import StatsCarouselComponent from "~/components/year_stats/carousel/StatsCarouselComponent";
-import { useDispatch, useSelector } from "react-redux";
 import { updateYear } from "~/app/statsSlice";
 
 export default function YearStatsScreen() {

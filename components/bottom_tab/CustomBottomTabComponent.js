@@ -5,10 +5,16 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { IconButton } from "react-native-paper";
+
 import { themeColors } from "~/theme";
 
-const CustomBottomTab = ({ state, descriptors, navigation }) => {
+export default CustomBottomTabComponent = ({
+  state,
+  descriptors,
+  navigation,
+}) => {
   const { width } = useWindowDimensions();
+
   const MARGIN = 20;
   const TAB_BAR_WIDTH = width;
   const TAB_WIDTH = TAB_BAR_WIDTH / state.routes.length;
@@ -80,8 +86,6 @@ const CustomBottomTab = ({ state, descriptors, navigation }) => {
     </View>
   );
 };
-
-export default CustomBottomTab;
 
 const styles = StyleSheet.create({
   tabBarContainer: {

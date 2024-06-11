@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import {
   getCategories,
   updateCategories,
   setDefaultCategoryForecast,
 } from "~/api/apiCategories";
 import { formatDate } from "~/utils/manageDate";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const date = formatDate(new Date());
 

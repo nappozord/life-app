@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+
 import { getIngredients, updateIngredients } from "~/api/apiIngredients";
 import { addLog } from "~/app/logsSlice";
 import { deleteIngredientFromRecipe } from "./recipesSlice";

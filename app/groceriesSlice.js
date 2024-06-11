@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+
 import { getGroceryList, updateGroceryList } from "~/api/apiGroceries";
 import { getCurrentWeek } from "~/utils/manageDate";
 import { calculateNewList } from "~/utils/calculateGroceryList";
-import { checkIngredientQuantity } from "../utils/manageIngredients";
+import { checkIngredientQuantity } from "~/utils/manageIngredients";
 
 const initialState = {
   groceries: [],

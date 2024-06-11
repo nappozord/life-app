@@ -1,8 +1,6 @@
-import { View, Image, BackHandler, Alert } from "react-native";
+import { View, Image } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useMemo, useCallback } from "react";
-import { useNavigation } from "@react-navigation/native";
-import { signOut } from "aws-amplify/auth";
+import React, { useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import Animated, {
   withTiming,
@@ -26,7 +24,6 @@ export default function BudgetScreen() {
   const user = useSelector((state) => state.user.user);
   const cardPressed = useSelector((state) => state.categories.cardPressed);
 
-  const navigation = useNavigation();
   const searchBarHeight = useSharedValue(76);
   const searchBarAnimatedStyle = useAnimatedStyle(() => ({
     height: searchBarHeight.value,
@@ -37,34 +34,6 @@ export default function BudgetScreen() {
       ? (searchBarHeight.value = withTiming(0, { duration: 500 }))
       : (searchBarHeight.value = withTiming(76, { duration: 500 }));
   }, [cardPressed]);
-
-  useEffect(() => {
-    const backAction = () => {
-      Alert.alert("Hold on!", "Are you sure you want to log out?", [
-        {
-          text: "Cancel",
-          onPress: () => null,
-          style: "cancel",
-        },
-        {
-          text: "YES",
-          onPress: () => {
-            signOut()
-              .then(() => navigation.push("Welcome"))
-              .catch(() => navigation.push("Welcome"));
-          },
-        },
-      ]);
-      return true;
-    };
-
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
-
-    return () => backHandler.remove();
-  }, [navigation]);
 
   const renderHeader = useMemo(() => {
     return cardPressed ? <View></View> : <MemoizedHeaderComponent />;

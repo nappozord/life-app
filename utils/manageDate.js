@@ -1,5 +1,3 @@
-import { sortByDate } from "./sortItems";
-
 export const months = [
   { index: 1, fullName: "January", shortName: "JAN" },
   { index: 2, fullName: "February", shortName: "FEB" },
