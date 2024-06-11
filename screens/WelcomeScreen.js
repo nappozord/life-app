@@ -17,21 +17,20 @@ import Animated, {
   FadeOut,
 } from "react-native-reanimated";
 import { useNavigation } from "@react-navigation/native";
-import { themeColors } from "~/theme";
 import { useSelector, useDispatch } from "react-redux";
-
-import LoginComponent from "~/components/login/LoginComponent";
-import SignUpComponent from "~/components/login/SignUpComponent";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { ActivityIndicator } from "react-native-paper";
 import { getCurrentUser } from "@aws-amplify/auth";
-import ConfirmCodeComponent from "~/components/login/ConfirmCodeComponent";
-import { updateUser } from "~/app/userSlice";
-import FinalSetupComponent from "~/components/login/FinalSetupComponent";
-import PassRecoveryComponent from "~/components/login/PassRecoveryComponent";
+import * as LocalAuthentication from "expo-local-authentication";
 
 import { restoreBackup } from "~/api/apiManager";
-import { ActivityIndicator } from "react-native-paper";
+import { updateUser } from "~/app/userSlice";
+import { themeColors } from "~/theme";
+import LoginComponent from "~/components/login/LoginComponent";
+import SignUpComponent from "~/components/login/SignUpComponent";
+import ConfirmCodeComponent from "~/components/login/ConfirmCodeComponent";
+import FinalSetupComponent from "~/components/login/FinalSetupComponent";
+import PassRecoveryComponent from "~/components/login/PassRecoveryComponent";
 
 const height = Dimensions.get("window").height;
 
@@ -39,15 +38,19 @@ export default function WelcomeScreen() {
   const user = useSelector((state) => state.user.user);
   const status = useSelector((state) => state.user.status);
   const dispatch = useDispatch();
-
   const navigation = useNavigation();
+
   const [loading, setLoading] = useState(true);
   const [login, setLogin] = useState(false);
   const [signup, setSignup] = useState(false);
   const [confirmCode, setConfirmCode] = useState(false);
   const [finalSetup, setFinalSetup] = useState(false);
   const [passRecovery, setPassRecovery] = useState(false);
+
+  const isBiometricSupported = useRef(false);
+  const fingerprint = useRef(false);
   const email = useRef("");
+
   const pageTitle = login
     ? "Login"
     : signup
@@ -63,6 +66,24 @@ export default function WelcomeScreen() {
   const dev = false;
   const reset = false;
 
+  const checkBiometric = () => {
+    if (isBiometricSupported.current && fingerprint.current) {
+      LocalAuthentication.authenticateAsync({
+        promptMessage: "Login with Biometrics",
+        disableDeviceFallback: true,
+        cancelLabel: "Cancel",
+      })
+        .then((b) => {
+          if (b.success) {
+            navigation.push("Home");
+          }
+        })
+        .catch((e) => console.log(e));
+    } else {
+      navigation.push("Home");
+    }
+  };
+
   useEffect(() => {
     if (status === "succeeded") {
       setTimeout(() => {
@@ -76,8 +97,8 @@ export default function WelcomeScreen() {
               })
             );
           }
-          navigation.push("Home");
           AsyncStorage.getAllKeys().then((r) => console.log(r));
+          checkBiometric();
         }
 
         if (reset) {
@@ -98,7 +119,7 @@ export default function WelcomeScreen() {
           .then((r) => {
             if (r && r.userId) {
               if (user && user.userId === r.userId) {
-                navigation.push("Home");
+                checkBiometric();
               } else {
                 setLoading(false);
                 dispatch(updateUser({ ...user, userId: r.userId }));
@@ -114,6 +135,17 @@ export default function WelcomeScreen() {
       }, 700);
     }
   }, [status]);
+
+  useEffect(() => {
+    (async () => {
+      const compatible = await LocalAuthentication.hasHardwareAsync();
+      isBiometricSupported.current = compatible;
+      const enroll = await LocalAuthentication.isEnrolledAsync();
+      if (enroll) {
+        fingerprint.current = true;
+      }
+    })();
+  }, []);
 
   return (
     <View className="flex-1">
