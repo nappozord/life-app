@@ -36,7 +36,11 @@ export default function BudgetScreen() {
   }, [cardPressed]);
 
   const renderHeader = useMemo(() => {
-    return cardPressed ? <View></View> : <MemoizedHeaderComponent />;
+    return cardPressed ? (
+      <View></View>
+    ) : (
+      <MemoizedHeaderComponent text={"Your Budget"} />
+    );
   }, [cardPressed]);
 
   return (

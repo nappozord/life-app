@@ -29,7 +29,7 @@ export default function SettingsScreen() {
   const [logs, setLogs] = useState(false);
   const navigation = useNavigation();
 
-  const version = "Version " + packageJson.version;
+  const version = "Version 0.27.6";
 
   function onSignOutPress() {
     signOut()
@@ -73,7 +73,7 @@ export default function SettingsScreen() {
             }}
             className="mx-5 mb-10"
           >
-            <HeaderComponent />
+            <HeaderComponent text={"Your Profile"} />
           </View>
           <Animated.View
             entering={FadeIn}

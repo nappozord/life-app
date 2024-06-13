@@ -78,7 +78,11 @@ export default function ListScreen() {
       {user.userId ? (
         <View className="mt-16">
           <Animated.View style={searchBarAnimatedStyle} className="mx-5">
-            {cardPressed ? <View></View> : <HeaderComponent />}
+            {cardPressed ? (
+              <View></View>
+            ) : (
+              <HeaderComponent text={"Your Wishlists"} />
+            )}
           </Animated.View>
           <View className="mb-5 mx-4">
             <SearchComponent

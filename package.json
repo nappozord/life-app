@@ -44,7 +44,7 @@
     "babel-plugin-root-import": "^6.6.0"
   },
   "name": "life",
-  "version": "0.0.107",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "start": "expo start",

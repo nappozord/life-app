@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import { themeColors } from "~/theme";
 import DonutChartComponent from "~/components/budget/charts/DonutChartComponent";
@@ -7,11 +7,13 @@ import BarChartComponent from "~/components/budget/charts/BarChartComponent";
 import { getRemainingDaysInMonth } from "~/utils/manageDate";
 import { calculateMonthlyInOut } from "~/utils/calculateMoneyFlow";
 import { useSelector } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
 
 export default function OverallCategoryComponent() {
   const categories = useSelector((state) => state.categories.categories);
 
   const date = useSelector((state) => state.categories.date);
+  const navigation = useNavigation();
 
   const category = categories[0];
 
@@ -28,7 +30,7 @@ export default function OverallCategoryComponent() {
   }, [categories]);
 
   return (
-    <Pressable>
+    <View>
       {total ? (
         <>
           <View className="flex-row justify-center -mt-12">
@@ -141,8 +143,29 @@ export default function OverallCategoryComponent() {
               </View>
             </View>
           </View>
+
+          <TouchableOpacity
+            className="rounded-xl mx-5 my-4  mt-10"
+            style={{
+              backgroundColor: themeColors.primary,
+              elevation: 5,
+            }}
+            onPress={() => {
+              navigation.navigate("chart-line", { merge: true });
+            }}
+          >
+            <View className="mx-4 flex-row items-center justify-center">
+              <Text
+                className="text-xl font-semibold"
+                style={{ color: themeColors.onPrimary }}
+              >
+                Yearly Stats
+              </Text>
+              <IconButton icon="chart-line" color={themeColors.onPrimary} />
+            </View>
+          </TouchableOpacity>
         </>
       ) : null}
-    </Pressable>
+    </View>
   );
 }

@@ -61,13 +61,13 @@ export default function HomeScreen() {
             }}
             className="mx-5"
           >
-            <MemoizedHeaderComponent />
+            <MemoizedHeaderComponent text={"Hi, " + user.username} />
           </View>
           <View>
-            <View className="mb-4">
+            <View className="mb-8">
               <MemoizedHomeChipListComponent />
             </View>
-            <View className="mb-4">
+            <View className="mb-8">
               <MemoizedHomeChartViewComponent />
             </View>
             <View>

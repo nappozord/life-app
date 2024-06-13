@@ -1,6 +1,7 @@
 import { View } from "react-native";
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import BudgetScreen from "~/screens/BudgetScreen";
 import GroceryScreen from "~/screens/GroceryScreen";
@@ -11,6 +12,7 @@ import ListScreen from "~/screens/ListScreen";
 import HomeScreen from "~/screens/HomeScreen";
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
 const MemoizedBudgetScreen = React.memo(BudgetScreen);
 const MemoizedYearStatsScreen = React.memo(YearStatsScreen);
@@ -26,6 +28,13 @@ const List = () => <MemoizedListScreen />;
 const Settings = () => <MemoizedSettingsScreen />;
 const Home = () => <MemoizedHomeScreen />;
 
+const BudgetStack = () => (
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="budget" children={Budget} />
+    <Stack.Screen name="chart-line" component={Year} />
+  </Stack.Navigator>
+);
+
 export default function BottomTabNavigatorComponent() {
   return (
     <Tab.Navigator
@@ -37,8 +46,7 @@ export default function BottomTabNavigatorComponent() {
       )}
     >
       <Tab.Screen name="home" children={Home} />
-      <Tab.Screen name="chart-donut" children={Budget} />
-      <Tab.Screen name="chart-line" children={Year} />
+      <Tab.Screen name="chart-donut" children={BudgetStack} />
       <Tab.Screen name="cart" children={Grocery} />
       <Tab.Screen name="format-list-bulleted" children={List} />
       <Tab.Screen name="cog-outline" children={Settings} />

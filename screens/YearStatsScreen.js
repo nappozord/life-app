@@ -33,7 +33,7 @@ export default function YearStatsScreen() {
             }}
             className="mx-5"
           >
-            <HeaderComponent />
+            <HeaderComponent canGoBack={true} text={"Yearly Stats"} />
           </View>
           <View className="mb-4 -mt-4">
             <YearPickerComponent />

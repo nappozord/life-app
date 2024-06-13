@@ -34,7 +34,7 @@ export default function GroceryScreen() {
               }}
               className="mx-5"
             >
-              <HeaderComponent />
+              <HeaderComponent text={"Your Groceries"} />
             </View>
             <View className="mb-4 -mt-1">
               <ChipListComponent />
