@@ -12,6 +12,7 @@ const date = formatDate(new Date());
 
 const initialState = {
   categories: [],
+  thisMonthCategories: [],
   defaultCategories: [],
   status: "idle",
   error: null,
@@ -199,6 +200,13 @@ const categoriesSlice = createSlice({
       }
     },
     _updateDate(state, action) {
+      const thisMonth = formatDate(new Date());
+      if (
+        state.date.month === thisMonth.month &&
+        state.date.year === thisMonth.year
+      ) {
+        state.thisMonthCategories = state.categories;
+      }
       state.date = action.payload;
     },
     updateCardPressed(state, action) {
@@ -256,6 +264,18 @@ export const getExpense = (state, expenseId, categoryId) => {
     (category) => category.id === categoryId
   );
   return category.expenses.find((expense) => expense.id === expenseId);
+};
+
+export const getCurrentMonthCategory = (state) => {
+  const thisMonth = formatDate(new Date());
+  if (
+    state.categories.date.month === thisMonth.month &&
+    state.categories.date.year === thisMonth.year
+  ) {
+    return state.categories.categories;
+  } else {
+    return state.categories.thisMonthCategories;
+  }
 };
 
 export default categoriesSlice.reducer;

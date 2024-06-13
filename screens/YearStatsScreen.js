@@ -1,10 +1,6 @@
 import { View, Image } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect } from "react";
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-} from "react-native-reanimated";
 import { useDispatch, useSelector } from "react-redux";
 
 import YearPickerComponent from "~/components/year_stats/datepicker/YearPickerComponent";
@@ -22,12 +18,6 @@ export default function YearStatsScreen() {
     dispatch(updateYear(new Date().getFullYear()));
   }, []);
 
-  const searchBarHeight = useSharedValue(76);
-
-  const searchBarAnimatedStyle = useAnimatedStyle(() => ({
-    height: searchBarHeight.value,
-  }));
-
   return (
     <View className="flex-1 relative">
       <StatusBar style="light" />
@@ -37,9 +27,14 @@ export default function YearStatsScreen() {
       />
       {user.userId ? (
         <View className="mt-16">
-          <Animated.View style={searchBarAnimatedStyle} className="mx-5">
+          <View
+            style={{
+              height: 75,
+            }}
+            className="mx-5"
+          >
             <HeaderComponent />
-          </Animated.View>
+          </View>
           <View className="mb-4 -mt-4">
             <YearPickerComponent />
           </View>

@@ -1,6 +1,6 @@
 import { defaultCategories } from "~/data";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getMonthNumber, sortDatesDescending } from "~/utils/manageDate";
+import { sortDatesDescending } from "~/utils/manageDate";
 import { calculateMonthlyInOut } from "~/utils/calculateMoneyFlow";
 
 async function calculateMonthStartingBalance(totalCategories, date) {

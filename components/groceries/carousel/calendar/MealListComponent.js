@@ -6,7 +6,7 @@ import { IconButton } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteMeal } from "~/app/mealsSlice";
 
-export default function MealListComponent({ day, type, recipe }) {
+export default function MealListComponent({ day, type, recipe, home }) {
   const meals = useSelector((state) => state.meals.meals);
   const recipes = useSelector((state) => state.recipes.recipes);
   const ingredients = useSelector((state) => state.ingredients.ingredients);
@@ -29,7 +29,7 @@ export default function MealListComponent({ day, type, recipe }) {
   const data = meal[type][recipe ? "recipes" : "ingredients"];
 
   return (
-    <View className="flex-1 overflow-hidden">
+    <View>
       <ScrollView showsVerticalScrollIndicator={false}>
         {data.map((id) => {
           const item = recipe
@@ -58,30 +58,36 @@ export default function MealListComponent({ day, type, recipe }) {
                       className="m-0 p-0"
                     />
                     <Text
-                      className="text-base ml-2"
-                      style={{ color: themeColors.onSecondaryContainer }}
+                      className="text-base ml-2 py-1 mr-4"
+                      style={{
+                        color: themeColors.onSecondaryContainer,
+                      }}
+                      numberOfLines={2}
+                      ellipsizeMode="tail"
                     >
                       {item.title}
                     </Text>
                   </View>
-                  <TouchableOpacity
-                    className="rounded-3xl p-0 -mr-1 pl-5"
-                    style={{
-                      backgroundColor: themeColors.errorContainer,
-                      borderTopLeftRadius: 50,
-                      borderBottomLeftRadius: 50,
-                    }}
-                    onPress={() => {
-                      handleDeleteItem(item);
-                    }}
-                  >
-                    <IconButton
-                      icon="delete-sweep"
-                      color={themeColors.onErrorContainer}
-                      size={24}
-                      className="m-0 p-0"
-                    />
-                  </TouchableOpacity>
+                  {!home ? (
+                    <TouchableOpacity
+                      className="rounded-3xl p-0 -mr-1 pl-5"
+                      style={{
+                        backgroundColor: themeColors.errorContainer,
+                        borderTopLeftRadius: 50,
+                        borderBottomLeftRadius: 50,
+                      }}
+                      onPress={() => {
+                        handleDeleteItem(item);
+                      }}
+                    >
+                      <IconButton
+                        icon="delete-sweep"
+                        color={themeColors.onErrorContainer}
+                        size={24}
+                        className="m-0 p-0"
+                      />
+                    </TouchableOpacity>
+                  ) : null}
                 </View>
               </TouchableOpacity>
             </Animated.View>

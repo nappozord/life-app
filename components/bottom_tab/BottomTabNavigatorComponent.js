@@ -7,6 +7,7 @@ import SettingsScreen from "~/screens/SettingsScreen";
 import CustomBottomTabComponent from "./CustomBottomTabComponent";
 import YearStatsScreen from "~/screens/YearStatsScreen";
 import ListScreen from "~/screens/ListScreen";
+import HomeScreen from "~/screens/HomeScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -15,12 +16,14 @@ const MemoizedYearStatsScreen = React.memo(YearStatsScreen);
 const MemoizedGroceryScreen = React.memo(GroceryScreen);
 const MemoizedListScreen = React.memo(ListScreen);
 const MemoizedSettingsScreen = React.memo(SettingsScreen);
+const MemoizedHomeScreen = React.memo(HomeScreen);
 
 const Budget = () => <MemoizedBudgetScreen />;
 const Year = () => <MemoizedYearStatsScreen />;
 const Grocery = () => <MemoizedGroceryScreen />;
 const List = () => <MemoizedListScreen />;
 const Settings = () => <MemoizedSettingsScreen />;
+const Home = () => <MemoizedHomeScreen />;
 
 export default function BottomTabNavigatorComponent() {
   return (
@@ -32,6 +35,7 @@ export default function BottomTabNavigatorComponent() {
         </View>
       )}
     >
+      <Tab.Screen name="home" children={Home} />
       <Tab.Screen name="chart-donut" children={Budget} />
       <Tab.Screen name="chart-line" children={Year} />
       <Tab.Screen name="cart" children={Grocery} />

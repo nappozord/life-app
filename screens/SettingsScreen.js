@@ -8,11 +8,7 @@ import {
   Alert,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  FadeIn,
-} from "react-native-reanimated";
+import Animated, { FadeIn } from "react-native-reanimated";
 import { IconButton } from "react-native-paper";
 import { signOut } from "aws-amplify/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -30,14 +26,9 @@ export default function SettingsScreen() {
 
   const [finalSetup, setFinalSetup] = useState(false);
   const [logs, setLogs] = useState(false);
-  const searchBarHeight = useSharedValue(76);
   const navigation = useNavigation();
 
-  const version = "Version 0.102 - 11/07/2024";
-
-  const searchBarAnimatedStyle = useAnimatedStyle(() => ({
-    height: searchBarHeight.value,
-  }));
+  const version = "Version 0.104 - 13/07/2024";
 
   function onSignOutPress() {
     signOut()
@@ -75,10 +66,14 @@ export default function SettingsScreen() {
       />
       {user.userId ? (
         <View className="mt-16 flex-1">
-          <Animated.View style={searchBarAnimatedStyle} className="mx-5 mb-10">
+          <View
+            style={{
+              height: 75,
+            }}
+            className="mx-5 mb-10"
+          >
             <HeaderComponent />
-          </Animated.View>
-
+          </View>
           <Animated.View
             entering={FadeIn}
             className="h-full"

@@ -1,3 +1,42 @@
+import { getCurrentWeek } from "./manageDate";
+
+export async function calculateDailyInOut(categories, date) {
+  const real = { in: 0, out: 0 };
+
+  for (c of categories) {
+    if (c.id !== 0) {
+      if (c.income) {
+        real.in += c.expenses.reduce(
+          (total, e) =>
+            e.date === date.toDateString() ? total + e.total : total,
+          0
+        );
+      } else {
+        real.out += c.expenses.reduce(
+          (total, e) =>
+            e.date === date.toDateString() ? total + e.total : total,
+          0
+        );
+      }
+    }
+  }
+
+  return real;
+}
+
+export async function calculateWeeklyInOut(categories, date) {
+  const currentWeek = getCurrentWeek(date.toISOString());
+  const real = { in: 0, out: 0 };
+
+  for (d of currentWeek) {
+    const dayExpenses = calculateDailyInOut(categories, new Date(d.date));
+    real.in += (await dayExpenses).in;
+    real.out += (await dayExpenses).out;
+  }
+
+  return real;
+}
+
 export async function calculateMonthlyInOut(categories) {
   const real = { in: 0, out: 0 };
   const forecast = { in: 0, out: 0 };

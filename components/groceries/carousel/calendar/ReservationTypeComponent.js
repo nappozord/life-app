@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 
 const MemoizedMealPlanModalComponent = React.memo(MealPlanModalComponent);
 
-export default function ReservationTypeComponent({ day, type }) {
+export default function ReservationTypeComponent({ day, type, home }) {
   const meals = useSelector((state) => state.meals.meals);
   const ingredients = useSelector((state) => state.ingredients.ingredients);
   const recipes = useSelector((state) => state.recipes.recipes);
@@ -35,7 +35,7 @@ export default function ReservationTypeComponent({ day, type }) {
   }, [dailyMeal, type.type, ingredients, recipes]);
 
   return (
-    <View className="flex-1">
+    <View>
       {modalVisible && (
         <MemoizedMealPlanModalComponent
           item={{
@@ -50,7 +50,7 @@ export default function ReservationTypeComponent({ day, type }) {
       )}
       <TouchableOpacity
         style={{ backgroundColor: themeColors.secondary }}
-        className="flex-1 rounded-2xl p-3"
+        className="rounded-2xl p-3"
         onPress={handlePress}
       >
         <View className="flex-row justify-between -mt-2">
@@ -68,25 +68,37 @@ export default function ReservationTypeComponent({ day, type }) {
               {type.type[0].toUpperCase() + type.type.slice(1)}
             </Text>
           </View>
-          <View className="flex-row justify-end">
-            <View
-              className="px-2 rounded-xl flex-row items-center my-1"
-              style={{ backgroundColor: themeColors.primary, elevation: 5 }}
-            >
-              <Text
-                className="text-base font-semibold"
-                style={{ color: themeColors.onPrimary }}
+          {!home ? (
+            <View className="flex-row justify-end">
+              <View
+                className="px-2 rounded-xl flex-row items-center my-1"
+                style={{ backgroundColor: themeColors.primary, elevation: 5 }}
               >
-                {"€" + mealCost}
-              </Text>
+                <Text
+                  className="text-base font-semibold"
+                  style={{ color: themeColors.onPrimary }}
+                >
+                  {"€" + mealCost}
+                </Text>
+              </View>
             </View>
-          </View>
+          ) : null}
         </View>
         <Divider />
         {dailyMeal && (
           <>
-            <MealListComponent day={day} type={type.type} recipe={true} />
-            <MealListComponent day={day} type={type.type} recipe={false} />
+            <MealListComponent
+              day={day}
+              type={type.type}
+              recipe={true}
+              home={home}
+            />
+            <MealListComponent
+              day={day}
+              type={type.type}
+              recipe={false}
+              home={home}
+            />
           </>
         )}
       </TouchableOpacity>
