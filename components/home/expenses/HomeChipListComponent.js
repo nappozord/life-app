@@ -1,13 +1,14 @@
 import { View, TouchableOpacity, Text } from "react-native";
 import React, { useEffect, useState } from "react";
-import HomeChipComponent from "./HomeChipComponent";
-import { themeColors } from "~/theme";
 import {
   calculateWeeklyInOut,
   calculateDailyInOut,
 } from "~/utils/calculateMoneyFlow";
 import { useSelector } from "react-redux";
 import { IconButton } from "react-native-paper";
+
+import HomeChipComponent from "./HomeChipComponent";
+import { themeColors } from "~/theme";
 import { getCurrentMonthCategory } from "~/app/categoriesSlice";
 
 export default function HomeChipListComponent() {

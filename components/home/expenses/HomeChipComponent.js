@@ -1,6 +1,5 @@
-import { TouchableOpacity, View } from "react-native";
+import { View } from "react-native";
 import React from "react";
-import { themeColors } from "~/theme";
 import {
   useSharedValue,
   withTiming,

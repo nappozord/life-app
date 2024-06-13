@@ -15,6 +15,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 
+import packageJson from "~/package.json";
 import { themeColors } from "~/theme";
 import HeaderComponent from "~/components/header/HeaderComponent";
 import FinalSetupComponent from "~/components/login/FinalSetupComponent";
@@ -28,7 +29,7 @@ export default function SettingsScreen() {
   const [logs, setLogs] = useState(false);
   const navigation = useNavigation();
 
-  const version = "Version 0.106 - 13/07/2024";
+  const version = "Version " + packageJson.version;
 
   function onSignOutPress() {
     signOut()

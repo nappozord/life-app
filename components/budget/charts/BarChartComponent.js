@@ -6,12 +6,15 @@ import {
   withTiming,
   useDerivedValue,
 } from "react-native-reanimated";
+
 import { themeColors } from "~/theme";
 
-const WIDTH = 180;
 const HEIGHT = 30;
 
-export default function BarChartComponent({ forecast, real }) {
+export default function BarChartComponent({ forecast, real, width }) {
+  let WIDTH = 180;
+  if (width) WIDTH = width;
+
   const totalValue = useSharedValue(0);
 
   let percentage = real / forecast;

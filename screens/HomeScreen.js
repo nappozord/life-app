@@ -1,13 +1,6 @@
-import {
-  View,
-  Image,
-  Text,
-  BackHandler,
-  Alert,
-  ScrollView,
-} from "react-native";
+import { View, Image, BackHandler, Alert } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { signOut } from "aws-amplify/auth";
@@ -15,9 +8,11 @@ import { signOut } from "aws-amplify/auth";
 import HeaderComponent from "~/components/header/HeaderComponent";
 import HomeChipListComponent from "~/components/home/expenses/HomeChipListComponent";
 import MealCardComponent from "~/components/home/meals/MealCardComponent";
+import HomeBarChartViewComponent from "~/components/home/expenses/HomeBarChartViewComponent";
 
 const MemoizedHeaderComponent = React.memo(HeaderComponent);
 const MemoizedHomeChipListComponent = React.memo(HomeChipListComponent);
+const MemoizedHomeChartViewComponent = React.memo(HomeBarChartViewComponent);
 
 export default function HomeScreen() {
   const user = useSelector((state) => state.user.user);
@@ -71,6 +66,9 @@ export default function HomeScreen() {
           <View>
             <View className="mb-4">
               <MemoizedHomeChipListComponent />
+            </View>
+            <View className="mb-4">
+              <MemoizedHomeChartViewComponent />
             </View>
             <View>
               <MealCardComponent />

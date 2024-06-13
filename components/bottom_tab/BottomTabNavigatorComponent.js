@@ -1,6 +1,7 @@
 import { View } from "react-native";
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
 import BudgetScreen from "~/screens/BudgetScreen";
 import GroceryScreen from "~/screens/GroceryScreen";
 import SettingsScreen from "~/screens/SettingsScreen";

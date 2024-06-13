@@ -1,14 +1,14 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import ReservationTypeComponent from "~/components/groceries/carousel/calendar/ReservationTypeComponent";
 import Animated, { FadeIn } from "react-native-reanimated";
-import MealListComponent from "../../groceries/carousel/calendar/MealListComponent";
-import { themeColors } from "~/theme";
 import { IconButton } from "react-native-paper";
-import { useSelector } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
+
+import { themeColors } from "~/theme";
+import ReservationTypeComponent from "~/components/groceries/carousel/calendar/ReservationTypeComponent";
 
 export default function MealCardComponent() {
-  const meals = useSelector((state) => state.meals.meals);
   const day = new Date().toISOString().split("T")[0];
+  const navigation = useNavigation();
 
   const types = [
     {
@@ -49,10 +49,15 @@ export default function MealCardComponent() {
           </Text>
           <IconButton icon={"food"} color={themeColors.primary} />
         </View>
-        <TouchableOpacity className="-mx-4 -mb-3 -mt-2">
+        <TouchableOpacity
+          className="-mx-4 -mb-3 -mt-2"
+          onPress={() => {
+            navigation.navigate("cart", { merge: true });
+          }}
+        >
           <IconButton
             size={32}
-            icon={"plus-circle-outline"}
+            icon={"arrow-right-thin-circle-outline"}
             color={themeColors.primary}
           />
         </TouchableOpacity>

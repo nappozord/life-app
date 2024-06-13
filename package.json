@@ -43,8 +43,8 @@
     "@babel/core": "^7.24.0",
     "babel-plugin-root-import": "^6.6.0"
   },
-  "name": "budget-app",
-  "version": "1.0.0",
+  "name": "life",
+  "version": "0.0.107",
   "private": true,
   "scripts": {
     "start": "expo start",
