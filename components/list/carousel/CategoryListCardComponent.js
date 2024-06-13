@@ -30,7 +30,7 @@ export default function CategoryListCardComponent({ listId, isActive }) {
   const width = useSharedValue(WIDTH);
 
   useEffect(() => {
-    if (loading) {
+    if (loading && categoryId !== 0) {
       dispatch(updateCardPressed(true));
       startAnimation(500);
     }

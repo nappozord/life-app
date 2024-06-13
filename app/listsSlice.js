@@ -161,10 +161,8 @@ const listsSlice = createSlice({
         : null;
     },
     updateCardPressed(state, action) {
-      if (activeCategory !== 0) {
-        state.cardPressed = action.payload;
-        if (!action.payload) state.finishedAnimation = false;
-      }
+      state.cardPressed = action.payload;
+      if (!action.payload) state.finishedAnimation = false;
     },
     updateActiveCategory(state, action) {
       state.activeCategory = action.payload;

@@ -56,7 +56,7 @@ export default function CategoryCardComponent({ categoryId, isActive }) {
   );
 
   useEffect(() => {
-    if (loading) {
+    if (loading && categoryId !== 0) {
       dispatch(updateCardPressed(true));
       startAnimation(500);
     }
