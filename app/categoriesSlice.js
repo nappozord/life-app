@@ -210,8 +210,10 @@ const categoriesSlice = createSlice({
       state.date = action.payload;
     },
     updateCardPressed(state, action) {
-      state.cardPressed = action.payload;
-      if (!action.payload) state.finishedAnimation = false;
+      if (state.activeCategory !== 0) {
+        state.cardPressed = action.payload;
+        if (!action.payload) state.finishedAnimation = false;
+      }
     },
     updateActiveCategory(state, action) {
       state.activeCategory = action.payload;

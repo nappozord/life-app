@@ -10,8 +10,6 @@ export default function MealCardComponent() {
   const meals = useSelector((state) => state.meals.meals);
   const day = new Date().toISOString().split("T")[0];
 
-  console.log("REFR");
-
   const types = [
     {
       type: "breakfast",
