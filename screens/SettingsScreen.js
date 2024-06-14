@@ -29,7 +29,7 @@ export default function SettingsScreen() {
   const [logs, setLogs] = useState(false);
   const navigation = useNavigation();
 
-  const version = "Version 0.27.6";
+  const version = "Version 0.27.7";
 
   function onSignOutPress() {
     signOut()

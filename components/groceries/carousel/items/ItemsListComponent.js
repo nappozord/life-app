@@ -1,4 +1,10 @@
-import { View, TouchableOpacity, Text, RefreshControl } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  RefreshControl,
+  FlatList,
+} from "react-native";
 import React, { useState, useEffect, useCallback } from "react";
 import { IconButton } from "react-native-paper";
 import { FlashList } from "@shopify/flash-list";
@@ -167,7 +173,7 @@ export default function ItemsListComponent() {
         </View>
       </View>
       <View className="mx-3 flex-1">
-        <FlashList
+        <FlatList
           key={"items_" + sort}
           refreshControl={
             <RefreshControl
@@ -177,10 +183,8 @@ export default function ItemsListComponent() {
               colors={[themeColors.onPrimaryContainer]}
             />
           }
-          estimatedItemSize={45}
           keyExtractor={(item) => "items_" + item.id}
           fadingEdgeLength={50}
-          removeClippedSubviews={false}
           showsVerticalScrollIndicator={false}
           data={
             sort === "alphabetical"

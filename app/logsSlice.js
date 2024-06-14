@@ -16,9 +16,10 @@ export const fetchLogs = createAsyncThunk("logs/fetchLogs", async () => {
 
 export const addLog = createAsyncThunk(
   "logs/addLog",
-  async (log, { dispatch }) => {
+  async (log, { getState, dispatch }) => {
     dispatch(_addLog(log));
-    updateLogs(log);
+    const state = getState().logs;
+    updateLogs(state.logs);
   }
 );
 

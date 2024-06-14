@@ -24,7 +24,7 @@ export default function ItemComponent({ itemId }) {
   const firstRender = useRef(true);
 
   useEffect(() => {
-    if (!firstRender.current) {
+    if (!firstRender.current && counter !== item.stock) {
       dispatch(
         incrementItem({
           id: itemId,

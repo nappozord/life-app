@@ -15,6 +15,7 @@ export default function GroceryScreen() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    console.log("REFRESH");
     dispatch(checkMealsAndIngredients());
   }, []);
 

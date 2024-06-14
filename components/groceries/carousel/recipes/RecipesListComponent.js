@@ -1,4 +1,10 @@
-import { View, TouchableOpacity, Text, RefreshControl } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  RefreshControl,
+  FlatList,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import { IconButton } from "react-native-paper";
 import { themeColors } from "~/theme";
@@ -152,7 +158,7 @@ export default function RecipesListComponent() {
         </View>
       </View>
       <View className="mx-4 flex-1">
-        <FlashList
+        <FlatList
           key={"recipes_" + sort}
           refreshControl={
             <RefreshControl
@@ -162,10 +168,8 @@ export default function RecipesListComponent() {
               colors={[themeColors.onPrimaryContainer]}
             />
           }
-          estimatedItemSize={45}
           keyExtractor={(item) => "recipes_" + item.id}
           fadingEdgeLength={50}
-          removeClippedSubviews={false}
           showsVerticalScrollIndicator={false}
           data={
             sort === "alphabetical"

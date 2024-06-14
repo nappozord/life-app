@@ -24,7 +24,7 @@ export default function IngredientComponent({ ingredientId }) {
   const firstRender = useRef(true);
 
   useEffect(() => {
-    if (!firstRender.current) {
+    if (!firstRender.current && counter !== ingredient.stock) {
       dispatch(
         incrementIngredient({
           id: ingredientId,
